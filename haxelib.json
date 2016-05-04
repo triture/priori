@@ -1,6 +1,6 @@
 {
   "name": "priori",
-  "url": "",
+  "url": "https://github.com/triture/priori",
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Build Single Page Application only using Haxe",
