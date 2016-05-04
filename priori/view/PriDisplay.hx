@@ -1,0 +1,637 @@
+package priori.view;
+
+import haxe.extern.EitherType;
+import js.html.Element;
+import priori.event.PriMouseEvent;
+import priori.event.PriSwipeEvent;
+import jQuery.Event;
+import priori.event.PriTapEvent;
+import priori.view.container.PriContainer;
+import priori.event.PriEventDispatcher;
+import priori.app.PriApp;
+import jQuery.JQuery;
+
+class PriDisplay extends PriEventDispatcher {
+
+    public static var PRIORI_ID_NAME:String = "prioriid";
+
+    @:isVar public var width(get, set):Float;
+    @:isVar public var height(get, set):Float;
+    @:isVar public var x(get, set):Float;
+    @:isVar public var y(get, set):Float;
+    @:isVar public var centerX(get, set):Float;
+    @:isVar public var centerY(get, set):Float;
+    @:isVar public var maxX(get, set):Float;
+    @:isVar public var maxY(get, set):Float;
+    @:isVar public var parent(get, null):PriContainer;
+    @:isVar public var app(get, null):PriApp;
+    @:isVar public var visible(get, set):Bool;
+    @:isVar public var disabled(get, set):Bool;
+    @:isVar public var alpha(default, set):Float;
+    @:isVar public var pointer(get, set):Bool;
+    @:isVar public var corners(default, set):Array<Int>;
+
+    @:isVar public var bgColor(default, set):Int;
+
+    @:isVar public var clipping(get, set):Bool;
+
+    private var _priId:String;
+    private var _element:JQuery;
+    private var _jselement:Element;
+
+    private var _specialEventList:Array<String>;
+    private var _specialEventStack:Array<Dynamic>;
+
+    public function new() {
+        super();
+
+        this._specialEventStack = [];
+        this._specialEventList = [];
+
+        // initialize display
+        this._priId = this.getRandomId();
+        this.createElement();
+
+        PriApp.PRIORI_MAP.set(this._priId, this);
+
+        this.x = 0;
+        this.y = 0;
+        this.width = 100;
+        this.height = 100;
+    }
+
+    @:noCompletion private function set_corners(value:Array<Int>):Array<Int> {
+        this.corners = value;
+
+        if (value == null) {
+            this.getElement().css("border-radius", "");
+        } else {
+
+            var tempArray:Array<Int> = value.copy();
+
+            var n:Int = tempArray.length;
+
+            if (n == 0) {
+                this.getElement().css("border-radius", "");
+            } else {
+                if (n > 4) tempArray = tempArray.splice(0, 4);
+
+                this.getElement().css("border-radius", tempArray.join("px ") + "px");
+            }
+        }
+
+
+        return value;
+    }
+
+    @:noCompletion private function get_clipping():Bool {
+        var result:Bool = false;
+
+        if (this.getCSS("overflow") == "hidden") {
+            result = true;
+        }
+
+        return result;
+    }
+
+    @:noCompletion private function set_clipping(value:Bool) {
+        if (value) {
+            this.setCSS("overflow", "hidden");
+        } else {
+            this.setCSS("overflow", "");
+        }
+
+        return value;
+    }
+
+    private function getRandomId(len:Int = 7):String {
+        var length:Int = len;
+        var charactersToUse:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var result:String = "";
+
+        result = "";
+
+        for (i in 0...length) {
+            result += charactersToUse.charAt(Math.floor((charactersToUse.length * Math.random())));
+        }
+
+        result += "_" + Date.now().getTime();
+
+        return result;
+    }
+
+    @:noCompletion private function set_width(value:Float) {
+        if (value == null) {
+            this.setCSS("width", "");
+        } else {
+            this.setCSS("width", Std.int(value) + "px");
+        }
+
+        return value;
+    }
+
+    @:noCompletion private function get_width():Float {
+        return this.getElement().width();
+    }
+
+    @:noCompletion private function set_height(value:Float):Float {
+        if (value == null) {
+            this.setCSS("height", "");
+        } else {
+            this.setCSS("height", Std.int(value) + "px");
+        }
+
+        return value;
+    }
+
+    @:noCompletion private function get_height():Float {
+        return this.getElement().height();
+    }
+
+    @:noCompletion private function get_maxX():Float {
+        return this.x + this.width;
+    }
+
+    @:noCompletion private function set_maxX(value:Float) {
+        this.x = value - this.width;
+        return value;
+    }
+
+    @:noCompletion private function get_maxY():Float {
+        return this.y + this.height;
+    }
+
+    @:noCompletion private function set_maxY(value:Float) {
+        this.y = value - this.height;
+        return value;
+    }
+
+
+    @:noCompletion private function set_centerX(value:Float) {
+        this.x = value - this.width/2;
+        return value;
+    }
+
+    @:noCompletion private function get_centerX():Float {
+        return this.x + this.width/2;
+    }
+
+    @:noCompletion private function set_centerY(value:Float) {
+        this.y = value - this.height/2;
+        return value;
+    }
+
+    @:noCompletion private function get_centerY():Float {
+        return this.y + this.height/2;
+    }
+
+
+    @:noCompletion private function set_x(value:Float) {
+        this.setCSS("left", Std.int(value) + "px");
+        return value;
+    }
+
+    @:noCompletion private function get_x():Float {
+        return this.getElement().position().left;
+    }
+
+    @:noCompletion private function set_y(value:Float) {
+        this.setCSS("top", Std.int(value) + "px");
+        return value;
+    }
+
+    @:noCompletion private function get_y():Float {
+        return this.getElement().position().top;
+    }
+
+    @:noCompletion private function set_alpha(value:Float) {
+        this.alpha = value;
+        this.setCSS("opacity", Std.string(value));
+        return value;
+    }
+
+    public function hasApp():Bool {
+        var result:Bool = false;
+
+        if (this.app != null) result = true;
+
+        return result;
+    }
+
+    @:noCompletion private function get_app():PriApp {
+        var result:PriApp = null;
+
+        var lastDisplay:PriDisplay = this;
+        var reachTop:Bool = false;
+
+        while (reachTop == false) {
+            lastDisplay = getParentFromObject(lastDisplay);
+
+            if (lastDisplay == null) {
+                reachTop = true;
+            } else {
+                if (Std.is(lastDisplay, PriApp)) {
+                    reachTop = true;
+                    result = cast(lastDisplay, PriApp);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private function getParentFromObject(object:PriDisplay):PriContainer {
+        return object.parent;
+    }
+
+    public function get_parent():PriContainer {
+        var result:PriContainer = null;
+        var parentPrioriId:String;
+        var parentJQ:JQuery = this.getElement().parent("["+PRIORI_ID_NAME+"]");
+        var hasParent:Bool = parentJQ.length > 0 ? true : false;
+
+
+        if (hasParent) {
+            parentPrioriId = parentJQ.attr(PRIORI_ID_NAME);
+            result = PriApp.PRIORI_MAP.exists(parentPrioriId) ? PriApp.PRIORI_MAP.get(parentPrioriId) : null;
+        }
+
+        return result;
+    }
+
+    public function getPrid():String {
+        return this._priId;
+    }
+
+    public function getDepthLevel():Int {
+        var result:Int = 0;
+        var parent:Dynamic = this.parent;
+
+        if (parent != null) {
+            result = 1;
+
+            result += parent.getDepthLevel();
+        }
+
+        return result;
+    }
+
+    public function getJSElement():Element {
+//        if (!this._jselement == null) this.createElement();
+        return _jselement;
+    }
+
+    public function getElement():JQuery {
+//        if (this._element == null) {
+//            this._element = this.createElement();
+//            this.alpha = 1;
+//        }
+
+        return this._element;
+    }
+
+    private function setCSS(property:String, value:String):Void {
+        this.getElement().css(property, value);
+    }
+
+    private function getCSS(property:String):String {
+        return this.getElement().css(property);
+    }
+
+    @:noCompletion private function set_bgColor(value:Int):Int {
+        this.bgColor = value;
+
+        if (value == null) {
+            this.setCSS("background-color", "");
+        } else {
+            this.setCSS("background-color", "#" + StringTools.hex(value, 6));
+        }
+
+        return value;
+    }
+
+    override public function addEventListener(event:String, listener:Dynamic->Void):Void {
+
+        // tap events
+        if (event == PriTapEvent.TAP && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP, _onJTouch_tap);
+        } else if (event == PriTapEvent.TAP_DOWN && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP_DOWN, _onJTouch_tapdown);
+        } else if (event == PriTapEvent.TAP_UP && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP_UP, _onJTouch_tapup);
+        } else if (event == PriTapEvent.TAP_START && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP_START, _onJTouch_tapstart);
+        } else if (event == PriTapEvent.TAP_END && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP_END, _onJTouch_tapend);
+        } else if (event == PriTapEvent.TAP_MOVE && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriTapEvent.TAP_MOVE, _onJTouch_tapmove);
+        }
+
+        // swipe events
+        if (event == PriSwipeEvent.SWIPE && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE, _onJTouch_swipe);
+        } else if (event == PriSwipeEvent.SWIPE_UP && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE_UP, _onJTouch_swipeup);
+        }else if (event == PriSwipeEvent.SWIPE_RIGHT && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE_RIGHT, _onJTouch_swiperight);
+        }else if (event == PriSwipeEvent.SWIPE_DOWN && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE_DOWN, _onJTouch_swipedown);
+        }else if (event == PriSwipeEvent.SWIPE_LEFT && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE_LEFT, _onJTouch_swipeleft);
+        }else if (event == PriSwipeEvent.SWIPE_END && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent(PriSwipeEvent.SWIPE_END, _onJTouch_swipeend);
+        }
+
+        if (event == PriMouseEvent.MOUSE_OUT && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent("mouseleave", _SPEVENT_mouseleave);
+        } else if (event == PriMouseEvent.MOUSE_OVER && this._specialEventList.indexOf(event) == -1) {
+            this.addSpecialEvent("mouseenter", _SPEVENT_mouseenter);
+        }
+
+
+        if (event == PriTapEvent.TAP) {
+            this.pointer = true;
+        }
+
+        super.addEventListener(event, listener);
+    }
+
+    override public function removeEventListener(event:String, listener:Dynamic->Void):Void {
+        super.removeEventListener(event, listener);
+
+        if (event == PriTapEvent.TAP && this.hasEvent(PriTapEvent.TAP) == false) {
+            this.pointer = false;
+        }
+    }
+
+    private function addSpecialEvent(event:String, callback:Dynamic):Void {
+        this._specialEventList.push(event);
+        this._specialEventStack.push({
+            event : event,
+            callback : callback
+        });
+
+        (new JQuery("body")).on(event, "#" + this.getPrid(), callback);
+    }
+
+    private function killSpecialEvents():Void {
+        var i:Int = 0;
+        var n:Int = this._specialEventStack.length;
+
+        // TODO : Verificar forma de nao remover o clique de todo sistema - problema do plugin de taps
+
+        while (i < n) {
+
+            (new JQuery("body")).off(
+                this._specialEventStack[i].event,
+                "#" + this._priId,
+                this._specialEventStack[i].callback
+            );
+
+            i++;
+        }
+
+
+        // remove todos os eventos associados ao objeto
+        this._specialEventList = [];
+        this._specialEventStack = [];
+    }
+
+
+    private function _SPEVENT_mouseenter(e:Event, d):Void {
+        //e.stopPropagation();
+
+        // todo fazer o bubble dos eventos atraves dos evrntos priori
+        // todo criar o clone de event de forma melhorada usando serializacao
+
+        var event:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+
+    private function _SPEVENT_mouseleave(e:Event, d):Void {
+        //e.stopPropagation();
+
+        var event:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OUT);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+
+    private function _onJTouch_tap(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_tapdown(e:Dynamic, touch):Void {
+        e.stopPropagation();
+
+        var data:Dynamic = {
+            //screenY : e.screenY,
+            //screenX : e.screenX,
+            //clientY : e.clientY,
+            //clientX : e.clientX,
+            pageY : e.pageY,
+            pageX : e.pageX,
+            y : e.offsetY,
+            x : e.offsetX
+
+        };
+
+        //trace(data);
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN, false, false, data);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_tapup(e:Dynamic, touch):Void {
+        e.stopPropagation();
+
+        var data:Dynamic = {
+            //screenY : e.screenY,
+            //screenX : e.screenX,
+            //clientY : e.clientY,
+            //clientX : e.clientX,
+            pageY : e.pageY,
+            pageX : e.pageX,
+            y : e.offsetY,
+            x : e.offsetX
+        };
+
+        //trace(data);
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP, false, false, data);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_tapstart(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_START, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_tapend(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_END, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_tapmove(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_MOVE, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+
+
+    private function _onJTouch_swipe(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_swipeup(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_UP, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_swiperight(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_RIGHT, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_swipedown(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_DOWN, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_swipeleft(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_LEFT, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+    private function _onJTouch_swipeend(e:Event, touch):Void {
+        e.stopPropagation();
+
+        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_END, false);
+        if (!this.disabled) this.dispatchEvent(event);
+    }
+
+
+    private function createElement():Void {
+//        var element:JQuery = PrioriRun JQuery('<div prioriid="$_priId" class="priori_noselect" style="position:absolute;margin:0px;padding:0px;overflow:hidden;"></div>');
+//
+//        var element:JQuery = PrioriRun JQuery(js.Browser.document.createElement("div"));
+        var jsElement:Element = js.Browser.document.createElement("div");
+        jsElement.setAttribute("id", this._priId);
+        jsElement.setAttribute("prioriid", this._priId);
+        jsElement.setAttribute("class", "priori_noselect");
+        jsElement.setAttribute("style", "position:absolute;margin:0px;padding:0px;overflow:hidden;");
+
+        this._jselement = jsElement;
+        this._element = new JQuery(jsElement);
+
+//        element.attr("prioriid", this._priId);
+//        element.attr("class", "priori_noselect");
+//        element.attr("style", "position:absolute;margin:0px;padding:0px;overflow:hidden;");
+//
+//        return (PrioriRun JQuery(jsElement));
+    }
+
+    public function removeFromParent():Void {
+        if (this.parent != null) {
+            this.parent.removeChild(this);
+        }
+    }
+
+    override public function kill():Void {
+        this.killSpecialEvents();
+
+        // remove todos os eventos do elemento
+        this.getElement().off();
+        this.getElement().find("*").off();
+
+        if (this.parent != null) parent.removeChild(this);
+        PriApp.PRIORI_MAP.remove(this._priId);
+
+        this._element = null;
+        this._jselement = null;
+
+        super.kill();
+    }
+
+    @:noCompletion private function get_visible():Bool {
+        var result:Bool = true;
+
+        if (this.getCSS("visibility") == "hidden") {
+            result = false;
+        }
+
+        return result;
+    }
+
+    @:noCompletion private function set_visible(value:Bool) {
+        if (value == true) {
+            this.setCSS("visibility", "visible");
+        } else {
+            this.setCSS("visibility", "hidden");
+        }
+
+        return value;
+    }
+
+    @:noCompletion private function get_pointer():Bool {
+        var result:Bool = true;
+
+        if (this.getCSS("cursor") == "pointer") {
+            result = false;
+        }
+
+        return result;
+    }
+
+    @:noCompletion private function set_pointer(value:Bool) {
+        if (value == true) {
+            this.setCSS("cursor", "pointer");
+        } else {
+            this.setCSS("cursor", "");
+        }
+
+        return value;
+    }
+
+    private function isDisabledByInherit():Bool {
+        return !(this.getElement().attr("priori-disabled") == "disabled");
+    }
+
+    @:noCompletion private function get_disabled():Bool {
+        var result:Bool = false;
+
+        if (this.getElement().is("[disabled]")) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    @:noCompletion private function set_disabled(value:Bool) {
+        if (value == true) {
+            this.getElement().attr("priori-disabled", "disabled");
+            this.getElement().attr("disabled", "disabled");
+            this.getElement().find("*").attr("disabled", "disabled");
+        } else {
+
+            this.getElement().removeAttr("priori-disabled");
+
+            // verifica se algum parent esta desabilitado
+            if (this.getElement().parents("*[priori-disabled='disabled']").length == 0) {
+                this.getElement().removeAttr("disabled");
+                this.getElement().find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
+            }
+        }
+
+        return value;
+    }
+
+
+}

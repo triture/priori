@@ -1,0 +1,19 @@
+{
+  "project_name" : "Project Name",
+
+  "lang" : "en",
+
+  "meta" : [],
+
+  "link" : [],
+
+  "dependencies" : [],
+
+  "main" : "Main",
+
+  "src" : [
+    "src"
+  ],
+
+  "output" : "build"
+}

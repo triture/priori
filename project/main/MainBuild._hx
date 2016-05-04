@@ -1,0 +1,18 @@
+package ;
+
+import priori.app.PriApp;
+import jQuery.JQuery;
+
+class {MAINBUILDCLASS} {
+
+    static public function main():Void {
+
+        new JQuery(function():Void {
+
+            var appclass:Class<PriApp> = {APPCLASS};
+            var instance:{APPCLASS} = Type.createInstance({APPCLASS}, []);
+
+        });
+
+    }
+}

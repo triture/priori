@@ -1,0 +1,8 @@
+-lib jQueryExtern
+-lib priori
+
+-cp src_test
+
+-main Main
+
+-js out/release/priori.js

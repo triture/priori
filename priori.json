@@ -1,0 +1,32 @@
+{
+  "project_name" : "Priori",
+
+  "lang" : "en",
+
+  "meta" : [
+    "<meta charset=\"utf-8\">",
+    "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">",
+    "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">",
+    "<meta name=\"apple-touch-fullscreen\" content=\"yes\">",
+    "<meta id=\"extViewportMeta\" name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">"
+  ],
+
+  "link" : [
+    "<!--[if lt IE 9]> \n <script type=\"text/javascript\" src=\"js/html5shiv.min.js\"></script> \n <![endif]-->",
+    "<!--[if lt IE 9]> \n <script type=\"text/javascript\" src=\"js/respond.min.js\"></script> \n <![endif]-->",
+    "<script type=\"text/javascript\" src=\"js/jquery-2.1.4.min.js\"></script>",
+    "<script type=\"text/javascript\" src=\"js/jquery.mobile-events.min.js\"></script>",
+    "<link href=\"css/priori.css\" rel=\"stylesheet\">"
+  ],
+
+  "dependencies" : [
+    "jQueryExtern"
+  ],
+
+  "src" : [
+    "src"
+  ],
+
+  "template" : "template",
+  "output" : "build"
+}

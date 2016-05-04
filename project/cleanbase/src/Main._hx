@@ -1,0 +1,28 @@
+package ;
+
+import priori.style.font.PriFontSyleWeight;
+import priori.style.font.PriFontStyle;
+import priori.view.text.PriText;
+import priori.app.PriApp;
+
+class Main extends PriApp {
+
+    private var example:PriText;
+
+    public function new() {
+        super();
+    }
+
+    override private function setup():Void {
+        this.example = new PriText();
+        this.example.text = "Hello World!";
+        this.example.fontStyle = new PriFontStyle(PriFontSyleWeight.BOLD);
+        this.addChild(this.example);
+    }
+
+    override private function paint():Void {
+        this.example.centerX = this.width/2;
+        this.example.centerY = this.height/2;
+    }
+
+}
