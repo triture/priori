@@ -106,6 +106,10 @@ class AssetManager extends PriEventDispatcher {
     private function onAssetError(e:PriEvent):Void {
         var asset:Asset = cast(e.currentTarget, Asset);
 
+        #if debug
+        trace(" > Erro loading " + asset.id);
+        #end
+
         this._totalErrors ++;
 
         if (this._totalErrors < this.maxError) {

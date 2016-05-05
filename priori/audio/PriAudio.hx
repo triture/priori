@@ -59,7 +59,7 @@ class PriAudio extends PriEventDispatcher {
         }
     }
 
-    public function load(ogg:String, mp3:String = null):Void {
+    public function load(mp3:String, ogg:String = null):Void {
         this.resetStatus();
 
         if (this._loader != null) {
@@ -67,7 +67,7 @@ class PriAudio extends PriEventDispatcher {
             _loader = null;
         }
 
-        this._loader = new AssetAudio("_internalasset", ogg, mp3);
+        this._loader = new AssetAudio("_internalasset", mp3, ogg);
         this._loader.addEventListener(PriEvent.COMPLETE, this.onAssetComplete);
         this._loader.addEventListener(PriEvent.ERROR, this.onAssetError);
         this._loader.load();

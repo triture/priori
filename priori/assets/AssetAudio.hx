@@ -13,7 +13,7 @@ class AssetAudio extends Asset {
 
     public var urlMP3:String;
 
-    public function new(id:String, urlOGG:String, urlMP3:String = null) {
+    public function new(id:String, urlMP3:String, urlOGG:String = null) {
         this.urlMP3 = urlMP3;
 
         super(id, urlOGG);
@@ -25,17 +25,43 @@ class AssetAudio extends Asset {
             this._isLoading = true;
 
             this._element = new JQuery("<audio>");
-            this._element.on("loadeddata", this._onLoadAudio);
+            var dom:Dynamic = this._element.get(0);
 
-            if (this.url != null && this.url != "") {
-                this._element.append(new JQuery("<source>", {src : this.url, type : "audio/ogg"}));
+            var canPlayAny:Bool = false;
+
+            if (dom.canPlayType != null) {
+                this._element.on("loadeddata", this._onLoadAudio);
+
+                if (dom.canPlayType("audio/ogg;")) {
+                    if (this.url != null && this.url != "") {
+                        this._element.append(new JQuery("<source>", {src : this.url, type : "audio/ogg"}));
+                        canPlayAny = true;
+                    }
+                } else {
+                    #if debug
+                    trace("This browser cannot play ogg audio files");
+                    #end
+                }
+
+                if (!canPlayAny) {
+                    if (dom.canPlayType("audio/mp3;")) {
+                        if (this.urlMP3 != null && this.urlMP3 != "") {
+                            this._element.append(new JQuery("<source>", {src : this.urlMP3, type : "audio/mp3"}));
+                            canPlayAny = true;
+                        }
+                    } else {
+                        #if debug
+                        trace("This browser cannot play mp3 audio files");
+                        #end
+                    }
+                }
+
+                this._element.find("source").on("error", this._onErrorAudio);
             }
 
-            if (this.urlMP3 != null && this.urlMP3 != "") {
-                this._element.append(new JQuery("<source>", {src : this.urlMP3, type : "audio/mp3"}));
+            if (!canPlayAny) {
+                this.dispatchEvent(new PriEvent(PriEvent.ERROR));
             }
-
-            this._element.find("source").on("error", this._onErrorAudio);
 
         } else if (_isLoaded) {
             this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
@@ -51,6 +77,9 @@ class AssetAudio extends Asset {
     }
 
     private function _onErrorAudio(e:Event):Void {
+        #if debug
+        trace(e);
+        #end
         this._isLoading = false;
         this._isLoaded = false;
 
