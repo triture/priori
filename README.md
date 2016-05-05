@@ -36,3 +36,15 @@ You can also install aditional priori libs:
 
 ## Priori Example Project
 Check out some Priori [examples](https://github.com/triture/priori-example).
+
+## Priori Roadmap for 1.0.0 Release Version
+- Full Documentation
+- Rotation property for PriDisplay
+- Scale property for PriDisplay
+- 9 Slice Images
+- Background Images
+- Better Border Support (Current version is buggy)
+- Full compatibilty for Android and IOs devices
+- Youtube, Vimeo and other video streaming (?) support
+- Better performance for PriDataGrid
+- Several bug fixes
