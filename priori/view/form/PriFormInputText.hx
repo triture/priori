@@ -46,11 +46,11 @@ class PriFormInputText extends PriFormElementBase {
         var result:String = this.value;
 
         var isDisabled:Bool = this.disabled;
-        if (isDisabled) this.disabled = false;
+        if (isDisabled) this.suspendDisabled();
 
         result = this._baseElement.val();
 
-        if (isDisabled) this.disabled = true;
+        if (isDisabled) this.reactivateDisable();
 
         return result;
     }

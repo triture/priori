@@ -12,6 +12,16 @@ class PriFormElementBase extends PriExtendable {
         super();
     }
 
+    private function suspendDisabled():Void {
+        this.getElement().removeAttr("disabled");
+        this.getElement().find("*").removeAttr("disabled");
+    }
+
+    private function reactivateDisable():Void {
+        this.getElement().attr("disabled", "disabled");
+        this.getElement().find("*").attr("disabled", "disabled");
+    }
+
 
     private function applyIdToFormElement():Void {
         this._fieldId = "field_" + this.getRandomId(4);

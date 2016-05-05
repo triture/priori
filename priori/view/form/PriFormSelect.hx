@@ -62,10 +62,10 @@ class PriFormSelect extends PriFormElementBase {
             var n:Int = this._menuItens.length;
 
             var isDisabled:Bool = this.disabled;
-            if (isDisabled) this.disabled = false;
+            if (isDisabled) this.suspendDisabled();
 
             var selectedId:String = this._baseElement.val();
-            if (isDisabled) this.disabled = true;
+            if (isDisabled) this.reactivateDisable();
 
             while (i < n) {
 
