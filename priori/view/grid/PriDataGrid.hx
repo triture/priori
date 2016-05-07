@@ -3,7 +3,7 @@ package priori.view.grid;
 import priori.app.PriApp;
 import haxe.Timer;
 import priori.view.grid.column.PriGridColumnSort;
-import priori.style.border.BorderStyle;
+import priori.style.border.PriBorderStyle;
 import priori.event.PriTapEvent;
 import priori.view.grid.header.PriGridHeader;
 import priori.view.grid.column.PriGridColumnSize;
@@ -77,7 +77,7 @@ class PriDataGrid extends PriGroup {
         this.horizontalGridLineColor = 0xDDDDDD;
         this.verticalGridLineColor = 0xDDDDDD;
 
-        this.border = new BorderStyle();
+        this.border = new PriBorderStyle();
         this.rowPointer = true;
 
         this.rowColorSequence = [0xFFFFFF];

@@ -1,6 +1,6 @@
 package priori.style.border;
 
-enum BorderType {
+enum PriBorderType {
     SOLID;
     DOTTED;
     DASHED;

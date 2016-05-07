@@ -1,7 +1,6 @@
 package priori.view.container;
 
-import priori.style.border.BorderStyle;
-import Std;
+import priori.style.border.PriBorderStyle;
 import jQuery.JQuery;
 import priori.geom.PriGeomBox;
 import priori.event.PriEvent;
@@ -9,78 +8,12 @@ import priori.event.PriEvent;
 class PriContainer extends PriDisplay {
 
     private var _childList:Array<PriDisplay> = [];
-
     private var _migratingView:Bool = false;
-    private var _elementBorder:JQuery;
 
     @:isVar public var numChildren(get, null):Int;
-    @:isVar public var border(default, set):BorderStyle;
 
     public function new() {
         super();
-    }
-
-    @:noCompletion private function set_border(value:BorderStyle) {
-        this.border = value;
-
-        if (value == null) {
-            removeBorder();
-        } else {
-            applyBorder();
-        }
-
-        return value;
-    }
-
-    private function applyBorder():Void {
-        if (this._elementBorder == null) {
-            this._elementBorder = new JQuery('<div style="position:absolute;width:inherit;height:inherit;pointer-events:none;"></div>');
-
-            this.getElement().append(this._elementBorder);
-
-            this.addEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
-            this.addEventListener(PriEvent.ADDED, onAddRemoveUpdateBorder);
-            this.addEventListener(PriEvent.REMOVED, onAddRemoveUpdateBorder);
-       }
-
-        this._elementBorder.css("border", this.border.toString());
-
-        //this._elementBorder.css("top", this.getElement().scrollTop() + "px");
-        //this._elementBorder.css("left", this.getElement().scrollLeft() + "px");
-        //this._elementBorder.css("z-index", 888 - this.getDepthLevel());
-        //this.getElement().css("clip", "rect(0px, " + this.width + "px, " + this.height + "px, 0px)");
-
-        this.updateBorderDisplay();
-    }
-
-    private function onScrollUpdateBorder(e:PriEvent):Void {
-        this.updateBorderDisplay();
-    }
-
-    private function onAddRemoveUpdateBorder(e:PriEvent):Void {
-        this.updateBorderDisplay();
-    }
-
-    private function updateBorderDisplay():Void {
-        if (this._elementBorder != null) {
-            this._elementBorder.css("z-index", 888 - this.getDepthLevel());
-
-            //this.getElement().css("clip", "rect(0px, " + this.width + "px, " + this.height + "px, 0px)");
-
-            this._elementBorder.css("top", this.getElement().scrollTop() + "px");
-            this._elementBorder.css("left", this.getElement().scrollLeft() + "px");
-        }
-    }
-
-    private function removeBorder():Void {
-        if (_elementBorder != null) {
-            this.removeEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
-            this.removeEventListener(PriEvent.ADDED, onAddRemoveUpdateBorder);
-            this.removeEventListener(PriEvent.REMOVED, onAddRemoveUpdateBorder);
-
-            this._elementBorder.remove();
-            this._elementBorder = null;
-        }
     }
 
     @:noCompletion private function get_numChildren():Int {

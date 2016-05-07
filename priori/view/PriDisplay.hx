@@ -1,5 +1,7 @@
 package priori.view;
 
+import priori.event.PriEvent;
+import priori.style.border.PriBorderStyle;
 import haxe.extern.EitherType;
 import js.html.Element;
 import priori.event.PriMouseEvent;
@@ -30,6 +32,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var alpha(default, set):Float;
     @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
+    @:isVar public var border(default, set):PriBorderStyle;
 
     @:isVar public var bgColor(default, set):Int;
 
@@ -37,6 +40,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private var _priId:String;
     private var _element:JQuery;
+    private var _elementBorder:JQuery;
     private var _jselement:Element;
 
     private var _specialEventList:Array<String>;
@@ -58,6 +62,13 @@ class PriDisplay extends PriEventDispatcher {
         this.y = 0;
         this.width = 100;
         this.height = 100;
+
+        this.addEventListener(PriEvent.ADDED, __onAdded);
+    }
+
+    private function __onAdded(e:PriEvent):Void {
+        this.updateDepth();
+        this.updateBorderDisplay();
     }
 
     @:noCompletion private function set_corners(value:Array<Int>):Array<Int> {
@@ -82,6 +93,54 @@ class PriDisplay extends PriEventDispatcher {
 
 
         return value;
+    }
+
+    @:noCompletion private function set_border(value:PriBorderStyle) {
+        this.border = value;
+
+        if (value == null) {
+            removeBorder();
+        } else {
+            applyBorder();
+        }
+
+        return value;
+    }
+
+    private function applyBorder():Void {
+        if (this._elementBorder == null) {
+            this._elementBorder = new JQuery('<div style="position:absolute;width:inherit;height:inherit;pointer-events:none;"></div>');
+
+            this.getElement().append(this._elementBorder);
+
+            this.addEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
+        }
+
+        this._elementBorder.css("border", this.border.toString());
+
+        this.updateBorderDisplay();
+    }
+
+    private function onScrollUpdateBorder(e:PriEvent):Void {
+        this.updateBorderDisplay();
+    }
+
+    private function updateBorderDisplay():Void {
+        if (this._elementBorder != null) {
+            this._elementBorder.css("top", this.getElement().scrollTop() + "px");
+            this._elementBorder.css("left", this.getElement().scrollLeft() + "px");
+            this._elementBorder.css("border-radius", this.getElement().css("border-radius"));
+            this._elementBorder.css("z-index", this.getElement().css("z-index"));
+        }
+    }
+
+    private function removeBorder():Void {
+        if (_elementBorder != null) {
+            this.removeEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
+
+            this._elementBorder.remove();
+            this._elementBorder = null;
+        }
     }
 
     @:noCompletion private function get_clipping():Bool {
@@ -263,30 +322,18 @@ class PriDisplay extends PriEventDispatcher {
         return this._priId;
     }
 
-    public function getDepthLevel():Int {
-        var result:Int = 0;
-        var parent:Dynamic = this.parent;
+    public function updateDepth():Void {
+        var dep:Int = this.getElement().parents().length;
+        this.getElement().css("z-index", 1000 - dep);
+        if (this._elementBorder != null) this._elementBorder.css("z-index", 1000 - dep);
 
-        if (parent != null) {
-            result = 1;
-
-            result += parent.getDepthLevel();
-        }
-
-        return result;
     }
 
     public function getJSElement():Element {
-//        if (!this._jselement == null) this.createElement();
         return _jselement;
     }
 
     public function getElement():JQuery {
-//        if (this._element == null) {
-//            this._element = this.createElement();
-//            this.alpha = 1;
-//        }
-
         return this._element;
     }
 

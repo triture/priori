@@ -24,7 +24,7 @@ Optional Parameters:
 - -D : Any -D flag will be passed to the haxe compiler
 
 ## Instalation
-Requires [Haxe](http://haxe.org) 3.1.0+.
+Requires [Haxe](http://haxe.org) 3.2.1+.
 
 * **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`
 * **Step two:** install Priori lib: `haxelib install priori`
