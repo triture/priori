@@ -47,4 +47,13 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Full compatibilty for Android and IOs devices
 - Youtube, Vimeo and other video streaming (?) support
 - Better performance for PriDataGrid
+- Fix scroller on mobile devices
 - Several bug fixes
+
+## Changelog
+### 0.0.3 - 05/08/2016
+- Bugfix : cannot get values from disabled form elements
+- Improvements : Better border support. * Still need more tests.
+- Change Class names :
+    - BorderStyle to PriBorderStyle
+    - BorderType to PriBorderType

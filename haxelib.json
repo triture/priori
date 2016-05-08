@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Build Single Page Application only using Haxe",
-  "version": "0.0.2",
-  "releasenote": "Fully functional but many things are changing yet. * Audio fix",
+  "version": "0.0.3",
+  "releasenote": "Bugfix : cannot get values from disabled form elements; Improvements : Better border support. * Still need more tests.; Change Class names : BorderStyle to PriBorderStyle : BorderType to PriBorderType",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
