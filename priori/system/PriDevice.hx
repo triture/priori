@@ -35,12 +35,8 @@ class PriDevice {
         var navigator:Navigator = Browser.navigator;
         var userAgent:String = navigator.userAgent;
 
-        if(userAgent.indexOf("Macintosh") > -1) {
+        if (userAgent.indexOf("Macintosh") > -1) {
             return PriDeviceSystem.MAC;
-        } else if (userAgent.indexOf("Windows") > -1) {
-            return PriDeviceSystem.WINDOWS;
-        } else if (userAgent.indexOf("Linux") > -1) {
-            return PriDeviceSystem.LINUX;
         } else if (~/Android/i.match(userAgent)) {
             return PriDeviceSystem.ANDROID;
         } else if (~/BlackBerry/i.match(userAgent)) {
@@ -51,6 +47,10 @@ class PriDevice {
             return PriDeviceSystem.OPERAMINI;
         } else if (~/IEMobile|WPDesktop/i.match(userAgent)) {
             return PriDeviceSystem.WINDOWSMOBILE;
+        } else if (userAgent.indexOf("Linux") > -1) {
+            return PriDeviceSystem.LINUX;
+        } else if (userAgent.indexOf("Windows") > -1) {
+            return PriDeviceSystem.WINDOWS;
         }
 
         return PriDeviceSystem.UNKNOW;
