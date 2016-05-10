@@ -48,6 +48,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Youtube, Vimeo and other video streaming (?) support
 - Better performance for PriDataGrid
 - Fix scroller on mobile devices
+- Remove JQuery dependency for better performance
 - Several bug fixes
 
 ## Changelog
@@ -57,3 +58,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Change Class names :
     - BorderStyle to PriBorderStyle
     - BorderType to PriBorderType
+
+### 0.0.4 - 05/10/2016
+- Bugfix: Wrong detection for android devices;
+- Bugfix: Audio not loading on ios devices;

@@ -3,9 +3,9 @@
   "url": "https://github.com/triture/priori",
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
-  "description": "Build Single Page Application only using Haxe",
-  "version": "0.0.3",
-  "releasenote": "Bugfix : cannot get values from disabled form elements; Improvements : Better border support. * Still need more tests.; Change Class names : BorderStyle to PriBorderStyle : BorderType to PriBorderType",
+  "description": "Create Single-page web applications. HTML code not required ;)",
+  "version": "0.0.4",
+  "releasenote": "Bugfix: Wrong detection for android devices; Bugfix: Audio not loading on ios devices;",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
