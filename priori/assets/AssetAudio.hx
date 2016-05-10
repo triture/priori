@@ -1,5 +1,7 @@
 package priori.assets;
 
+import priori.system.PriDeviceSystem;
+import priori.system.PriDevice;
 import jQuery.Event;
 import priori.event.PriEvent;
 import jQuery.JQuery;
@@ -30,7 +32,12 @@ class AssetAudio extends Asset {
             var canPlayAny:Bool = false;
 
             if (dom.canPlayType != null) {
-                this._element.on("loadeddata", this._onLoadAudio);
+
+                if (PriDevice.g().deviceSystem() == PriDeviceSystem.IOS) {
+                    this._element.on("progress", this._onLoadAudio);
+                } else {
+                    this._element.on("loadeddata", this._onLoadAudio);
+                }
 
                 if (dom.canPlayType("audio/ogg;")) {
                     if (this.url != null && this.url != "") {
@@ -78,6 +85,7 @@ class AssetAudio extends Asset {
 
     private function _onErrorAudio(e:Event):Void {
         #if debug
+        trace("* AssetAudio Loading Error");
         trace(e);
         #end
         this._isLoading = false;
@@ -91,6 +99,10 @@ class AssetAudio extends Asset {
     }
 
     private function _onLoadAudio(e:Event):Void {
+        #if debug
+        trace("* AssetAudio Loaded");
+        trace(e);
+        #end
         this._isLoading = false;
         this._isLoaded = true;
 
