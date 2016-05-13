@@ -25,6 +25,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var centerY(get, set):Float;
     @:isVar public var maxX(get, set):Float;
     @:isVar public var maxY(get, set):Float;
+    @:isVar public var rotation(default, set):Float;
     @:isVar public var parent(get, null):PriContainer;
     @:isVar public var app(get, null):PriApp;
     @:isVar public var visible(get, set):Bool;
@@ -62,6 +63,7 @@ class PriDisplay extends PriEventDispatcher {
         this.y = 0;
         this.width = 100;
         this.height = 100;
+        this.rotation = 0;
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
@@ -109,7 +111,12 @@ class PriDisplay extends PriEventDispatcher {
 
     private function applyBorder():Void {
         if (this._elementBorder == null) {
-            this._elementBorder = new JQuery('<div style="position:absolute;width:inherit;height:inherit;pointer-events:none;"></div>');
+            this._elementBorder = new JQuery('<div style="
+                box-sizing:border-box !important;
+                position:absolute;
+                width:inherit;
+                height:inherit;
+                pointer-events:none;"></div>');
 
             this.getElement().append(this._elementBorder);
 
@@ -261,6 +268,24 @@ class PriDisplay extends PriEventDispatcher {
 
     @:noCompletion private function get_y():Float {
         return this.getElement().position().top;
+    }
+
+    @:noCompletion private function set_rotation(value:Float):Float {
+        var val:Float = value > 360 ? value = value % 360 : value;
+
+        this.rotation = val;
+
+        this.__applyMatrixTransformation();
+
+        return value;
+    }
+
+    private function __applyMatrixTransformation():Void {
+        var angle:Float = this.rotation;
+        var aSin:Float = Math.sin(angle);
+        var aCos:Float = Math.cos(angle);
+        var sx:Float = 1.5;
+        var sy:Float = 1.5;
     }
 
     @:noCompletion private function set_alpha(value:Float) {
@@ -566,9 +591,7 @@ class PriDisplay extends PriEventDispatcher {
 
 
     private function createElement():Void {
-//        var element:JQuery = PrioriRun JQuery('<div prioriid="$_priId" class="priori_noselect" style="position:absolute;margin:0px;padding:0px;overflow:hidden;"></div>');
-//
-//        var element:JQuery = PrioriRun JQuery(js.Browser.document.createElement("div"));
+        
         var jsElement:Element = js.Browser.document.createElement("div");
         jsElement.setAttribute("id", this._priId);
         jsElement.setAttribute("prioriid", this._priId);
@@ -578,11 +601,6 @@ class PriDisplay extends PriEventDispatcher {
         this._jselement = jsElement;
         this._element = new JQuery(jsElement);
 
-//        element.attr("prioriid", this._priId);
-//        element.attr("class", "priori_noselect");
-//        element.attr("style", "position:absolute;margin:0px;padding:0px;overflow:hidden;");
-//
-//        return (PrioriRun JQuery(jsElement));
     }
 
     public function removeFromParent():Void {

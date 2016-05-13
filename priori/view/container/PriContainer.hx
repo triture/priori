@@ -50,7 +50,7 @@ class PriContainer extends PriDisplay {
         }
 
         this._childList.push(child);
-        this.getElement().append(child.getElement());
+        this._jselement.appendChild(child.getJSElement());
 
         if (this.disabled) {
             child.getElement().attr("disabled", "disabled");

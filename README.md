@@ -30,9 +30,9 @@ Requires [Haxe](http://haxe.org) 3.2.1+.
 * **Step two:** install Priori lib: `haxelib install priori`
 
 You can also install aditional priori libs:
-- [Bootstrap for Priori](https://github.com/triture/priori-bootstrap): `haxelib install priori-bootstrap`
-- [Font Awesome for Priori](https://github.com/triture/priori-fontawesome): `haxelib install priori-fontawesome`
-- [Scene Manager for Priori](https://github.com/triture/priori-scenemanager): `haxelib install priori-scenemanager`
+- [Bootstrap for Priori](https://github.com/triture/priori-bootstrap): `haxelib install priori-bootstrap`  
+- [Font Awesome for Priori](https://github.com/triture/priori-fontawesome): `haxelib install priori-fontawesome`  
+- [Scene Manager for Priori](https://github.com/triture/priori-scenemanager): `haxelib install priori-scenemanager`  
 
 ## Priori Example Project
 Check out some Priori [examples](https://github.com/triture/priori-example).
