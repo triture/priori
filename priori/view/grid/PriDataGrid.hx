@@ -47,8 +47,6 @@ class PriDataGrid extends PriGroup {
 
     private var __rowAutoSize:Bool;
 
-//    private var __mouseIsOnGrid:Bool;
-
     private var sort:PriGridColumnSort;
 
     private var __renderRowIndexStart:Int;
@@ -377,8 +375,6 @@ class PriDataGrid extends PriGroup {
 
         var sortedList:Array<Dynamic> = this.sort.sort(value.copy());
 
-        //this.__data_waitingInsertion = this.sort.sort(value.copy());
-
         this.data = sortedList.copy();
 
         this.generateRows();
@@ -462,23 +458,25 @@ class PriDataGrid extends PriGroup {
 
             this.__data_waitingInsertion = [];
 
-            trace("** ", i, n, totalItens);
-
             while (i < n) {
                 this.__data_waitingInsertion.push(this.data[i]);
 
                 i++;
             }
 
-            this.generateRowsBatch();
+            // set all rows to pool
+            this.__pooledRows = this.__usedRows.concat(this.__pooledRows);
+            this.__usedRows = [];
+
+            this.generateRowsBatch(this.__renderRowIndexStart);
         }
     }
 
-    private function generateRowsBatch():Void {
-//        this.killInsertionTimer();
-//
-//        var maxTime:Float = 1000/20;
-//        var startTime:Float = Date.now().getTime();
+    private function generateRowsBatch(indexStart:Int):Void {
+        this.killInsertionTimer();
+
+        var maxTime:Float = 150;
+        var startTime:Float = Date.now().getTime();
 
         var i:Int = 0;
         var n:Int = this.__data_waitingInsertion.length;
@@ -487,32 +485,23 @@ class PriDataGrid extends PriGroup {
         var rowSizes:PriGridColumnSize = PriGridColumnSize.calculate(this.width, this.columns);
         var rowHeightCalculated = this.calculateRowHeight();
 
-        var rowsOnScreen:Array<PriGridRow> = this.__usedRows.copy();
-
-        this.__usedRows = [];
-
         while (i < n) {
             var item:Dynamic = this.__data_waitingInsertion.shift();
-            var itemIndex:Int = i + this.__renderRowIndexStart;
 
-            if (rowsOnScreen.length > 0) {
-                gridRow = rowsOnScreen.shift();
+            if (this.__pooledRows.length > 0) {
+                gridRow = this.__pooledRows.shift();
             } else {
-                if (this.__pooledRows.length > 0) {
-                    gridRow = this.__pooledRows.shift();
-                } else {
-                    gridRow = new PriGridRow();
-                }
+                gridRow = new PriGridRow();
             }
 
-
             this.__usedRows.push(gridRow);
+
             gridRow.applyPreCalcColumns(rowSizes);
-            gridRow.rowIndex = itemIndex;
+            gridRow.rowIndex = indexStart;
             gridRow.columns = this.columns;
             gridRow.data = item;
             gridRow.width = this.width;
-            gridRow.height = i == n-1 ? rowHeightCalculated.last : rowHeightCalculated.all;
+            gridRow.height = indexStart == this.data.length-1 ? rowHeightCalculated.last : rowHeightCalculated.all;
             gridRow.selection = this.selection;
             gridRow.pointer = this.rowPointer;
 
@@ -521,24 +510,25 @@ class PriDataGrid extends PriGroup {
             gridRow.validate();
 
             i++;
+            indexStart++;
 
-//            if (this.asyncRow == true && (Date.now().getTime() - startTime) > maxTime) {
-//                i = n;
-//            }
+            if (this.asyncRow == true && (Date.now().getTime() - startTime) > maxTime) {
+                i = n;
+            }
         }
 
         // REMOVE UNUSED ROWS
-        this.removeRows(rowsOnScreen);
-
         this.organizeRowPosition();
 
-//        if (this.__data_waitingInsertion.length > 0) {
-//            this.__timer_insetionFlow = Timer.delay(function():Void {
-//                this.generateRowsBatch();
-//            }, PriApp.g().getMSUptate());
-//        } else {
-//            trace("Grid Rendering Time : " + (Date.now().getTime() - this.timeStart));
-//        }
+        if (this.__data_waitingInsertion.length > 0) {
+            this.__timer_insetionFlow = Timer.delay(function():Void {
+                this.generateRowsBatch(indexStart);
+            }, PriApp.g().getMSUptate());
+        } else {
+            this.removeRows(this.__pooledRows);
+
+            trace("Grid Rendering Time : " + (Date.now().getTime() - this.timeStart));
+        }
     }
 
     private function killInsertionTimer():Void {
@@ -583,40 +573,4 @@ class PriDataGrid extends PriGroup {
 
         super.kill();
     }
-
-
-//    private function __onGridOver(e:PriMouseEvent):Void {
-//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onGridOver);
-//        this.__mouseIsOnGrid = true;
-//        this.activeMouseOverOnRows();
-//        this.addEventListener(PriMouseEvent.MOUSE_OUT, this.__onGridOut);
-//    }
-//
-//    private function __onGridOut(e:PriMouseEvent):Void {
-//        this.removeEventListener(PriMouseEvent.MOUSE_OUT, this.__onGridOut);
-//        this.__mouseIsOnGrid = false;
-//        this.removeMouseOverOnRows();
-//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onGridOver);
-//    }
-//
-//    private function activeMouseOverOnRows():Void {
-//        var i:Int = 0;
-//        var n:Int = this.__usedRows.length;
-//
-//        while (i < n) {
-//            this.__usedRows[i].activateRowOver();
-//            i++;
-//        }
-//    }
-//
-//    private function removeMouseOverOnRows():Void {
-//        var i:Int = 0;
-//        var n:Int = this.__usedRows.length;
-//
-//        while (i < n) {
-//            this.__usedRows[i].removeRowOver();
-//            i++;
-//        }
-//    }
-
 }
