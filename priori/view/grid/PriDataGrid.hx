@@ -1,5 +1,7 @@
 package priori.view.grid;
 
+import priori.event.PriEvent;
+import priori.event.PriMouseEvent;
 import priori.app.PriApp;
 import haxe.Timer;
 import priori.view.grid.column.PriGridColumnSort;
@@ -45,7 +47,12 @@ class PriDataGrid extends PriGroup {
 
     private var __rowAutoSize:Bool;
 
+//    private var __mouseIsOnGrid:Bool;
+
     private var sort:PriGridColumnSort;
+
+    private var __renderRowIndexStart:Int;
+    private var __renderRowIndexEnd:Int;
 
     @:isVar public var scrollY(get, set):Float;
     @:isVar public var maxScrollY(get, null):Float;
@@ -63,6 +70,10 @@ class PriDataGrid extends PriGroup {
 
         this.header = new PriGridHeader();
         this.scrollerContainer = new PriScrollableContainer();
+        this.scrollerContainer.addEventListener(PriEvent.SCROLL, onScroll);
+
+        this.__renderRowIndexStart = -1;
+        this.__renderRowIndexEnd = -1;
 
         this.__data_originalList = [];
         this.__data_waitingInsertion = [];
@@ -86,6 +97,7 @@ class PriDataGrid extends PriGroup {
 
 
         this.addEventListener(PriDataGridEvent.SORT, this.onDataGridSort);
+//        this.addEventListener(PriMouseEvent.MOUSE_OVER, __onGridOver);
     }
 
     @:noCompletion private function set_scrollY(value:Float) {
@@ -137,6 +149,7 @@ class PriDataGrid extends PriGroup {
         this.scrollerContainer.width = this.width;
         this.scrollerContainer.height = this.height - this.headerHeight;
 
+        this.generateRows();
         this.organizeRowPosition();
 
         var i:Int = 0;
@@ -168,19 +181,20 @@ class PriDataGrid extends PriGroup {
 
         while (i < n) {
 
+            var index:Int = this.__usedRows[i].rowIndex;
+
             if (this.horizontalGridLines) {
-                this.__usedRows[i].y = (rowHeightCalculated.all + 1) * i;
+                this.__usedRows[i].y = (rowHeightCalculated.all + 1) * index;
             } else {
-                this.__usedRows[i].y = rowHeightCalculated.all * i;
+                this.__usedRows[i].y = rowHeightCalculated.all * index;
             }
 
-            this.__usedRows[i].height = i == n-1 ? rowHeightCalculated.last : rowHeightCalculated.all;
-            this.__usedRows[i].rowColor = this.rowColorSequence[i % this.rowColorSequence.length];
+            this.__usedRows[i].height = index == n-1 ? rowHeightCalculated.last : rowHeightCalculated.all;
+            this.__usedRows[i].rowColor = this.rowColorSequence[index % this.rowColorSequence.length];
 
             i++;
         }
 
-        // TODO verificar se é melhor ja setar a rolagem para o tamanho final
         if (this.data == null) n = 0 else n = this.data.length;
 
         if (this.horizontalGridLines) {
@@ -356,10 +370,16 @@ class PriDataGrid extends PriGroup {
 
 
     @:noCompletion private function set_data(value:Array<Dynamic>):Array<Dynamic> {
-        this.__data_originalList = value;
-        this.__data_waitingInsertion = this.sort.sort(value.copy());
+        this.__renderRowIndexStart = -1;
+        this.__renderRowIndexEnd = -1;
 
-        this.data = this.__data_waitingInsertion.copy();
+        this.__data_originalList = value;
+
+        var sortedList:Array<Dynamic> = this.sort.sort(value.copy());
+
+        //this.__data_waitingInsertion = this.sort.sort(value.copy());
+
+        this.data = sortedList.copy();
 
         this.generateRows();
         return value;
@@ -413,17 +433,52 @@ class PriDataGrid extends PriGroup {
 
     private var timeStart:Float;
 
+    private function onScroll(e:PriEvent):Void {
+        this.generateRows();
+    }
+
     private function generateRows():Void {
-        this.removeRows();
-        this.timeStart = Date.now().getTime();
-        this.generateRowsBatch();
+        var scrollPos:Float = this.scrollerContainer.scrollY;
+        var viewHeight:Float = this.scrollerContainer.height;
+
+        var itemHeight:Float = this.calculateRowHeight().all + (this.horizontalGridLines ? 1 : 0);
+        var totalItens:Int = this.data == null ? 0 : this.data.length;
+
+        var offsetItens:Int = 4;
+        var itensPerView:Int = Math.floor(viewHeight / itemHeight) + offsetItens;
+
+        var i:Int = 0;
+        var n:Int = 0;
+
+        i = Math.floor((scrollPos / itemHeight) - offsetItens/2);
+        n = i + itensPerView;
+
+        if (i < 0) i = 0;
+        if (n > totalItens) n = totalItens;
+
+        if (i != this.__renderRowIndexStart || n != this.__renderRowIndexEnd) {
+            this.__renderRowIndexStart = i;
+            this.__renderRowIndexEnd = n;
+
+            this.__data_waitingInsertion = [];
+
+            trace("** ", i, n, totalItens);
+
+            while (i < n) {
+                this.__data_waitingInsertion.push(this.data[i]);
+
+                i++;
+            }
+
+            this.generateRowsBatch();
+        }
     }
 
     private function generateRowsBatch():Void {
-        this.killInsertionTimer();
-
-        var maxTime:Float = 1000/20;
-        var startTime:Float = Date.now().getTime();
+//        this.killInsertionTimer();
+//
+//        var maxTime:Float = 1000/20;
+//        var startTime:Float = Date.now().getTime();
 
         var i:Int = 0;
         var n:Int = this.__data_waitingInsertion.length;
@@ -432,18 +487,28 @@ class PriDataGrid extends PriGroup {
         var rowSizes:PriGridColumnSize = PriGridColumnSize.calculate(this.width, this.columns);
         var rowHeightCalculated = this.calculateRowHeight();
 
+        var rowsOnScreen:Array<PriGridRow> = this.__usedRows.copy();
+
+        this.__usedRows = [];
+
         while (i < n) {
             var item:Dynamic = this.__data_waitingInsertion.shift();
+            var itemIndex:Int = i + this.__renderRowIndexStart;
 
-            if (this.__pooledRows.length > 0) {
-                gridRow = this.__pooledRows.shift();
+            if (rowsOnScreen.length > 0) {
+                gridRow = rowsOnScreen.shift();
             } else {
-                gridRow = new PriGridRow();
+                if (this.__pooledRows.length > 0) {
+                    gridRow = this.__pooledRows.shift();
+                } else {
+                    gridRow = new PriGridRow();
+                }
             }
+
 
             this.__usedRows.push(gridRow);
             gridRow.applyPreCalcColumns(rowSizes);
-            gridRow.rowIndex = this.__usedRows.length-1;
+            gridRow.rowIndex = itemIndex;
             gridRow.columns = this.columns;
             gridRow.data = item;
             gridRow.width = this.width;
@@ -451,25 +516,29 @@ class PriDataGrid extends PriGroup {
             gridRow.selection = this.selection;
             gridRow.pointer = this.rowPointer;
 
-            this.__rowContainer.addChild(gridRow);
+            if (gridRow.parent == null) this.__rowContainer.addChild(gridRow);
+
             gridRow.validate();
 
             i++;
 
-            if (this.asyncRow == true && (Date.now().getTime() - startTime) > maxTime) {
-                i = n;
-            }
+//            if (this.asyncRow == true && (Date.now().getTime() - startTime) > maxTime) {
+//                i = n;
+//            }
         }
+
+        // REMOVE UNUSED ROWS
+        this.removeRows(rowsOnScreen);
 
         this.organizeRowPosition();
 
-        if (this.__data_waitingInsertion.length > 0) {
-            this.__timer_insetionFlow = Timer.delay(function():Void {
-                this.generateRowsBatch();
-            }, PriApp.g().getMSUptate());
-        } else {
-            trace("Grid Rendering Time : " + (Date.now().getTime() - this.timeStart));
-        }
+//        if (this.__data_waitingInsertion.length > 0) {
+//            this.__timer_insetionFlow = Timer.delay(function():Void {
+//                this.generateRowsBatch();
+//            }, PriApp.g().getMSUptate());
+//        } else {
+//            trace("Grid Rendering Time : " + (Date.now().getTime() - this.timeStart));
+//        }
     }
 
     private function killInsertionTimer():Void {
@@ -479,19 +548,22 @@ class PriDataGrid extends PriGroup {
         }
     }
 
-    private function removeRows():Void {
+    private function removeRows(rowListToRemove:Array<PriGridRow> = null):Void {
         this.killInsertionTimer();
 
+        var rowList:Array<PriGridRow> = rowListToRemove == null ? this.__usedRows : rowListToRemove;
+
         var i:Int = 0;
-        var n:Int = this.__usedRows.length;
+        var n:Int = rowList.length;
 
         while (i < n) {
-            this.__rowContainer.removeChild(this.__usedRows[i]);
+
+            var item:PriGridRow = rowList.shift();
+            this.__pooledRows.push(item);
+            this.__rowContainer.removeChild(item);
+
             i++;
         }
-
-        this.__pooledRows = this.__pooledRows.concat(this.__usedRows);
-        this.__usedRows = [];
     }
 
     override public function kill():Void {
@@ -511,5 +583,40 @@ class PriDataGrid extends PriGroup {
 
         super.kill();
     }
+
+
+//    private function __onGridOver(e:PriMouseEvent):Void {
+//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onGridOver);
+//        this.__mouseIsOnGrid = true;
+//        this.activeMouseOverOnRows();
+//        this.addEventListener(PriMouseEvent.MOUSE_OUT, this.__onGridOut);
+//    }
+//
+//    private function __onGridOut(e:PriMouseEvent):Void {
+//        this.removeEventListener(PriMouseEvent.MOUSE_OUT, this.__onGridOut);
+//        this.__mouseIsOnGrid = false;
+//        this.removeMouseOverOnRows();
+//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onGridOver);
+//    }
+//
+//    private function activeMouseOverOnRows():Void {
+//        var i:Int = 0;
+//        var n:Int = this.__usedRows.length;
+//
+//        while (i < n) {
+//            this.__usedRows[i].activateRowOver();
+//            i++;
+//        }
+//    }
+//
+//    private function removeMouseOverOnRows():Void {
+//        var i:Int = 0;
+//        var n:Int = this.__usedRows.length;
+//
+//        while (i < n) {
+//            this.__usedRows[i].removeRowOver();
+//            i++;
+//        }
+//    }
 
 }

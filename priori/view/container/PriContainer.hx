@@ -74,7 +74,8 @@ class PriContainer extends PriDisplay {
             var viewHasAppBefore:Bool = child.hasApp();
 
             this._childList.remove(child);
-            child.getElement().remove();
+            this._jselement.removeChild(child.getJSElement());
+            //child.getElement().remove();
 
             if (viewHasAppBefore) {
                 child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));

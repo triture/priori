@@ -27,11 +27,20 @@ class PriGridCellRenderer extends PriGroup {
         super();
 
         this.addEventListener(PriEvent.CHANGE, this.__onCellDataChange);
-        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
         this.addEventListener(PriTapEvent.TAP, this.__onTap);
+        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
         this.pointer = false;
         this.clipping = false;
     }
+
+//    public function activateCellOver():Void {
+//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
+//    }
+//
+//    public function removeCellOver():Void {
+//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
+//    }
+
 
     private function __onTap(e:PriTapEvent):Void {
         var event:PriDataGridEvent = new PriDataGridEvent(PriDataGridEvent.GRID_CLICK, false, true, this.data);
@@ -45,6 +54,8 @@ class PriGridCellRenderer extends PriGroup {
         var event:PriDataGridEvent = new PriDataGridEvent(PriDataGridEvent.CELL_OVER, false, true, this.data);
         event.colIndex = this.colIndex;
         event.rowIndex = this.rowIndex;
+
+//        trace(this.colIndex, this.rowIndex);
 
         this.dispatchEvent(event);
     }

@@ -27,7 +27,6 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var maxY(get, set):Float;
     @:isVar public var rotation(default, set):Float;
     @:isVar public var parent(get, null):PriContainer;
-    @:isVar public var app(get, null):PriApp;
     @:isVar public var visible(get, set):Bool;
     @:isVar public var disabled(get, set):Bool;
     @:isVar public var alpha(default, set):Float;
@@ -253,21 +252,53 @@ class PriDisplay extends PriEventDispatcher {
 
 
     @:noCompletion private function set_x(value:Float) {
-        this.setCSS("left", Std.int(value) + "px");
+
+//        JQUERY WAY
+//        this.setCSS("left", Math.round(value) + "px");
+
+//        DOM WAY
+        this.getJSElement().style.left = untyped value.toString(10) + "px";
+
         return value;
     }
 
     @:noCompletion private function get_x():Float {
-        return this.getElement().position().left;
+        return Std.parseInt(this.getJSElement().style.left.split("px")[0]);
+//        return this.getElement().position().left;
     }
 
     @:noCompletion private function set_y(value:Float) {
-        this.setCSS("top", Std.int(value) + "px");
+
+//        JQUERY WAY
+//        this.setCSS("top", Math.round(value) + "px");
+
+
+//        DOM WAY
+        this.getJSElement().style.top = untyped value.toString(10) + "px";
+
+//        DOM ALTERNATIVE
+//        var val:String = untyped value.toString(10);
+//        var styleVal:String = this.getJSElement().getAttribute("style");
+//
+//        if (styleVal.indexOf("top") == -1) {
+//            styleVal += "; top:" + val + "px;";
+//        } else {
+//            var styleValList:Array<String> = styleVal.split("top");
+//            var pxIndex:Int = styleValList[1].indexOf("px");
+//            styleValList[1] = styleValList[1].substr(pxIndex+2);
+//
+//            styleVal = styleValList.join("top:" + val + "px");
+//        }
+//
+//        this.getJSElement().setAttribute("style", styleVal);
+
+
         return value;
     }
 
     @:noCompletion private function get_y():Float {
-        return this.getElement().position().top;
+        return Std.parseInt(this.getJSElement().style.top.split("px")[0]);
+//        return this.getElement().position().top;
     }
 
     @:noCompletion private function set_rotation(value:Float):Float {
@@ -295,40 +326,12 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function hasApp():Bool {
-        var result:Bool = false;
-
-        if (this.app != null) result = true;
-
-        return result;
+        var priAppId:String = PriApp.g().getPrid();
+        if (this.getElement().parents("#" + priAppId).length > 0) return true;
+        return false;
     }
 
-    @:noCompletion private function get_app():PriApp {
-        var result:PriApp = null;
-
-        var lastDisplay:PriDisplay = this;
-        var reachTop:Bool = false;
-
-        while (reachTop == false) {
-            lastDisplay = getParentFromObject(lastDisplay);
-
-            if (lastDisplay == null) {
-                reachTop = true;
-            } else {
-                if (Std.is(lastDisplay, PriApp)) {
-                    reachTop = true;
-                    result = cast(lastDisplay, PriApp);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private function getParentFromObject(object:PriDisplay):PriContainer {
-        return object.parent;
-    }
-
-    public function get_parent():PriContainer {
+    @:noCompletion private function get_parent():PriContainer {
         var result:PriContainer = null;
         var parentPrioriId:String;
         var parentJQ:JQuery = this.getElement().parent("["+PRIORI_ID_NAME+"]");

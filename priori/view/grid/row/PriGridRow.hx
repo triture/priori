@@ -1,5 +1,6 @@
 package priori.view.grid.row;
 
+//import priori.event.PriMouseEvent;
 import priori.event.PriEvent;
 import priori.view.grid.column.PriGridColumnSize;
 import priori.view.grid.column.PriGridColumn;
@@ -25,6 +26,36 @@ class PriGridRow extends PriGroup {
         this.clipping = false;
         this.rowColor = 0xFFFFFF;
     }
+
+//    public function activateRowOver():Void {
+//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onRowOver);
+//        this.addEventListener(PriMouseEvent.MOUSE_OUT, this.__onRowOut);
+//    }
+//
+//    public function removeRowOver():Void {
+//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onRowOver);
+//        this.removeEventListener(PriMouseEvent.MOUSE_OUT, this.__onRowOut);
+//    }
+//
+//    private function __onRowOver(e:PriMouseEvent):Void {
+//        var i:Int = 0;
+//        var n:Int = this.cellList.length;
+//
+//        while (i < n) {
+//            this.cellList[i].activateCellOver();
+//            i++;
+//        }
+//    }
+//
+//    private function __onRowOut(e:PriMouseEvent):Void {
+//        var i:Int = 0;
+//        var n:Int = this.cellList.length;
+//
+//        while (i < n) {
+//            this.cellList[i].removeCellOver();
+//            i++;
+//        }
+//    }
 
     override private function setup():Void {
 
