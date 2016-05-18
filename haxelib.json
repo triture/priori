@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Create Single-page web applications. HTML code not required ;)",
-  "version": "0.0.4",
-  "releasenote": "Bugfix: Wrong detection for android devices; Bugfix: Audio not loading on ios devices;",
+  "version": "0.0.5",
+  "releasenote": "Improvements : Better performance for PriDataGrid - thousands of rows working fine",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""

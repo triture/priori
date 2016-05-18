@@ -26,8 +26,8 @@ Optional Parameters:
 ## Instalation
 Requires [Haxe](http://haxe.org) 3.2.1+.
 
-* **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`
-* **Step two:** install Priori lib: `haxelib install priori`
+* **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`  
+* **Step two:** install Priori lib: `haxelib install priori`  
 
 You can also install aditional priori libs:
 - [Bootstrap for Priori](https://github.com/triture/priori-bootstrap): `haxelib install priori-bootstrap`  
@@ -37,28 +37,33 @@ You can also install aditional priori libs:
 ## Priori Example Project
 Check out some Priori [examples](https://github.com/triture/priori-example).
 
-## Priori Roadmap for 1.0.0 Release Version
+## Priori Roadmap for 1.0.0 Release Version  
 - Full Documentation
 - Rotation property for PriDisplay
 - Scale property for PriDisplay
 - 9 Slice Images
 - Background Images
-- Better Border Support (Current version is buggy)
+- ~~Better Border Support (Current version is buggy)~~ **Done**
 - Full compatibilty for Android and IOs devices
 - Youtube, Vimeo and other video streaming (?) support
-- Better performance for PriDataGrid
-- Fix scroller on mobile devices
+- ~~Better performance for PriDataGrid~~ **Done**
+- ~~Fix scroller on mobile devices~~ **Done**
 - Remove JQuery dependency for better performance
+- Better accessibility for Priori Apps
 - Several bug fixes
 
 ## Changelog
-### 0.0.3 - 05/08/2016
-- Bugfix : cannot get values from disabled form elements
-- Improvements : Better border support. * Still need more tests.
-- Change Class names :
-    - BorderStyle to PriBorderStyle
-    - BorderType to PriBorderType
+### 0.0.3 - 05/08/2016  
+- Bugfix : cannot get values from disabled form elements  
+- Improvements : Better border support. * Still need more tests  
+- Change Class names :  
+    - BorderStyle to PriBorderStyle  
+    - BorderType to PriBorderType  
 
-### 0.0.4 - 05/10/2016
-- Bugfix: Wrong detection for android devices;
-- Bugfix: Audio not loading on ios devices;
+### 0.0.4 - 05/10/2016  
+- Bugfix: Wrong detection for android devices  
+- Bugfix: Audio not loading on ios devices  
+
+### 0.0.5 - 05/18/2016  
+- Improvements : Better performance for PriDataGrid - thousands of rows working fine [working fine](http://priori.triture.com/example)  
+- Some smallfixs  
