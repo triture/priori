@@ -41,7 +41,11 @@ class PriApp extends PriGroup {
 
         super();
 
+        #if debug
         trace("** PRIORI APP **");
+        trace("Device : ", priori.system.PriDevice.g().deviceSystem());
+        trace("Browser : ", priori.system.PriDevice.g().browser());
+        #end
 
         this.setupApp();
     }

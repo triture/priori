@@ -22,11 +22,11 @@ class PriGridColumnSort {
             return data;
         }
 
+        var direction:Int = this.order == PriGridColumnSortOrder.ASC ? 1 : -1;
+
         data.sort(function(x:Dynamic, y:Dynamic):Int {
             var vx:Dynamic;
             var vy:Dynamic;
-
-            var direction:Int = this.order == PriGridColumnSortOrder.ASC ? 1 : -1;
 
             vx = Reflect.getProperty(x, this.dataField);
             vy = Reflect.getProperty(y, this.dataField);

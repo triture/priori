@@ -1,5 +1,7 @@
 package priori.view.grid;
 
+import priori.system.PriDeviceBrowser;
+import priori.system.PriDevice;
 import priori.event.PriEvent;
 import priori.event.PriMouseEvent;
 import priori.app.PriApp;
@@ -39,6 +41,8 @@ class PriDataGrid extends PriGroup {
     private var scrollerContainer:PriScrollableContainer;
 
     private var __timer_insetionFlow:Timer;
+    private var __timer_timeToGenerate:Timer;
+
     private var __data_originalList:Array<Dynamic>;
     private var __data_waitingInsertion:Array<Dynamic>;
     private var __rowContainer:PriContainer;
@@ -95,7 +99,6 @@ class PriDataGrid extends PriGroup {
 
 
         this.addEventListener(PriDataGridEvent.SORT, this.onDataGridSort);
-//        this.addEventListener(PriMouseEvent.MOUSE_OVER, __onGridOver);
     }
 
     @:noCompletion private function set_scrollY(value:Float) {
@@ -338,10 +341,6 @@ class PriDataGrid extends PriGroup {
         return value;
     }
 
-    private function updateGridLines():Void {
-
-    }
-
     @:noCompletion private function set_rowHeight(value:Float):Float {
         this.rowHeight = value;
 
@@ -433,7 +432,30 @@ class PriDataGrid extends PriGroup {
         this.generateRows();
     }
 
+    private var lastRenderTime:Float = 0;
+
     private function generateRows():Void {
+        if (this.__timer_timeToGenerate != null) {
+            this.__timer_timeToGenerate.stop();
+            this.__timer_timeToGenerate = null;
+        }
+
+        // todo : another way to better performance on firefox ???
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Performance/Scroll-linked_effects
+        if (PriDevice.g().browser() == PriDeviceBrowser.MOZILLA) {
+            if (Date.now().getTime() - this.lastRenderTime > 300) {
+                this.generateRowsRun();
+            } else {
+                this.__timer_timeToGenerate = haxe.Timer.delay(this.generateRowsRun, 30);
+            }
+        } else {
+            this.generateRowsRun();
+        }
+    }
+
+    private function generateRowsRun():Void {
+        this.lastRenderTime = Date.now().getTime();
+
         var scrollPos:Float = this.scrollerContainer.scrollY;
         var viewHeight:Float = this.scrollerContainer.height;
 
@@ -465,7 +487,10 @@ class PriDataGrid extends PriGroup {
             }
 
             // set all rows to pool
-            this.__pooledRows = this.__usedRows.concat(this.__pooledRows);
+            for (j in 0...this.__usedRows.length) {
+                this.__pooledRows.unshift(this.__usedRows[j]);
+            }
+
             this.__usedRows = [];
 
             this.generateRowsBatch(this.__renderRowIndexStart);
@@ -527,7 +552,9 @@ class PriDataGrid extends PriGroup {
         } else {
             this.removeRows(this.__pooledRows);
 
+            #if debug
             trace("Grid Rendering Time : " + (Date.now().getTime() - this.timeStart));
+            #end
         }
     }
 
@@ -558,6 +585,11 @@ class PriDataGrid extends PriGroup {
 
     override public function kill():Void {
         removeRows();
+
+        if (this.__timer_timeToGenerate != null) {
+            this.__timer_timeToGenerate.stop();
+            this.__timer_timeToGenerate = null;
+        }
 
         var i:Int = 0;
         var n:Int = this.__pooledRows.length;

@@ -7,28 +7,35 @@ class PriDevice {
 
     private static var _g:PriDevice;
 
+    private var _detectedBrowser:PriDeviceBrowser = null;
+
     public function new() {
         _g = this;
     }
 
 
     public function browser():PriDeviceBrowser {
-        var navigator:Navigator = Browser.navigator;
-        var userAgent:String = navigator.userAgent;
+        if (this._detectedBrowser == null) {
 
-        if(userAgent.indexOf("Chrome") > -1) {
-            return PriDeviceBrowser.CHROME;
-        } else if (userAgent.indexOf("Safari") > -1) {
-            return PriDeviceBrowser.SAFARI;
-        } else if (userAgent.indexOf("Opera") > -1) {
-            return PriDeviceBrowser.OPERA;
-        } else if (userAgent.indexOf("Firefox") > -1) {
-            return PriDeviceBrowser.MOZILLA;
-        } else if (userAgent.indexOf("MSIE") > -1) {
-            return PriDeviceBrowser.MSIE;
+            var navigator:Navigator = Browser.navigator;
+            var userAgent:String = navigator.userAgent;
+
+            if(userAgent.indexOf("Chrome") > -1) {
+                this._detectedBrowser = PriDeviceBrowser.CHROME;
+            } else if (userAgent.indexOf("Safari") > -1) {
+                this._detectedBrowser = PriDeviceBrowser.SAFARI;
+            } else if (userAgent.indexOf("Opera") > -1) {
+                this._detectedBrowser = PriDeviceBrowser.OPERA;
+            } else if (userAgent.indexOf("Firefox") > -1) {
+                this._detectedBrowser = PriDeviceBrowser.MOZILLA;
+            } else if (userAgent.indexOf("MSIE") > -1) {
+                this._detectedBrowser = PriDeviceBrowser.MSIE;
+            } else {
+                this._detectedBrowser = PriDeviceBrowser.UNKNOW;
+            }
         }
 
-        return PriDeviceBrowser.UNKNOW;
+        return this._detectedBrowser;
     }
 
     public function deviceSystem():PriDeviceSystem {
