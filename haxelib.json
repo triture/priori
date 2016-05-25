@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Create Single-page web applications. HTML code not required ;)",
-  "version": "0.0.5",
-  "releasenote": "Improvements : Better performance for PriDataGrid - thousands of rows working fine",
+  "version": "0.1.0",
+  "releasenote": "New Feature : PriNineSlice component for nine-sliced images!",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""

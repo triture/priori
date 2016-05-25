@@ -23,19 +23,19 @@ Optional Parameters:
 - -p : source path
 - -D : Any -D flag will be passed to the haxe compiler
 
-## Instalation
+## Instalation  
 Requires [Haxe](http://haxe.org) 3.2.1+.
 
 * **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`  
 * **Step two:** install Priori lib: `haxelib install priori`  
 
-You can also install aditional priori libs:
+You can also install aditional priori libs:  
 - [Bootstrap for Priori](https://github.com/triture/priori-bootstrap): `haxelib install priori-bootstrap`  
 - [Font Awesome for Priori](https://github.com/triture/priori-fontawesome): `haxelib install priori-fontawesome`  
 - [Scene Manager for Priori](https://github.com/triture/priori-scenemanager): `haxelib install priori-scenemanager`  
 
 ## Priori Example Project
-Check out some Priori [examples](https://github.com/triture/priori-example).
+Check out some Priori [examples](https://github.com/triture/priori-example).  
 
 ## Priori Roadmap for 1.0.0 Release Version  
 - Full Documentation
@@ -50,6 +50,9 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - ~~Fix scroller on mobile devices~~ **Done**
 - Remove JQuery dependency for better performance
 - Better accessibility for Priori Apps
+- Better support for Mouse and Keyboard events
+- Form Container
+- Form validation support
 - Several bug fixes
 
 ## Changelog
@@ -67,3 +70,6 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 ### 0.0.5 - 05/18/2016  
 - Improvements : Better performance for PriDataGrid - thousands of rows working fine [working fine](http://priori.triture.com/example)  
 - Some smallfixs  
+
+### 0.1.0 - 05/25/2016  
+- New Feature : PriNineSlice component for nine-sliced images! [WHAT IS IT?](http://rwillustrator.blogspot.com.br/2007/04/understanding-9-slice-scaling.html)
