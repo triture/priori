@@ -28,11 +28,17 @@ class PriNineSlice extends PriDisplay {
     private var _smallerWidth:Float;
     private var _smallerHeight:Float;
 
+    @:isVar public var smoothEdges(default, set):Bool;
+    @:isVar public var smoothSides(default, set):Bool;
+    @:isVar public var smoothCenter(default, set):Bool;
+    @:isVar public var smoothAll(get, set):Bool;
+
     public function new(assetId:String = null, left:Float = 0.2, top:Float = 0.2, right:Float = 0.2, bottom:Float = 0.2) {
         this._canvas = js.Browser.document.createCanvasElement();
 
         super();
         this.clipping = true;
+        this.smoothAll = true;
 
         this._canvas.setAttribute("style", "width:100%;height:100%;");
         this.getElement().append(this._canvas);
@@ -56,6 +62,35 @@ class PriNineSlice extends PriDisplay {
             }
         }
     }
+
+    function get_smoothAll():Bool {
+        return (this.smoothEdges && this.smoothSides && this.smoothCenter);
+    }
+
+    function set_smoothAll(value:Bool) {
+        this.smoothEdges = this.smoothSides = this.smoothCenter = value;
+        this.updateSliceDraw();
+        return value;
+    }
+
+    function set_smoothEdges(value:Bool) {
+        this.smoothEdges = value;
+        this.updateSliceDraw();
+        return value;
+    }
+
+    function set_smoothSides(value:Bool) {
+        this.smoothSides = value;
+        this.updateSliceDraw();
+        return value;
+    }
+
+    function set_smoothCenter(value:Bool) {
+        this.smoothCenter = value;
+        this.updateSliceDraw();
+        return value;
+    }
+
 
     public function load(imageURL:String, left:Float = 0.2, top:Float = 0.2, right:Float = 0.2, bottom:Float = 0.2):Void {
         this.updateSliceCrop(left, top, right, bottom);
@@ -227,13 +262,47 @@ class PriNineSlice extends PriDisplay {
 
             context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
+            if (this.smoothCenter) {
+                (cast context).mozImageSmoothingEnabled = true;
+                (cast context).webkitImageSmoothingEnabled = true;
+                (cast context).msImageSmoothingEnabled = true;
+                context.imageSmoothingEnabled = true;
+            } else {
+                (cast context).mozImageSmoothingEnabled = false;
+                (cast context).webkitImageSmoothingEnabled = false;
+                (cast context).msImageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = false;
+            }
             if (cw > 0 && ch > 0) context.drawImage(imageElement, CCR.x, CCR.y, CCR.width, CCR.height, lw, th, CCR.width * cwscale, CCR.height * chscale);
 
+
+            if (this.smoothSides) {
+                (cast context).mozImageSmoothingEnabled = true;
+                (cast context).webkitImageSmoothingEnabled = true;
+                (cast context).msImageSmoothingEnabled = true;
+                context.imageSmoothingEnabled = true;
+            } else {
+                (cast context).mozImageSmoothingEnabled = false;
+                (cast context).webkitImageSmoothingEnabled = false;
+                (cast context).msImageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = false;
+            }
             if (cw > 0) context.drawImage(imageElement, TCR.x, TCR.y, TCR.width, TCR.height, lw, 0, TCR.width * cwscale, TCR.height);
             if (cw > 0) context.drawImage(imageElement, BCR.x, BCR.y, BCR.width, BCR.height, lw, curH - BCR.height, BCR.width * cwscale, BCR.height);
             if (ch > 0) context.drawImage(imageElement, CLR.x, CLR.y, CLR.width, CLR.height, 0, th, CLR.width, CLR.height * chscale);
             if (ch > 0) context.drawImage(imageElement, CRR.x, CRR.y, CRR.width, CRR.height, curW - CRR.width, th, CRR.width, CRR.height * chscale);
 
+            if (this.smoothEdges) {
+                (cast context).mozImageSmoothingEnabled = true;
+                (cast context).webkitImageSmoothingEnabled = true;
+                (cast context).msImageSmoothingEnabled = true;
+                context.imageSmoothingEnabled = true;
+            } else {
+                (cast context).mozImageSmoothingEnabled = false;
+                (cast context).webkitImageSmoothingEnabled = false;
+                (cast context).msImageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = false;
+            }
             context.drawImage(imageElement, TLR.x, TLR.y, TLR.width, TLR.height, 0, 0, TLR.width, TLR.height);
             context.drawImage(imageElement, TRR.x, TRR.y, TRR.width, TRR.height, curW - TRR.width, 0, TRR.width, TRR.height);
             context.drawImage(imageElement, BLR.x, BLR.y, BLR.width, BLR.height, 0, curH - BLR.height, BLR.width, BLR.height);
