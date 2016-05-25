@@ -107,7 +107,18 @@ class PriNineSlice extends PriDisplay {
     }
 
     private function onAssetComplete(e:PriEvent):Void {
+        var pixels:Dynamic = this.cropPixels;
+
         this.loadByAsset(this._loader, this._left, this._top, this._right, this._bottom);
+
+        if (pixels != null) {
+            this.updateSliceCropInPixels(
+                pixels.left,
+                pixels.top,
+                pixels.right,
+                pixels.bottom
+            );
+        }
 
         this._loader.kill();
         this._loader = null;
