@@ -41,7 +41,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Full Documentation
 - Rotation property for PriDisplay
 - Scale property for PriDisplay
-- 9 Slice Images
+- ~~9 Slice Images~~
 - Background Images
 - ~~Better Border Support (Current version is buggy)~~ **Done**
 - Full compatibilty for Android and IOs devices
