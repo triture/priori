@@ -56,6 +56,20 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.1.1 - 05/27/2016  
+- Bugfix : Small fix for PriNineSlice  
+
+### 0.1.0 - 05/25/2016  
+- New Feature : PriNineSlice component for nine-sliced images! [WHAT IS IT?](http://rwillustrator.blogspot.com.br/2007/04/understanding-9-slice-scaling.html)  
+
+### 0.0.5 - 05/18/2016  
+- Improvements : Better performance for PriDataGrid - thousands of rows working fine [working fine](http://priori.triture.com/example)  
+- Some smallfixs  
+
+### 0.0.4 - 05/10/2016  
+- Bugfix: Wrong detection for android devices  
+- Bugfix: Audio not loading on ios devices  
+
 ### 0.0.3 - 05/08/2016  
 - Bugfix : cannot get values from disabled form elements  
 - Improvements : Better border support. * Still need more tests  
@@ -63,13 +77,3 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
     - BorderStyle to PriBorderStyle  
     - BorderType to PriBorderType  
 
-### 0.0.4 - 05/10/2016  
-- Bugfix: Wrong detection for android devices  
-- Bugfix: Audio not loading on ios devices  
-
-### 0.0.5 - 05/18/2016  
-- Improvements : Better performance for PriDataGrid - thousands of rows working fine [working fine](http://priori.triture.com/example)  
-- Some smallfixs  
-
-### 0.1.0 - 05/25/2016  
-- New Feature : PriNineSlice component for nine-sliced images! [WHAT IS IT?](http://rwillustrator.blogspot.com.br/2007/04/understanding-9-slice-scaling.html)

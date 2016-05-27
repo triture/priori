@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Create Single-page web applications. HTML code not required ;)",
-  "version": "0.1.0",
-  "releasenote": "New Feature : PriNineSlice component for nine-sliced images!",
+  "version": "0.1.1",
+  "releasenote": "Bugfix : Small fix for PriNineSlice",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
