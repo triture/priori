@@ -134,8 +134,6 @@ class PriNineSlice extends PriDisplay {
     }
 
     public function loadByAsset(asset:AssetImage, left:Float = 0.2, top:Float = 0.2, right:Float = 0.2, bottom:Float = 0.2):Void {
-        this.updateSliceCrop(left, top, right, bottom);
-
         if (asset != null) {
             this._originalImageWidth = asset.imageWidth;
             this._originalImageHeight = asset.imageHeight;
@@ -145,7 +143,9 @@ class PriNineSlice extends PriDisplay {
             this.width = this._originalImageWidth;
             this.height = this._originalImageHeight;
 
-            this.updateSliceDraw();
+            this.updateSliceCrop(left, top, right, bottom);
+        } else {
+            this.updateSliceCrop(left, top, right, bottom);
         }
     }
 
