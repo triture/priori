@@ -1,0 +1,18 @@
+-cmd haxelib run dox -i dox -o dox/pages -in "priori" -ex "priori.plugins" -D version=1 -D source-path https://github.com/triture/priori/tree/master/
+
+--next
+
+-D doc-gen
+-dce no
+
+--macro jQuery.haxe.Config.addPlugin('priori.plugins.PriPlugin')
+--macro include('priori')
+
+-lib jQueryExtern
+
+--no-output
+
+-xml dox/priori.xml
+
+--each
+-js priori.js
