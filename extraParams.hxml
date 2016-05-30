@@ -1,2 +1,1 @@
---macro jQuery.haxe.Config.addPlugin('priori.plugins.PerfectScrollbars')
---macro jQuery.haxe.Config.addPlugin('priori.plugins.DateTimePicker')
+--macro jQuery.haxe.Config.addPlugin('priori.plugins.PriPlugin')
