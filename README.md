@@ -23,6 +23,9 @@ Optional Parameters:
 - -p : source path
 - -D : Any -D flag will be passed to the haxe compiler
 
+## Documentation
+Check the Priori api documentation ***under construction*** on (http://priori.triture.com/dox).
+
 ## Instalation  
 Requires [Haxe](http://haxe.org) 3.2.1+.
 
@@ -38,10 +41,10 @@ You can also install aditional priori libs:
 Check out some Priori [examples](https://github.com/triture/priori-example).  
 
 ## Priori Roadmap for 1.0.0 Release Version  
-- Full Documentation
+- Full Documentation **01% Completed**
 - Rotation property for PriDisplay
 - Scale property for PriDisplay
-- ~~9 Slice Images~~
+- ~~9 Slice Images~~ **Done**
 - Background Images
 - ~~Better Border Support (Current version is buggy)~~ **Done**
 - Full compatibilty for Android and IOs devices
