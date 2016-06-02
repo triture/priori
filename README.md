@@ -1,6 +1,6 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat) ![Haxelib Version](https://img.shields.io/github/tag/triture/priori.svg?style=flat&label=haxelib)
 
-# Priori
+![PRIORI](http://priori.triture.com/wiki/priorilogo.png)
 
 Build Single Page Application only using Haxe? Priori is the answer.
 
