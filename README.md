@@ -18,10 +18,10 @@ haxelib run priori create
 ```
 haxelib run priori build
 ```
-Optional Parameters:
-- -f : priori.json file name
-- -p : source path
-- -D : Any -D flag will be passed to the haxe compiler
+Optional Parameters:  
+- -f : priori.json file name  
+- -p : source path  
+- -D : Any -D flag will be passed to the haxe compiler  
 
 ## Documentation
 Check the Priori api documentation ***under construction*** on (http://priori.triture.com/dox).
@@ -59,7 +59,10 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
-### 0.1.1 - 05/27/2016  
+### 0.1.2 - 06/02/2016
+- Bugfix : Wrong PriDataGrid max scroll value on Firefox.
+
+### 0.1.1 - 05/27/2016
 - Bugfix : Small fix for PriNineSlice  
 
 ### 0.1.0 - 05/25/2016  

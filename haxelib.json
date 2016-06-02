@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Create Single-page web applications. HTML code not required ;)",
-  "version": "0.1.1",
-  "releasenote": "Bugfix : Small fix for PriNineSlice",
+  "version": "0.1.2",
+  "releasenote": "Bugfix : Wrong PriDataGrid max scroll value on Firefox",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
