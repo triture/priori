@@ -174,6 +174,17 @@ class PriDataGrid extends PriGroup {
         this.updateVerticalLines();
     }
 
+    private function updateRowContainerHeight():Void {
+        var rowHeightCalculated = this.calculateRowHeight();
+        var n:Int = this.data == null ? 0 : this.data.length;
+
+        if (this.horizontalGridLines) {
+            this.__rowContainer.height = n*(rowHeightCalculated.all + 1) - 1;
+        } else {
+            this.__rowContainer.height = n*rowHeightCalculated.all;
+        }
+    }
+
     private function organizeRowPosition():Void {
         var i:Int = 0;
         var n:Int = this.__usedRows.length;
@@ -196,13 +207,7 @@ class PriDataGrid extends PriGroup {
             i++;
         }
 
-        if (this.data == null) n = 0 else n = this.data.length;
-
-        if (this.horizontalGridLines) {
-            this.__rowContainer.height = n*(rowHeightCalculated.all + 1) - 1;
-        } else {
-            this.__rowContainer.height = n*rowHeightCalculated.all;
-        }
+        this.updateRowContainerHeight();
     }
 
     private function updateVerticalLines():Void {
@@ -443,6 +448,9 @@ class PriDataGrid extends PriGroup {
         // todo : another way to better performance on firefox ???
         // https://developer.mozilla.org/en-US/docs/Mozilla/Performance/Scroll-linked_effects
         if (PriDevice.g().browser() == PriDeviceBrowser.MOZILLA) {
+
+            this.updateRowContainerHeight();
+
             if (Date.now().getTime() - this.lastRenderTime > 300) {
                 this.generateRowsRun();
             } else {
