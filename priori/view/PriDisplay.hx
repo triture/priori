@@ -29,6 +29,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var parent(get, null):PriContainer;
     @:isVar public var visible(get, set):Bool;
     @:isVar public var disabled(get, set):Bool;
+    @:isVar public var mouseEnabled(get, set):Bool;
     @:isVar public var alpha(default, set):Float;
     @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
@@ -670,6 +671,22 @@ class PriDisplay extends PriEventDispatcher {
 
     private function isDisabledByInherit():Bool {
         return !(this.getElement().attr("priori-disabled") == "disabled");
+    }
+
+
+
+    @:noCompletion private function get_mouseEnabled():Bool {
+        return (this.getElement().css("pointer-events") != "none");
+    }
+
+    @:noCompletion private function set_mouseEnabled(value:Bool):Bool {
+        if (!value) {
+            this.getElement().css("pointer-events", "none");
+        } else {
+            this.getElement().css("pointer-events", "");
+        }
+
+        return value;
     }
 
     @:noCompletion private function get_disabled():Bool {
