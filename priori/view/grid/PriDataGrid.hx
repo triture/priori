@@ -381,7 +381,7 @@ class PriDataGrid extends PriGroup {
 
         this.data = sortedList.copy();
 
-        this.generateRows();
+        if (this.canPaint()) this.generateRows();
         return value;
     }
 
