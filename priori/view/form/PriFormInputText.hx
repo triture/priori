@@ -20,7 +20,7 @@ class PriFormInputText extends PriFormElementBase {
     }
 
     override public function getComponentCode():String {
-        return "<input type=\"text\">";
+        return "<input type=\"text\" />";
     }
 
     override private function onAddedToApp():Void {
