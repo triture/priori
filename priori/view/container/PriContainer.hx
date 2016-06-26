@@ -52,6 +52,8 @@ class PriContainer extends PriDisplay {
         this._childList.push(child);
         this._jselement.appendChild(child.getJSElement());
 
+        child._parent = this;
+
         if (this.disabled) {
             child.getElement().attr("disabled", "disabled");
             child.getElement().find("*").attr("disabled", "disabled");
@@ -76,6 +78,8 @@ class PriContainer extends PriDisplay {
             this._childList.remove(child);
             this._jselement.removeChild(child.getJSElement());
             //child.getElement().remove();
+
+            child._parent = null;
 
             if (viewHasAppBefore) {
                 child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));

@@ -30,7 +30,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var visible(get, set):Bool;
     @:isVar public var disabled(get, set):Bool;
     @:isVar public var mouseEnabled(get, set):Bool;
-    @:isVar public var alpha(default, set):Float;
+    @:isVar public var alpha(get, set):Float;
     @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var border(default, set):PriBorderStyle;
@@ -44,6 +44,8 @@ class PriDisplay extends PriEventDispatcher {
     private var _elementBorder:JQuery;
     private var _jselement:Element;
 
+    private var _parent:PriContainer;
+
     private var _specialEventList:Array<String>;
     private var _specialEventStack:Array<Dynamic>;
 
@@ -56,8 +58,6 @@ class PriDisplay extends PriEventDispatcher {
         // initialize display
         this._priId = this.getRandomId();
         this.createElement();
-
-        PriApp.PRIORI_MAP.set(this._priId, this);
 
         this.x = 0;
         this.y = 0;
@@ -320,6 +320,10 @@ class PriDisplay extends PriEventDispatcher {
         var sy:Float = 1.5;
     }
 
+    @:noCompletion private function get_alpha() {
+        return this.alpha;
+    }
+
     @:noCompletion private function set_alpha(value:Float) {
         this.alpha = value;
         this.setCSS("opacity", Std.string(value));
@@ -333,18 +337,20 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     @:noCompletion private function get_parent():PriContainer {
-        var result:PriContainer = null;
-        var parentPrioriId:String;
-        var parentJQ:JQuery = this.getElement().parent("["+PRIORI_ID_NAME+"]");
-        var hasParent:Bool = parentJQ.length > 0 ? true : false;
-
-
-        if (hasParent) {
-            parentPrioriId = parentJQ.attr(PRIORI_ID_NAME);
-            result = PriApp.PRIORI_MAP.exists(parentPrioriId) ? PriApp.PRIORI_MAP.get(parentPrioriId) : null;
-        }
-
-        return result;
+        return this._parent;
+//
+//        var result:PriContainer = null;
+//        var parentPrioriId:String;
+//        var parentJQ:JQuery = this.getElement().parent("["+PRIORI_ID_NAME+"]");
+//        var hasParent:Bool = parentJQ.length > 0 ? true : false;
+//
+//
+//        if (hasParent) {
+//            parentPrioriId = parentJQ.attr(PRIORI_ID_NAME);
+//            result = PriApp.PRIORI_MAP.exists(parentPrioriId) ? PriApp.PRIORI_MAP.get(parentPrioriId) : null;
+//        }
+//
+//        return result;
     }
 
     public function getPrid():String {
@@ -621,7 +627,6 @@ class PriDisplay extends PriEventDispatcher {
         this.getElement().find("*").off();
 
         if (this.parent != null) parent.removeChild(this);
-        PriApp.PRIORI_MAP.remove(this._priId);
 
         this._element = null;
         this._jselement = null;

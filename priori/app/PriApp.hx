@@ -14,8 +14,6 @@ import priori.view.PriDisplay;
 
 class PriApp extends PriGroup {
 
-    public static var PRIORI_MAP:StringMap<Dynamic> = new StringMap<Dynamic>();
-
     private static var _g:PriApp;
 
     private var _body:JQuery;
