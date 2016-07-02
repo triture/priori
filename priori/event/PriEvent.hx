@@ -17,6 +17,8 @@ class PriEvent {
     public static var SCROLL:String = "prievent_base_scroll";
     public static var ADD_ITEM:String = "prievent_base_add_item";
     public static var REMOVE_ITEM:String = "prievent_base_remove_item";
+    public static var OPEN:String = "prievent_base_open";
+    public static var CLOSE:String = "prievent_base_close";
 
     public static var ADDED_TO_APP:String = "prievent_base_addedToApp";
     public static var REMOVED_FROM_APP:String = "prievent_base_removedFromApp";
