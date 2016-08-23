@@ -2,7 +2,6 @@ package priori.view;
 
 import priori.event.PriEvent;
 import priori.style.border.PriBorderStyle;
-import haxe.extern.EitherType;
 import js.html.Element;
 import priori.event.PriMouseEvent;
 import priori.event.PriSwipeEvent;
@@ -196,8 +195,36 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
+    private function getOutDOMDimensions():{w:Float, h:Float} {
+        var w:Float = 0;
+        var h:Float = 0;
+
+        var clone:JQuery = this._element.clone(false);
+
+        var body:JQuery = new JQuery("body");
+        body.append(clone);
+
+        w = clone.width();
+        h = clone.height();
+
+        clone.remove();
+
+        clone = null;
+
+        return {
+            w : w,
+            h : h
+        };
+    }
+
     @:noCompletion private function get_width():Float {
-        return this.getElement().width();
+        var value = this.getElement().width();
+
+        if (value == 0 && !this.hasApp()) {
+            value = this.getOutDOMDimensions().w;
+        }
+
+        return value;
     }
 
     @:noCompletion private function set_height(value:Float):Float {
@@ -211,7 +238,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     @:noCompletion private function get_height():Float {
-        return this.getElement().height();
+        var value = this.getElement().height();
+
+        if (value == 0 && !this.hasApp()) {
+            value = this.getOutDOMDimensions().h;
+        }
+
+        return value;
     }
 
     @:noCompletion private function get_maxX():Float {

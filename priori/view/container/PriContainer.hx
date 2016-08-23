@@ -40,6 +40,16 @@ class PriContainer extends PriDisplay {
         }
     }
 
+    public function removeChildList(childList:Array<Dynamic>):Void {
+        var i:Int = 0;
+        var n:Int = childList.length;
+
+        while (i < n) {
+            if (Std.is(childList[i], PriDisplay)) this.removeChild(childList[i]);
+            i++;
+        }
+    }
+
     public function addChild(child:PriDisplay):Void {
 
         // remove o objeto de algum parent, caso ja tenha algum
