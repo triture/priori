@@ -133,6 +133,10 @@ class PriDataGrid extends PriGroup {
         this.header.applySort("", PriGridColumnSortOrder.NONE);
     }
 
+    public function applySort(field:String, order:PriGridColumnSortOrder):Void {
+        this.header.applySort(field, order);
+    }
+
     override private function setup():Void {
         this.addChild(this.header);
         this.addChild(this.scrollerContainer);
@@ -396,6 +400,9 @@ class PriDataGrid extends PriGroup {
         this.applyColumnToRows();
         this.applyColumnToHeader();
         this.updateVerticalLines();
+
+        // update data to new columns
+        this.data = __data_originalList;
 
         return value;
     }

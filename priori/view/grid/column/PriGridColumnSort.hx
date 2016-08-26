@@ -31,6 +31,8 @@ class PriGridColumnSort {
             vx = Reflect.getProperty(x, this.dataField);
             vy = Reflect.getProperty(y, this.dataField);
 
+            if (Std.is(vx, Date)) vx = cast(vx, Date).getTime();
+            if (Std.is(vy, Date)) vy = cast(vy, Date).getTime();
 
             if (!Std.is(vx, Float) && !Std.is(vx, Int)) {
                 vx = Std.string(vx).toLowerCase();

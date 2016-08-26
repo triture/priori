@@ -105,7 +105,7 @@ class PriGridHeader extends PriGroup {
 
     public function applySort(field:String, order:PriGridColumnSortOrder):Void {
         var i:Int = 0;
-        var n:Int = this.columns.length;
+        var n:Int = this.columns == null ? 0 : this.columns.length;
 
         var caret:PriGridHeaderSortCaret = null;
 

@@ -99,6 +99,8 @@ class PriGridCellRenderer extends PriGroup {
     @:noCompletion private function get_value():Dynamic {
         var result:Dynamic = null;
 
+        if (this.__column == null) return null;
+
         if (this.__column.dataField == PriGridCellRenderer.SPECIAL_COLUMN_INDEX) {
             result = this.rowIndex;
         } else if (this.__column.dataField == PriGridCellRenderer.SPECIAL_ROW_LINE) {
