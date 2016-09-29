@@ -39,12 +39,13 @@ class PriFormCheckBox extends PriFormElementBase {
     @noCompletion private function get_value():Bool {
         var result:Bool = this.value;
 
-        var isDisabled:Bool = this.disabled;
-        if (isDisabled) this.disabled = false;
+        var isDisabled:Bool = this._baseElement.is("[disabled]");
+
+        if (isDisabled) this._baseElement.removeAttr("disabled");
 
         result = this._baseElement.prop("checked");
 
-        if (isDisabled) this.disabled = true;
+        if (isDisabled) this._baseElement.attr("disabled", "disabled");
 
         return result;
     }
