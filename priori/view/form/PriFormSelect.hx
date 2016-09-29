@@ -9,6 +9,7 @@ class PriFormSelect extends PriFormElementBase {
     @:isVar public var data(default, set):Array<Dynamic>;
     @:isVar public var labelField(default, set):String;
     @:isVar public var selected(get, set):Dynamic;
+    @:isVar public var selectedIndex(get, set):Int;
 
     private var _selectedData:Dynamic;
     private var _menuItens:Array<{label:String, id:String, data:Dynamic}>;
@@ -50,6 +51,47 @@ class PriFormSelect extends PriFormElementBase {
         this.labelField = value;
 
         this.updateDropDownData();
+
+        return value;
+    }
+
+    @:noCompletion private function get_selectedIndex():Int {
+        var result:Int = -1;
+
+        if (this._baseElement != null) {
+
+            var isDisabled:Bool = this.disabled;
+            if (isDisabled) this.suspendDisabled();
+
+            var selectedId:String = this._baseElement.val();
+            if (isDisabled) this.reactivateDisable();
+
+            for (i in 0 ... this._menuItens.length) {
+
+                if (this._menuItens[i].id == selectedId) {
+                    result = i;
+                    break;
+                }
+
+            }
+        }
+
+        return result;
+    }
+
+    @:noCompletion private function set_selectedIndex(value:Int):Int {
+
+        var newIndex:Int = value;
+
+        if (this.data != null && this.data.length > 0) {
+
+            if (newIndex < 0) newIndex = 0;
+            if (newIndex > this.data.length - 1) newIndex = this.data.length - 1;
+
+            this._selectedData = this.data[newIndex];
+        }
+
+        this.updateDropDownView();
 
         return value;
     }
@@ -191,8 +233,6 @@ class PriFormSelect extends PriFormElementBase {
     }
 
     private function _onSelectChange(e:Event):Void {
-        trace("changed");
-
         this._selectedData = this.selected;
 
         this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
