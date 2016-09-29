@@ -33,6 +33,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var border(default, set):PriBorderStyle;
+    @:isVar public var tooltip(default, set):String;
 
     @:isVar public var bgColor(default, set):Int;
 
@@ -92,6 +93,15 @@ class PriDisplay extends PriEventDispatcher {
             }
         }
 
+
+        return value;
+    }
+
+    @:noCompletion private function set_tooltip(value:String):String {
+        this.tooltip = value;
+
+
+        this.getElement().attr("title", value == "" ? null : value);
 
         return value;
     }
