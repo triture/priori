@@ -2,6 +2,7 @@ package priori.view.form;
 
 import priori.event.PriEvent;
 import jQuery.Event;
+
 class PriFormCheckBox extends PriFormElementBase {
 
     @:isVar public var value(get, set):Bool;
@@ -13,7 +14,7 @@ class PriFormCheckBox extends PriFormElementBase {
     }
 
     override private function getComponentCode():String {
-        return "<input type=\"checkbox\" style=\"padding:0px;margin:0px;\" />";
+        return "<input type=\"checkbox\" style=\"padding:0px;margin:0px;vertical-align: middle;\" />";
     }
 
     override private function onAddedToApp():Void {
