@@ -689,7 +689,7 @@ class PriDisplay extends PriEventDispatcher {
 
     @:noCompletion private function set_visible(value:Bool) {
         if (value == true) {
-            this.setCSS("visibility", "visible");
+            this.setCSS("visibility", "");
         } else {
             this.setCSS("visibility", "hidden");
         }
