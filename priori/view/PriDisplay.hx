@@ -1,16 +1,18 @@
 package priori.view;
 
+import js.html.Element;
+import jQuery.Event;
+import jQuery.JQuery;
+import priori.style.shadow.PriShadowStyle;
 import priori.event.PriEvent;
 import priori.style.border.PriBorderStyle;
-import js.html.Element;
 import priori.event.PriMouseEvent;
 import priori.event.PriSwipeEvent;
-import jQuery.Event;
 import priori.event.PriTapEvent;
 import priori.view.container.PriContainer;
 import priori.event.PriEventDispatcher;
 import priori.app.PriApp;
-import jQuery.JQuery;
+
 
 class PriDisplay extends PriEventDispatcher {
 
@@ -33,6 +35,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var border(default, set):PriBorderStyle;
+    @:isVar public var shadow(default, set):Array<PriShadowStyle>;
     @:isVar public var tooltip(default, set):String;
 
     @:isVar public var bgColor(default, set):Int;
@@ -73,7 +76,7 @@ class PriDisplay extends PriEventDispatcher {
         this.updateBorderDisplay();
     }
 
-    @:noCompletion private function set_corners(value:Array<Int>):Array<Int> {
+    private function set_corners(value:Array<Int>):Array<Int> {
         this.corners = value;
 
         if (value == null) {
@@ -97,7 +100,7 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function set_tooltip(value:String):String {
+    private function set_tooltip(value:String):String {
         this.tooltip = value;
 
 
@@ -106,13 +109,31 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function set_border(value:PriBorderStyle) {
+    private function set_border(value:PriBorderStyle):PriBorderStyle {
         this.border = value;
 
         if (value == null) {
             removeBorder();
         } else {
             applyBorder();
+        }
+
+        return value;
+    }
+
+    private function set_shadow(value:Array<PriShadowStyle>):Array<PriShadowStyle> {
+        this.shadow = value;
+
+        if (value == null || value.length == 0) {
+            this.setCSS("-webkit-box-shadow", "");
+            this.setCSS("-moz-box-shadow", "");
+            this.setCSS("box-shadow", "");
+        } else {
+            var shadowString:String = value.join(",");
+
+            this.setCSS("-webkit-box-shadow", shadowString);
+            this.setCSS("-moz-box-shadow", shadowString);
+            this.setCSS("box-shadow", shadowString);
         }
 
         return value;
@@ -159,7 +180,7 @@ class PriDisplay extends PriEventDispatcher {
         }
     }
 
-    @:noCompletion private function get_clipping():Bool {
+    private function get_clipping():Bool {
         var result:Bool = false;
 
         if (this.getCSS("overflow") == "hidden") {
@@ -169,7 +190,7 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    @:noCompletion private function set_clipping(value:Bool) {
+    private function set_clipping(value:Bool) {
         if (value) {
             this.setCSS("overflow", "hidden");
         } else {
@@ -195,7 +216,7 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    @:noCompletion private function set_width(value:Float) {
+    private function set_width(value:Float) {
         if (value == null) {
             this.setCSS("width", "");
         } else {
@@ -227,7 +248,7 @@ class PriDisplay extends PriEventDispatcher {
         };
     }
 
-    @:noCompletion private function get_width():Float {
+    private function get_width():Float {
         var value = this.getElement().width();
 
         if (value == 0 && !this.hasApp()) {
@@ -237,7 +258,7 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function set_height(value:Float):Float {
+    private function set_height(value:Float):Float {
         if (value == null) {
             this.setCSS("height", "");
         } else {
@@ -247,7 +268,7 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_height():Float {
+    private function get_height():Float {
         var value = this.getElement().height();
 
         if (value == 0 && !this.hasApp()) {
@@ -257,45 +278,45 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_maxX():Float {
+    private function get_maxX():Float {
         return this.x + this.width;
     }
 
-    @:noCompletion private function set_maxX(value:Float) {
+    private function set_maxX(value:Float) {
         this.x = value - this.width;
         return value;
     }
 
-    @:noCompletion private function get_maxY():Float {
+    private function get_maxY():Float {
         return this.y + this.height;
     }
 
-    @:noCompletion private function set_maxY(value:Float) {
+    private function set_maxY(value:Float) {
         this.y = value - this.height;
         return value;
     }
 
 
-    @:noCompletion private function set_centerX(value:Float) {
+    private function set_centerX(value:Float) {
         this.x = value - this.width/2;
         return value;
     }
 
-    @:noCompletion private function get_centerX():Float {
+    private function get_centerX():Float {
         return this.x + this.width/2;
     }
 
-    @:noCompletion private function set_centerY(value:Float) {
+    private function set_centerY(value:Float) {
         this.y = value - this.height/2;
         return value;
     }
 
-    @:noCompletion private function get_centerY():Float {
+    private function get_centerY():Float {
         return this.y + this.height/2;
     }
 
 
-    @:noCompletion private function set_x(value:Float) {
+    private function set_x(value:Float) {
 
 //        JQUERY WAY
 //        this.setCSS("left", Math.round(value) + "px");
@@ -306,12 +327,12 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_x():Float {
+    private function get_x():Float {
         return Std.parseInt(this.getJSElement().style.left.split("px")[0]);
 //        return this.getElement().position().left;
     }
 
-    @:noCompletion private function set_y(value:Float) {
+    private function set_y(value:Float) {
 
 //        JQUERY WAY
 //        this.setCSS("top", Math.round(value) + "px");
@@ -340,12 +361,12 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_y():Float {
+    private function get_y():Float {
         return Std.parseInt(this.getJSElement().style.top.split("px")[0]);
 //        return this.getElement().position().top;
     }
 
-    @:noCompletion private function set_rotation(value:Float):Float {
+    private function set_rotation(value:Float):Float {
         var val:Float = value > 360 ? value = value % 360 : value;
 
         this.rotation = val;
@@ -363,11 +384,11 @@ class PriDisplay extends PriEventDispatcher {
         var sy:Float = 1.5;
     }
 
-    @:noCompletion private function get_alpha() {
+    private function get_alpha() {
         return this.alpha;
     }
 
-    @:noCompletion private function set_alpha(value:Float) {
+    private function set_alpha(value:Float) {
         this.alpha = value;
         this.setCSS("opacity", Std.string(value));
         return value;
@@ -379,7 +400,7 @@ class PriDisplay extends PriEventDispatcher {
         return false;
     }
 
-    @:noCompletion private function get_parent():PriContainer {
+    private function get_parent():PriContainer {
         return this._parent;
 //
 //        var result:PriContainer = null;
@@ -423,7 +444,7 @@ class PriDisplay extends PriEventDispatcher {
         return this.getElement().css(property);
     }
 
-    @:noCompletion private function set_bgColor(value:Int):Int {
+    private function set_bgColor(value:Int):Int {
         this.bgColor = value;
 
         if (value == null) {
@@ -677,7 +698,7 @@ class PriDisplay extends PriEventDispatcher {
         super.kill();
     }
 
-    @:noCompletion private function get_visible():Bool {
+    private function get_visible():Bool {
         var result:Bool = true;
 
         if (this.getCSS("visibility") == "hidden") {
@@ -687,7 +708,7 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    @:noCompletion private function set_visible(value:Bool) {
+    private function set_visible(value:Bool) {
         if (value == true) {
             this.setCSS("visibility", "");
         } else {
@@ -697,7 +718,7 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_pointer():Bool {
+    private function get_pointer():Bool {
         var result:Bool = true;
 
         if (this.getCSS("cursor") == "pointer") {
@@ -707,7 +728,7 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    @:noCompletion private function set_pointer(value:Bool) {
+    private function set_pointer(value:Bool) {
         if (value == true) {
             this.setCSS("cursor", "pointer");
         } else {
@@ -723,11 +744,11 @@ class PriDisplay extends PriEventDispatcher {
 
 
 
-    @:noCompletion private function get_mouseEnabled():Bool {
+    private function get_mouseEnabled():Bool {
         return (this.getElement().css("pointer-events") != "none");
     }
 
-    @:noCompletion private function set_mouseEnabled(value:Bool):Bool {
+    private function set_mouseEnabled(value:Bool):Bool {
         if (!value) {
             this.getElement().css("pointer-events", "none");
         } else {
@@ -737,7 +758,7 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    @:noCompletion private function get_disabled():Bool {
+    private function get_disabled():Bool {
         var result:Bool = false;
 
         if (this.getElement().is("[disabled]")) {
@@ -747,7 +768,7 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    @:noCompletion private function set_disabled(value:Bool) {
+    private function set_disabled(value:Bool) {
         if (value == true) {
             this.getElement().attr("priori-disabled", "disabled");
             this.getElement().attr("disabled", "disabled");
