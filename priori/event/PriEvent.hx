@@ -20,6 +20,8 @@ class PriEvent {
     public static var OPEN:String = "prievent_base_open";
     public static var CLOSE:String = "prievent_base_close";
 
+    public static var PRESS_ENTER:String = "prievent_base_pressenter";
+
     public static var ADDED_TO_APP:String = "prievent_base_addedToApp";
     public static var REMOVED_FROM_APP:String = "prievent_base_removedFromApp";
     public static var ADDED:String = "prievent_base_addedToContainer";
