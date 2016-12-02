@@ -12,8 +12,8 @@ class PriImage extends PriDisplay {
     private var _originalImageWidth:Int;
     private var _originalImageHeight:Int;
 
-    @:isVar public var scaleX(get, set):Float;
-    @:isVar public var scaleY(get, set):Float;
+//    @:isVar public var scaleX(get, set):Float;
+//    @:isVar public var scaleY(get, set):Float;
 
     private var _loader:AssetImage;
     private var _imageElement:JQuery;
@@ -21,8 +21,8 @@ class PriImage extends PriDisplay {
     public function new(assetId:String = null) {
         super();
 
-        this._originalImageWidth = 1;
-        this._originalImageHeight = 1;
+        this._originalImageWidth = 0;
+        this._originalImageHeight = 0;
 
         if (assetId != null && assetId != "") {
             var asset:Asset = AssetManager.g().getAsset(assetId);
@@ -80,36 +80,45 @@ class PriImage extends PriDisplay {
 
             this.getElement().append(this._imageElement);
 
-            this.width = this._originalImageWidth;
-            this.height = this._originalImageHeight;
+            this.width = this._originalImageWidth * this.scaleX;
+            this.height = this._originalImageHeight * this.scaleY;
         }
     }
 
-    private function get_scaleX():Float {
-        var currWidth:Float = this.width;
-        var result:Float = currWidth / this._originalImageWidth;
+//    private function get_scaleX():Float {
+//        var currWidth:Float = this.width;
+//        var result:Float = currWidth / this._originalImageWidth;
+//
+//        return result;
+//    }
 
-        return result;
-    }
+    override private function set_scaleX(value:Float):Float {
+        var val:Float = value == null ? 1 : value;
 
-    private function set_scaleX(value:Float) {
-        this.width = this._originalImageWidth * value;
-
-        return value;
-    }
-
-    private function set_scaleY(value:Float) {
-        this.height = this._originalImageHeight * value;
+        this._scaleX = val;
+        this.width = this._originalImageWidth * val;
 
         return value;
     }
 
-    private function get_scaleY():Float {
-        var currHeight = this.height;
-        var result:Float = currHeight / this._originalImageHeight;
+    override private function set_scaleY(value:Float):Float {
+        var val:Float = value == null ? 1 : value;
 
-        return result;
+        this._scaleY = val;
+        this.height = this._originalImageHeight * val;
+
+        return value;
     }
 
+//    private function get_scaleY():Float {
+//        var currHeight = this.height;
+//        var result:Float = currHeight / this._originalImageHeight;
+//
+//        return result;
+//    }
+
+    override private function __applyMatrixTransformation():Void {
+
+    }
 
 }

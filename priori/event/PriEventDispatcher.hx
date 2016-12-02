@@ -16,13 +16,8 @@ class PriEventDispatcher {
     }
 
     public function hasEvent(event:String):Bool {
-        var result:Bool = false;
-
-        if (this._eventTypeList.indexOf(event) > -1) {
-            result = true;
-        }
-
-        return result;
+        if (this._eventTypeList.indexOf(event) > -1) return true;
+        return false;
     }
 
     public function addEventListener(event:String, listener:Dynamic->Void):Void {
@@ -37,13 +32,11 @@ class PriEventDispatcher {
     }
 
     public function removeEventListener(event:String, listener:Dynamic->Void):Void {
-        var i:Int = 0;
-        var n:Int = this._eventList.length;
 
         var itensToRemove:Array<Dynamic> = [];
         var alreadyHasSameEvent:Bool = false;
 
-        while (i < n) {
+        for (i in 0 ... this._eventList.length) {
             if (this._eventList[i].eventType == event && this._eventList[i].eventListener == listener) {
                 itensToRemove.push(this._eventList[i]);
             } else if(!alreadyHasSameEvent) {
@@ -51,16 +44,10 @@ class PriEventDispatcher {
                     alreadyHasSameEvent = true;
                 }
             }
-
-            i++;
         }
 
-        i = 0;
-        n = itensToRemove.length;
-
-        while (i < n) {
+        for (i in 0 ... itensToRemove.length) {
             this._eventList.remove(itensToRemove[i]);
-            i++;
         }
 
         if (!alreadyHasSameEvent) {
@@ -69,25 +56,16 @@ class PriEventDispatcher {
     }
 
     public function removeAllEventListenersFromType(event:String):Void {
-        var i:Int = 0;
-        var n:Int = this._eventList.length;
-
         var itensToRemove:Array<Dynamic> = [];
 
-        while (i < n) {
+        for (i in 0 ... this._eventList.length) {
             if (this._eventList[i].eventType == event) {
                 itensToRemove.push(this._eventList[i]);
             }
-
-            i++;
         }
 
-        i = 0;
-        n = itensToRemove.length;
-
-        while (i < n) {
+        for (i in 0 ... itensToRemove.length) {
             this._eventList.remove(itensToRemove[i]);
-            i++;
         }
 
         this._eventTypeList.remove(event);
@@ -100,15 +78,12 @@ class PriEventDispatcher {
         // em situacoes que um evento é removido no momento do seu despacho
         var temporaryEventList:Array<Dynamic> = _eventList.copy();
 
-        var i:Int = 0;
-        var n:Int = temporaryEventList.length;
-
         var clone:PriEvent = null;
 
         // define o primeiro objeto a disparar o evento
         if (event.currentTarget == null) event.currentTarget = this;
 
-        while (i < n) {
+        for (i in 0 ... temporaryEventList.length) {
             if (temporaryEventList[i].eventType == event.type) {
                 clone = event.clone();
 
@@ -130,8 +105,6 @@ class PriEventDispatcher {
                     this.bubbleEvent(cloneForBubble);
                 }
             }
-
-            i++;
         }
 
 

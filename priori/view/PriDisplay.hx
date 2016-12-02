@@ -16,23 +16,28 @@ import priori.app.PriApp;
 
 class PriDisplay extends PriEventDispatcher {
 
-    public static var PRIORI_ID_NAME:String = "prioriid";
+    public var width(get, set):Float;
+    public var height(get, set):Float;
+    public var x(get, set):Float;
+    public var y(get, set):Float;
 
-    @:isVar public var width(get, set):Float;
-    @:isVar public var height(get, set):Float;
-    @:isVar public var x(get, set):Float;
-    @:isVar public var y(get, set):Float;
-    @:isVar public var centerX(get, set):Float;
-    @:isVar public var centerY(get, set):Float;
-    @:isVar public var maxX(get, set):Float;
-    @:isVar public var maxY(get, set):Float;
+    public var centerX(get, set):Float;
+    public var centerY(get, set):Float;
+    public var maxX(get, set):Float;
+    public var maxY(get, set):Float;
+
+    public var parent(get, null):PriContainer;
+    public var visible(get, set):Bool;
+
+    public var disabled(get, set):Bool;
+    public var mouseEnabled(get, set):Bool;
+    public var pointer(get, set):Bool;
+    public var clipping(get, set):Bool;
+
+    private var _alpha:Float = 1;
+    public var alpha(get, set):Float;
+
     @:isVar public var rotation(default, set):Float;
-    @:isVar public var parent(get, null):PriContainer;
-    @:isVar public var visible(get, set):Bool;
-    @:isVar public var disabled(get, set):Bool;
-    @:isVar public var mouseEnabled(get, set):Bool;
-    @:isVar public var alpha(get, set):Float;
-    @:isVar public var pointer(get, set):Bool;
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var border(default, set):PriBorderStyle;
     @:isVar public var shadow(default, set):Array<PriShadowStyle>;
@@ -40,7 +45,14 @@ class PriDisplay extends PriEventDispatcher {
 
     @:isVar public var bgColor(default, set):Int;
 
-    @:isVar public var clipping(get, set):Bool;
+    @:isVar public var anchorX(default, set):Float = 0;
+    @:isVar public var anchorY(default, set):Float = 0;
+
+    private var _scaleX:Float = 1;
+    private var _scaleY:Float = 1;
+
+    public var scaleX(get, set):Float;
+    public var scaleY(get, set):Float;
 
     private var _priId:String;
     private var _element:JQuery;
@@ -66,6 +78,7 @@ class PriDisplay extends PriEventDispatcher {
         this.y = 0;
         this.width = 100;
         this.height = 100;
+
         this.rotation = 0;
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
@@ -102,10 +115,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function set_tooltip(value:String):String {
         this.tooltip = value;
-
-
         this.getElement().attr("title", value == "" ? null : value);
-
         return value;
     }
 
@@ -181,13 +191,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_clipping():Bool {
-        var result:Bool = false;
-
-        if (this.getCSS("overflow") == "hidden") {
-            result = true;
-        }
-
-        return result;
+        if (this.getCSS("overflow") == "hidden") return true;
+        return false;
     }
 
     private function set_clipping(value:Bool) {
@@ -216,16 +221,6 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    private function set_width(value:Float) {
-        if (value == null) {
-            this.setCSS("width", "");
-        } else {
-            this.setCSS("width", Std.int(value) + "px");
-        }
-
-        return value;
-    }
-
     private function getOutDOMDimensions():{w:Float, h:Float} {
         var w:Float = 0;
         var h:Float = 0;
@@ -248,13 +243,18 @@ class PriDisplay extends PriEventDispatcher {
         };
     }
 
+    private function set_width(value:Float) {
+        if (value == null) {
+            this.setCSS("width", "");
+        } else {
+            this.setCSS("width", Std.int(value) + "px");
+        }
+        return value;
+    }
+
     private function get_width():Float {
         var value = this.getElement().width();
-
-        if (value == 0 && !this.hasApp()) {
-            value = this.getOutDOMDimensions().w;
-        }
-
+        if (value == 0 && !this.hasApp()) value = this.getOutDOMDimensions().w;
         return value;
     }
 
@@ -270,11 +270,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_height():Float {
         var value = this.getElement().height();
-
-        if (value == 0 && !this.hasApp()) {
-            value = this.getOutDOMDimensions().h;
-        }
-
+        if (value == 0 && !this.hasApp()) value = this.getOutDOMDimensions().h;
         return value;
     }
 
@@ -317,80 +313,88 @@ class PriDisplay extends PriEventDispatcher {
 
 
     private function set_x(value:Float) {
-
-//        JQUERY WAY
-//        this.setCSS("left", Math.round(value) + "px");
-
-//        DOM WAY
         this.getJSElement().style.left = untyped value.toString(10) + "px";
-
         return value;
     }
 
     private function get_x():Float {
         return Std.parseInt(this.getJSElement().style.left.split("px")[0]);
-//        return this.getElement().position().left;
     }
 
     private function set_y(value:Float) {
-
-//        JQUERY WAY
-//        this.setCSS("top", Math.round(value) + "px");
-
-
-//        DOM WAY
         this.getJSElement().style.top = untyped value.toString(10) + "px";
-
-//        DOM ALTERNATIVE
-//        var val:String = untyped value.toString(10);
-//        var styleVal:String = this.getJSElement().getAttribute("style");
-//
-//        if (styleVal.indexOf("top") == -1) {
-//            styleVal += "; top:" + val + "px;";
-//        } else {
-//            var styleValList:Array<String> = styleVal.split("top");
-//            var pxIndex:Int = styleValList[1].indexOf("px");
-//            styleValList[1] = styleValList[1].substr(pxIndex+2);
-//
-//            styleVal = styleValList.join("top:" + val + "px");
-//        }
-//
-//        this.getJSElement().setAttribute("style", styleVal);
-
-
         return value;
     }
 
     private function get_y():Float {
         return Std.parseInt(this.getJSElement().style.top.split("px")[0]);
-//        return this.getElement().position().top;
+    }
+
+    private function get_scaleX():Float return this._scaleX;
+    private function set_scaleX(value:Float):Float {
+        trace(value);
+        this._scaleX = value == null ? 1 : value;
+        this.__applyMatrixTransformation();
+        return value;
+    }
+
+    private function get_scaleY():Float return this._scaleY;
+    private function set_scaleY(value:Float):Float {
+        this._scaleY = value == null ? 1 : value;
+        this.__applyMatrixTransformation();
+        return value;
+    }
+
+    private function set_anchorX(value:Float):Float {
+        this.anchorX = value == null ? 0 : value;
+        this.__applyMatrixTransformation();
+        return value;
+    }
+
+    private function set_anchorY(value:Float):Float {
+        this.anchorY = value == null ? 0 : value;
+        this.__applyMatrixTransformation();
+        return value;
     }
 
     private function set_rotation(value:Float):Float {
-        var val:Float = value > 360 ? value = value % 360 : value;
-
-        this.rotation = val;
-
+        this.rotation = value > 360 ? value = value % 360 : value;
         this.__applyMatrixTransformation();
-
         return value;
     }
 
     private function __applyMatrixTransformation():Void {
-        var angle:Float = this.rotation;
-        var aSin:Float = Math.sin(angle);
-        var aCos:Float = Math.cos(angle);
-        var sx:Float = 1.5;
-        var sy:Float = 1.5;
+//        var angle:Float = this.rotation;
+//        var aSin:Float = Math.sin(angle);
+//        var aCos:Float = Math.cos(angle);
+
+        var sx:Float = this.scaleX;
+        var sy:Float = this.scaleY;
+        var anchorX:Float = this.anchorX*100;
+        var anchorY:Float = this.anchorY*100;
+
+        var valOrigin:String = '';
+        var valMatrix:String = '';
+
+        if (sx != 1 || sy != 1) {
+            valOrigin = '$anchorX% $anchorY%';
+            valMatrix = 'matrix($sx, 0, 0, $sy, 0, 0)';
+        }
+
+        this.setCSS("-ms-transform-origin", valOrigin);
+        this.setCSS("-webkit-transform-origin", valOrigin);
+        this.setCSS("transform-origin", valOrigin);
+
+        this.setCSS("-ms-transform", valMatrix);
+        this.setCSS("-webkit-transform", valMatrix);
+        this.setCSS("transform", valMatrix);
     }
 
-    private function get_alpha() {
-        return this.alpha;
-    }
-
+    private function get_alpha():Float return this._alpha;
     private function set_alpha(value:Float) {
-        this.alpha = value;
-        this.setCSS("opacity", Std.string(value));
+        this._alpha = value;
+        if (this._alpha == 1) this.setCSS("opacity", "");
+        else this.setCSS("opacity", Std.string(value));
         return value;
     }
 
@@ -402,19 +406,6 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_parent():PriContainer {
         return this._parent;
-//
-//        var result:PriContainer = null;
-//        var parentPrioriId:String;
-//        var parentJQ:JQuery = this.getElement().parent("["+PRIORI_ID_NAME+"]");
-//        var hasParent:Bool = parentJQ.length > 0 ? true : false;
-//
-//
-//        if (hasParent) {
-//            parentPrioriId = parentJQ.attr(PRIORI_ID_NAME);
-//            result = PriApp.PRIORI_MAP.exists(parentPrioriId) ? PriApp.PRIORI_MAP.get(parentPrioriId) : null;
-//        }
-//
-//        return result;
     }
 
     public function getPrid():String {
@@ -699,13 +690,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_visible():Bool {
-        var result:Bool = true;
-
-        if (this.getCSS("visibility") == "hidden") {
-            result = false;
-        }
-
-        return result;
+        if (this.getCSS("visibility") == "hidden") return false;
+        return true;
     }
 
     private function set_visible(value:Bool) {
@@ -719,13 +705,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_pointer():Bool {
-        var result:Bool = true;
-
-        if (this.getCSS("cursor") == "pointer") {
-            result = false;
-        }
-
-        return result;
+        if (this.getCSS("cursor") == "pointer") return false;
+        return true;
     }
 
     private function set_pointer(value:Bool) {
@@ -759,13 +740,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_disabled():Bool {
-        var result:Bool = false;
-
-        if (this.getElement().is("[disabled]")) {
-            result = true;
-        }
-
-        return result;
+        if (this.getElement().is("[disabled]")) return true;
+        return false;
     }
 
     private function set_disabled(value:Bool) {
