@@ -6,8 +6,9 @@ Build Single Page Application only using Haxe? Priori is the answer.
 
 Priori helps you to create cross-browser web apps for desktops, tablets and smartphones using all benefits of the modern, high level, strictly typed programming language that you already know - and love.
 
-## Simple to use
-If you are familiar with OpenfFL, you will feel at home. Otherwise, you can check our [example project](https://github.com/triture/priori-example) to start your experimentations.
+## Demonstration
+- Live version: (http://priori.triture.com/example/)
+- Example project on github: (https://github.com/triture/priori-example)
 
 **Create New Project**
 ```
@@ -45,6 +46,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Rotation property for PriDisplay
 - Scale property for PriDisplay
 - ~~9 Slice Images~~ **Done**
+- ~~Shadow property~~ **Done**
 - Background Images
 - ~~Better Border Support (Current version is buggy)~~ **Done**
 - Full compatibilty for Android and IOs devices
@@ -59,6 +61,17 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.2.0 - 02/12/2016
+- New Feature : Shadow property
+- New Feature : PressEnter event for form elements
+- New Feature : Tooltip property
+- New Feature : Mouse enable / disable property
+- New Feature : selected index property for combo box
+- New Feature : PriFormTextArea
+- Improvements : Better way to handle parent objects
+- Bugfix : Child visibility
+- Several small fix
+
 ### 0.1.2 - 06/02/2016
 - Bugfix : Wrong PriDataGrid max scroll value on Firefox.
 

@@ -3,9 +3,9 @@
   "url": "https://github.com/triture/priori",
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
-  "description": "Create Single-page web applications. HTML code not required ;)",
-  "version": "0.1.2",
-  "releasenote": "Bugfix : Wrong PriDataGrid max scroll value on Firefox",
+  "description": "Single-page web applications (SPA) framework for Haxe",
+  "version": "0.2.0",
+  "releasenote": "Shadows, new properties and several bugfixes. Please, check Changelog section on readme file",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
