@@ -1,6 +1,6 @@
 package priori.view;
 
-import view.PriGraphic;
+import priori.view.PriGraphic;
 import js.html.CanvasRenderingContext2D;
 import jQuery.JQuery;
 import js.html.CanvasElement;
