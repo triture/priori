@@ -16,9 +16,38 @@ import priori.app.PriApp;
 
 class PriDisplay extends PriEventDispatcher {
 
+    /**
+    * Indicates the width of the PriDisplay object, in pixels. The scale or inner children are not affected.
+    * If you set `null`, the PriDisplay object try to get the width of inner elements.
+    *
+    * `default value : 100`
+    **/
     public var width(get, set):Float;
+    public var widthScaled(get, set):Float;
+
+    /**
+    * Indicates the height of the PriDisplay object, in pixels. The scale or inner children are not affected.
+    * If you set `null`, the PriDisplay object try to get the height of inner elements.
+    *
+    * `default value : 100`
+    **/
     public var height(get, set):Float;
+    public var heightScaled(get, set):Float;
+
+    /**
+    * Indicates the `x` coordinate of the PriDisplay instance relative to the local coordinates of the parent PriContainer.
+    * The object's coordinates refer to the left most point.
+    *
+    * `default value : 0`
+    **/
     public var x(get, set):Float;
+
+    /**
+    * Indicates the `y` coordinate of the PriDisplay instance relative to the local coordinates of the parent PriContainer.
+    * The object's coordinates refer to the element´s top most point.
+    *
+    * `default value : 0`
+    **/
     public var y(get, set):Float;
 
     public var centerX(get, set):Float;
@@ -35,6 +64,12 @@ class PriDisplay extends PriEventDispatcher {
     public var clipping(get, set):Bool;
 
     private var _alpha:Float = 1;
+    /**
+    * Indicates the alpha transparency value of the object specified.
+    * Valid values are 0(fully transparent) to 1(fully opaque).
+    *
+    * `default value : 1`
+    **/
     public var alpha(get, set):Float;
 
     @:isVar public var rotation(default, set):Float;
@@ -241,6 +276,19 @@ class PriDisplay extends PriEventDispatcher {
             w : w,
             h : h
         };
+    }
+
+
+    private function get_widthScaled():Float return this.width*this._scaleX;
+    private function set_widthScaled(value:Float):Float {
+        this.width = value / this._scaleX;
+        return value;
+    }
+
+    private function get_heightScaled():Float return this.height*this._scaleY;
+    private function set_heightScaled(value:Float):Float {
+        this.height = value / this._scaleY;
+        return value;
     }
 
     private function set_width(value:Float) {
