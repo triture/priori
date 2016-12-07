@@ -63,6 +63,8 @@ class PriDisplay extends PriEventDispatcher {
     public var pointer(get, set):Bool;
     public var clipping(get, set):Bool;
 
+    public var rotation(get, set):Float;
+
     private var _alpha:Float = 1;
     /**
     * Indicates the alpha transparency value of the object specified.
@@ -72,7 +74,6 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var alpha(get, set):Float;
 
-    @:isVar public var rotation(default, set):Float;
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var border(default, set):PriBorderStyle;
     @:isVar public var shadow(default, set):Array<PriShadowStyle>;
@@ -80,9 +81,12 @@ class PriDisplay extends PriEventDispatcher {
 
     @:isVar public var bgColor(default, set):Int;
 
-    @:isVar public var anchorX(default, set):Float = 0;
-    @:isVar public var anchorY(default, set):Float = 0;
+    public var anchorX(get, set):Float;
+    public var anchorY(get, set):Float;
 
+    private var _anchorX:Float = 0;
+    private var _anchorY:Float = 0;
+    private var _rotation:Float = 0;
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
 
@@ -393,40 +397,76 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
+    private function get_anchorX():Float return this._anchorX;
     private function set_anchorX(value:Float):Float {
-        this.anchorX = value == null ? 0 : value;
+        this._anchorX = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
+    private function get_anchorY():Float return this._anchorY;
     private function set_anchorY(value:Float):Float {
-        this.anchorY = value == null ? 0 : value;
+        this._anchorY = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
+    private function get_rotation():Float return this._rotation;
     private function set_rotation(value:Float):Float {
-        this.rotation = value > 360 ? value = value % 360 : value;
+        this._rotation = value > 360 ? value = value % 360 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
     private function __applyMatrixTransformation():Void {
-//        var angle:Float = this.rotation;
-//        var aSin:Float = Math.sin(angle);
-//        var aCos:Float = Math.cos(angle);
 
-        var sx:Float = this.scaleX;
-        var sy:Float = this.scaleY;
-        var anchorX:Float = this.anchorX*100;
-        var anchorY:Float = this.anchorY*100;
+        /* matrix reference */
+        // SCALE
+        // x 0 0
+        // 0 y 0
+        // 0 0 1
+
+        // ROTATE
+        // cosX -sinX   0
+        // sinX  cosX   0
+        //  0     0     1
+
+        var rot:Float = this._rotation;
+        var sx:Float = this._scaleX;
+        var sy:Float = this._scaleY;
 
         var valOrigin:String = '';
         var valMatrix:String = '';
 
-        if (sx != 1 || sy != 1) {
+
+        if (sx != 1 || sy != 1 || rot != 0) {
+
+            var anchorX:Float = this._anchorX*100;
+            var anchorY:Float = this._anchorY*100;
+
+            var angle:Float = rot * (Math.PI/180);
+            var aSin:Float = Math.sin(angle);
+            var aCos:Float = Math.cos(angle);
+
+            var m1:Array<Array<Float>> = [[aCos, -aSin, 0], [aSin, aCos, 0], [0, 0, 1]];
+            var m2:Array<Array<Float>> = [[sx, 0, 0], [0, sy, 0], [0, 0, 1]];
+
+            var calc:Int->Int->Float = function(row:Int, col:Int):Float {
+                return (
+                    m1[row][0] * m2[0][col] +
+                    m1[row][1] * m2[1][col] +
+                    m1[row][2] * m2[2][col]
+                );
+            }
+
+//            var m3:Array<Array<Float>> = [
+//                [calc(0, 0), calc(0, 1), calc(0, 2)],
+//                [calc(1, 0), calc(1, 1), calc(1, 2)],
+//                [calc(2, 0), calc(2, 1), calc(2, 2)]
+//            ];
+
             valOrigin = '$anchorX% $anchorY%';
-            valMatrix = 'matrix($sx, 0, 0, $sy, 0, 0)';
+            valMatrix = 'matrix(${calc(0, 0)}, ${calc(1, 0)}, ${calc(0, 1)}, ${calc(1, 1)}, ${calc(0, 2)}, ${calc(1, 2)})';
         }
 
         this.setCSS("-ms-transform-origin", valOrigin);
