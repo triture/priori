@@ -12,8 +12,8 @@ class PriImage extends PriDisplay {
     private var _originalImageWidth:Int;
     private var _originalImageHeight:Int;
 
-//    @:isVar public var scaleX(get, set):Float;
-//    @:isVar public var scaleY(get, set):Float;
+    @:isVar public var imageScaleX(get, set):Float;
+    @:isVar public var imageScaleY(get, set):Float;
 
     private var _loader:AssetImage;
     private var _imageElement:JQuery;
@@ -85,14 +85,14 @@ class PriImage extends PriDisplay {
         }
     }
 
-//    private function get_scaleX():Float {
-//        var currWidth:Float = this.width;
-//        var result:Float = currWidth / this._originalImageWidth;
-//
-//        return result;
-//    }
+    private function get_imageScaleX():Float {
+        var currWidth:Float = this.width;
+        var result:Float = currWidth / this._originalImageWidth;
 
-    override private function set_scaleX(value:Float):Float {
+        return result;
+    }
+
+    private function set_imageScaleX(value:Float):Float {
         var val:Float = value == null ? 1 : value;
 
         this._scaleX = val;
@@ -101,7 +101,14 @@ class PriImage extends PriDisplay {
         return value;
     }
 
-    override private function set_scaleY(value:Float):Float {
+    private function get_imageScaleY():Float {
+        var currHeight = this.height;
+        var result:Float = currHeight / this._originalImageHeight;
+
+        return result;
+    }
+
+    private function set_imageScaleY(value:Float):Float {
         var val:Float = value == null ? 1 : value;
 
         this._scaleY = val;
@@ -110,15 +117,8 @@ class PriImage extends PriDisplay {
         return value;
     }
 
-//    private function get_scaleY():Float {
-//        var currHeight = this.height;
-//        var result:Float = currHeight / this._originalImageHeight;
+//    override private function __applyMatrixTransformation():Void {
 //
-//        return result;
 //    }
-
-    override private function __applyMatrixTransformation():Void {
-
-    }
 
 }

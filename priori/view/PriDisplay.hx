@@ -84,8 +84,8 @@ class PriDisplay extends PriEventDispatcher {
     public var anchorX(get, set):Float;
     public var anchorY(get, set):Float;
 
-    private var _anchorX:Float = 0;
-    private var _anchorY:Float = 0;
+    private var _anchorX:Float = 0.5;
+    private var _anchorY:Float = 0.5;
     private var _rotation:Float = 0;
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
@@ -282,16 +282,15 @@ class PriDisplay extends PriEventDispatcher {
         };
     }
 
-
     private function get_widthScaled():Float return this.width*this._scaleX;
     private function set_widthScaled(value:Float):Float {
-        this.width = value / this._scaleX;
+        this.scaleX = value / this.width;
         return value;
     }
 
     private function get_heightScaled():Float return this.height*this._scaleY;
     private function set_heightScaled(value:Float):Float {
-        this.height = value / this._scaleY;
+        this.scaleY = value / this.height;
         return value;
     }
 
@@ -384,7 +383,6 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_scaleX():Float return this._scaleX;
     private function set_scaleX(value:Float):Float {
-        trace(value);
         this._scaleX = value == null ? 1 : value;
         this.__applyMatrixTransformation();
         return value;
@@ -413,7 +411,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_rotation():Float return this._rotation;
     private function set_rotation(value:Float):Float {
-        this._rotation = value > 360 ? value = value % 360 : value;
+        this._rotation = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
