@@ -42,9 +42,9 @@ You can also install aditional priori libs:
 Check out some Priori [examples](https://github.com/triture/priori-example).  
 
 ## Priori Roadmap for 1.0.0 Release Version  
-- Full Documentation **01% Completed**
-- Rotation property for PriDisplay
-- Scale property for PriDisplay
+- Full Documentation ** 02% Completed**
+- ~~Rotation property for PriDisplay~~ **Done**
+- ~~Scale property for PriDisplay~~ **Done**
 - ~~9 Slice Images~~ **Done**
 - ~~Shadow property~~ **Done**
 - Background Images
@@ -61,7 +61,12 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
-### 0.2.0 - 02/12/2016
+### 0.3.0 - 12/11/2016
+- New Feature : Scale and Rotation
+- Updated jQuery version to 2.2.1
+- Keep jquery and dom reference after kill method
+
+### 0.2.0 - 12/02/2016
 - New Feature : Shadow property
 - New Feature : PressEnter event for form elements
 - New Feature : Tooltip property
