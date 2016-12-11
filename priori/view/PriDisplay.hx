@@ -23,6 +23,13 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : 100`
     **/
     public var width(get, set):Float;
+
+    /**
+    * Indicates the width of the PriDisplay object, in pixels, after the scaleX effect applied.
+    *
+    * If you set a value for this property, the scaleX will change to render the object with the desired value.
+    *
+    **/
     public var widthScaled(get, set):Float;
 
     /**
@@ -32,6 +39,13 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : 100`
     **/
     public var height(get, set):Float;
+
+    /**
+    * Indicates the height of the PriDisplay object, in pixels, after the scaleY effect applied.
+    *
+    * If you set a value for this property, the scaleY will change to render the object with the desired value.
+    *
+    **/
     public var heightScaled(get, set):Float;
 
     /**
@@ -90,7 +104,24 @@ class PriDisplay extends PriEventDispatcher {
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
 
+    /**
+    * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
+    *
+    * This property only affects the rendering of the object, not the width itself. If you need to get the
+    * scaled width, use the property `widthScaled`.
+    *
+    * `default value : 1`
+    **/
     public var scaleX(get, set):Float;
+
+    /**
+    * Indicates the vertical scale (percentage) of the object as applied from the anchorY point.
+    *
+    * This property only affects the rendering of the object, not the height itself. If you need to get the
+    * scaled height, use the property `heightScaled`.
+    *
+    * `default value : 1`
+    **/
     public var scaleY(get, set):Float;
 
     private var _priId:String;
@@ -498,7 +529,7 @@ class PriDisplay extends PriEventDispatcher {
         return this._priId;
     }
 
-    public function updateDepth():Void {
+    private function updateDepth():Void {
         var dep:Int = this.getElement().parents().length;
         this.getElement().css("z-index", 1000 - dep);
         if (this._elementBorder != null) this._elementBorder.css("z-index", 1000 - dep);
