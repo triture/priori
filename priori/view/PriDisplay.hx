@@ -767,10 +767,7 @@ class PriDisplay extends PriEventDispatcher {
         this.getElement().off();
         this.getElement().find("*").off();
 
-        if (this.parent != null) parent.removeChild(this);
-
-        this._element = null;
-        this._jselement = null;
+        this.removeFromParent();
 
         super.kill();
     }
