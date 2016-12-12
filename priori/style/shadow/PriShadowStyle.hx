@@ -61,7 +61,8 @@ class PriShadowStyle {
             (this.verticalOffset + "px ") +
             (this.blur + "px ") +
             (this.spread + "px ") +
-            ("rgba(" + c.red + "," + c.green + "," + c.red + "," + this.opacity + ")")
+            ("rgba(" + c.red + "," + c.green + "," + c.red + "," + this.opacity + ")") +
+            ( this.type == PriShadowType.INSET ? "inset" : "")
         ;
     }
 }
