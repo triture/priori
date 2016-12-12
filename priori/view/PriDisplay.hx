@@ -3,9 +3,10 @@ package priori.view;
 import js.html.Element;
 import jQuery.Event;
 import jQuery.JQuery;
-import priori.style.shadow.PriShadowStyle;
-import priori.event.PriEvent;
 import priori.style.border.PriBorderStyle;
+import priori.style.shadow.PriShadowStyle;
+import priori.style.filter.PriFilterStyle;
+import priori.event.PriEvent;
 import priori.event.PriMouseEvent;
 import priori.event.PriSwipeEvent;
 import priori.event.PriTapEvent;
@@ -79,7 +80,7 @@ class PriDisplay extends PriEventDispatcher {
 
     public var rotation(get, set):Float;
 
-    private var _alpha:Float = 1;
+
     /**
     * Indicates the alpha transparency value of the object specified.
     * Valid values are 0(fully transparent) to 1(fully opaque).
@@ -87,13 +88,26 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : 1`
     **/
     public var alpha(get, set):Float;
+    private var _alpha:Float = 1;
 
     @:isVar public var corners(default, set):Array<Int>;
-    @:isVar public var border(default, set):PriBorderStyle;
-    @:isVar public var shadow(default, set):Array<PriShadowStyle>;
     @:isVar public var tooltip(default, set):String;
 
     @:isVar public var bgColor(default, set):Int;
+
+
+    // STYLES PROPERTIES
+
+    @:isVar public var border(default, set):PriBorderStyle;
+    @:isVar public var shadow(default, set):Array<PriShadowStyle>;
+
+    /**
+    * Defines visual effects for the object.
+    *
+    * `default value : null`
+    **/
+    @:isVar public var filter(default, set):PriFilterStyle;
+
 
     public var anchorX(get, set):Float;
     public var anchorY(get, set):Float;
@@ -149,8 +163,6 @@ class PriDisplay extends PriEventDispatcher {
         this.width = 100;
         this.height = 100;
 
-        this.rotation = 0;
-
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
 
@@ -204,17 +216,25 @@ class PriDisplay extends PriEventDispatcher {
     private function set_shadow(value:Array<PriShadowStyle>):Array<PriShadowStyle> {
         this.shadow = value;
 
-        if (value == null || value.length == 0) {
-            this.setCSS("-webkit-box-shadow", "");
-            this.setCSS("-moz-box-shadow", "");
-            this.setCSS("box-shadow", "");
-        } else {
-            var shadowString:String = value.join(",");
+        var shadowString:String = "";
+        if (value != null && value.length > 0) shadowString = value.join(",");
 
-            this.setCSS("-webkit-box-shadow", shadowString);
-            this.setCSS("-moz-box-shadow", shadowString);
-            this.setCSS("box-shadow", shadowString);
-        }
+        this.setCSS("-webkit-box-shadow", shadowString);
+        this.setCSS("-moz-box-shadow", shadowString);
+        this.setCSS("-o-box-shadow", shadowString);
+        this.setCSS("box-shadow", shadowString);
+
+        return value;
+    }
+
+    private function set_filter(value:PriFilterStyle):PriFilterStyle {
+        this.filter = value;
+
+        var filterString:String = "";
+        if (value != null) filterString = value.toString();
+
+        this.setCSS("-webkit-filter", filterString);
+        this.setCSS("filter", filterString);
 
         return value;
     }
