@@ -1,5 +1,6 @@
 package priori.style.filter;
 
+import priori.style.shadow.PriShadowStyle;
 class PriFilterStyle {
 
     /**
@@ -57,13 +58,21 @@ class PriFilterStyle {
     **/
     public var saturate:Float;
 
+    /**
+    * Applies a drop shadow effect to the PriDisplay.
+    * It will be ignored `spread` and `type` values of the ProShadowStyle object.
+    *
+    * `default : null`
+    **/
+    public var shadow:Array<PriShadowStyle>;
+
     @:dox(hide)
     public function new() {
         this.blur = 0;
         this.brightness = 1;
         this.contrast = 1;
         this.grayscale = 0;
-        this.hue = 1;
+        this.hue = 0;
     }
 
     public function setBlur(value:Float):PriFilterStyle {
@@ -91,15 +100,28 @@ class PriFilterStyle {
         return this;
     }
 
+    public function setShadow(value:Array<PriShadowStyle>):PriFilterStyle {
+        this.shadow = value;
+        return this;
+    }
+
     public function toString():String {
         var result:String = "";
 
         if (this.blur > 0) result += 'blur(${this.blur}px) ';
-        if (this.brightness > 0) result += 'brightness(${this.brightness * 100}%) ';
-        if (this.contrast > 0) result += 'contrast(${this.contrast * 100}%) ';
+        if (this.brightness != 1) result += 'brightness(${this.brightness * 100}%) ';
+        if (this.contrast != 1) result += 'contrast(${this.contrast * 100}%) ';
         if (this.grayscale > 0) result += 'grayscale${this.grayscale * 100}%) ';
         if (this.hue != 0) result += 'hue-rotate(${360 * this.hue}deg) ';
         if (this.saturate > 0) result += 'saturate(${this.saturate * 100}%) ';
+        if (this.shadow != null && this.shadow.length > 0) {
+            result += "drop-shadow(";
+            for (i in 0 ... this.shadow.length) {
+                if (i > 0) result += ",";
+                result += this.shadow[i].toString(2);
+            }
+            result += ") ";
+        }
 
         return result;
     }

@@ -51,8 +51,12 @@ class PriShadowStyle {
         return this;
     }
 
-    public function toString():String {
+    public function toString(mode:Int = 0):String {
         // H, V, B, S, RGBA()
+
+        // mode 0 : box-shadow
+        // mode 1 : text-shadow
+        // mode 2 : filter-shadow
 
         var c:PriColor = new PriColor(this.color);
 
@@ -60,9 +64,9 @@ class PriShadowStyle {
             (this.horizontalOffset + "px ") +
             (this.verticalOffset + "px ") +
             (this.blur + "px ") +
-            (this.spread + "px ") +
+            (mode > 0 ? "" : (this.spread + "px ")) +
             ("rgba(" + c.red + "," + c.green + "," + c.red + "," + this.opacity + ")") +
-            ( this.type == PriShadowType.INSET ? "inset" : "")
+            (mode > 0 ? "" : ( this.type == PriShadowType.INSET ? "inset" : ""))
         ;
     }
 }
