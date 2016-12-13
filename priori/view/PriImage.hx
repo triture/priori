@@ -1,6 +1,5 @@
 package priori.view;
 
-
 import priori.event.PriEvent;
 import priori.assets.AssetManager;
 import priori.assets.Asset;
@@ -12,8 +11,11 @@ class PriImage extends PriDisplay {
     private var _originalImageWidth:Int;
     private var _originalImageHeight:Int;
 
-    @:isVar public var imageScaleX(get, set):Float;
-    @:isVar public var imageScaleY(get, set):Float;
+    private var _imageScaleX:Float = 1;
+    private var _imageScaleY:Float = 1;
+
+    public var imageScaleX(get, set):Float;
+    public var imageScaleY(get, set):Float;
 
     private var _loader:AssetImage;
     private var _imageElement:JQuery;
@@ -80,45 +82,36 @@ class PriImage extends PriDisplay {
 
             this.getElement().append(this._imageElement);
 
-            this.width = this._originalImageWidth * this.scaleX;
-            this.height = this._originalImageHeight * this.scaleY;
+            this.width = this._originalImageWidth * this._imageScaleX;
+            this.height = this._originalImageHeight * this._imageScaleY;
         }
     }
 
     private function get_imageScaleX():Float {
-        var currWidth:Float = this.width;
-        var result:Float = currWidth / this._originalImageWidth;
-
+        if (this._originalImageWidth == 0) return this._imageScaleX;
+        var result:Float = this.width / this._originalImageWidth;
         return result;
     }
 
     private function set_imageScaleX(value:Float):Float {
         var val:Float = value == null ? 1 : value;
 
-        this._scaleX = val;
+        this._imageScaleX = val;
         this.width = this._originalImageWidth * val;
 
         return value;
     }
 
     private function get_imageScaleY():Float {
-        var currHeight = this.height;
-        var result:Float = currHeight / this._originalImageHeight;
-
+        if (this._originalImageHeight == 0) return this._imageScaleY;
+        var result:Float = this.height / this._originalImageHeight;
         return result;
     }
 
     private function set_imageScaleY(value:Float):Float {
         var val:Float = value == null ? 1 : value;
-
-        this._scaleY = val;
+        this._imageScaleY = val;
         this.height = this._originalImageHeight * val;
-
         return value;
     }
-
-//    override private function __applyMatrixTransformation():Void {
-//
-//    }
-
 }
