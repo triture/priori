@@ -6,8 +6,8 @@ import jQuery.JQuery;
 
 class PriText extends PriDisplay {
 
-    @:isVar public var text(get, set):String;
-    @:isVar public var html(get, set):String;
+    @:isVar public var text(default, set):String;
+    @:isVar public var html(default, set):String;
 
     @:isVar public var fontStyle(default, set):PriFontStyle;
     @:isVar public var fontSize(default, set):Float;
@@ -25,42 +25,34 @@ class PriText extends PriDisplay {
         this.multiLine = false;
     }
 
-    @:noCompletion private function set_text(value:String):String {
+    private function set_text(value:String):String {
         this.text = value;
-        this.getElement().text(value);
+        this._element.text(value);
 
         return value;
     }
 
-    @:noCompletion private function get_text():String {
-        return this.getElement().text();
-    }
-
-    @:noCompletion private function set_html(value:String):String {
+    private function set_html(value:String):String {
         this.html = value;
-        this.getElement().html(value);
+        this._element.html(value);
 
         return value;
     }
 
-    @:noCompletion private function get_html():String {
-        return this.getElement().html();
-    }
 
-
-    @:noCompletion private function set_fontStyle(value:PriFontStyle):PriFontStyle {
+    private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
         if (value == null) {
-            this.getElement().css(PriFontStyle.getFontStyleObjectBase());
+            this._element.css(PriFontStyle.getFontStyleObjectBase());
         } else {
-            this.getElement().css(value.getFontStyleObject());
+            this._element.css(value.getFontStyleObject());
         }
 
         return value;
     }
 
-    @:noCompletion private function set_fontSize(value:Float):Float {
+    private function set_fontSize(value:Float):Float {
         if (this.fontSize != value) {
             if (value == null) {
                 this.getElement().css("font-size", "");
@@ -73,7 +65,7 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    @:noCompletion private function get_fontSize():Float {
+    private function get_fontSize():Float {
         if (this.fontSize == null) {
             return 12;
         }
@@ -81,7 +73,7 @@ class PriText extends PriDisplay {
         return this.fontSize;
     }
 
-    @:noCompletion private function set_autoSize(value:Bool):Bool {
+    private function set_autoSize(value:Bool):Bool {
         if (this.autoSize != value) {
             this.autoSize = value;
 
@@ -95,7 +87,7 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    @:noCompletion private function set_multiLine(value:Bool):Bool {
+    private function set_multiLine(value:Bool):Bool {
         if (this.multiLine != value) {
 
             this.multiLine = value;
@@ -110,7 +102,7 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    @:noCompletion override private function set_width(value:Float):Float {
+    override private function set_width(value:Float):Float {
         if (this.autoSize == false || this.multiLine == true) {
             super.set_width(value);
         }
@@ -118,7 +110,7 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    @:noCompletion override private function set_height(value:Float):Float {
+    override private function set_height(value:Float):Float {
         if (this.autoSize == false) {
             super.set_height(value);
         }

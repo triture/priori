@@ -120,6 +120,9 @@ class PriDisplay extends PriEventDispatcher {
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
 
+    private var ___width:Float = 100;
+    private var ___height:Float = 100;
+
     /**
     * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
     *
@@ -344,6 +347,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_width(value:Float) {
+        this.___width = value;
+
         if (value == null) {
             this.setCSS("width", "");
         } else {
@@ -353,12 +358,19 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_width():Float {
-        var value = this.getElement().width();
-        if (value == 0 && !this.hasApp()) value = this.getOutDOMDimensions().w;
-        return value;
+        var result:Float = this.___width;
+
+        if (result == null) {
+            result = this._element.width();
+            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().w;
+        }
+
+        return result;
     }
 
     private function set_height(value:Float):Float {
+        this.___height = value;
+
         if (value == null) {
             this.setCSS("height", "");
         } else {
@@ -369,9 +381,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_height():Float {
-        var value = this.getElement().height();
-        if (value == 0 && !this.hasApp()) value = this.getOutDOMDimensions().h;
-        return value;
+        var result:Float = this.___height;
+
+        if (result == null) {
+            result = this._element.height();
+            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().h;
+        }
+        return result;
     }
 
     private function get_maxX():Float {
@@ -796,7 +812,7 @@ class PriDisplay extends PriEventDispatcher {
         jsElement.setAttribute("id", this._priId);
         jsElement.setAttribute("prioriid", this._priId);
         jsElement.setAttribute("class", "priori_noselect");
-        jsElement.setAttribute("style", "left:0px;top:0px;width:100px;height:100px;position:absolute;margin:0px;padding:0px;overflow:hidden;");
+        jsElement.setAttribute("style", 'left:0px;top:0px;width:${___width}px;height:${___height}px;position:absolute;margin:0px;padding:0px;overflow:hidden;');
 
         this._jselement = jsElement;
         this._element = new JQuery(jsElement);
