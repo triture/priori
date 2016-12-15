@@ -53,22 +53,23 @@ class PriContainer extends PriDisplay {
     public function addChild(child:PriDisplay):Void {
 
         // remove o objeto de algum parent, caso ja tenha algum
-        var parent:PriContainer = child.parent;
-
-        if (parent != null) {
-            parent.removeChild(child);
-        }
+        child.removeFromParent();
 
         this._childList.push(child);
         this._jselement.appendChild(child.getJSElement());
 
         child._parent = this;
 
-        if (this.disabled) {
-            child.getElement().attr("disabled", "disabled");
-            child.getElement().find("*").attr("disabled", "disabled");
-        } else {
-            this.disabled = false;
+        if (this.hasApp()) {
+            if (this.disabled) {
+                child.getElement().attr("disabled", "disabled");
+                child.getElement().find("*").attr("disabled", "disabled");
+            } else {
+                if (!this.hasDisabledParent()) {
+                    child.getElement().removeAttr("disabled");
+                    child.getElement().find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
+                }
+            }
         }
 
         if (child.hasApp()) {

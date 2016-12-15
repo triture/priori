@@ -74,6 +74,8 @@ class PriDisplay extends PriEventDispatcher {
     public var visible(get, set):Bool;
 
     public var disabled(get, set):Bool;
+    private var _disabled:Bool = false;
+
     public var mouseEnabled(get, set):Bool;
     public var pointer(get, set):Bool;
     public var clipping(get, set):Bool;
@@ -158,10 +160,6 @@ class PriDisplay extends PriEventDispatcher {
         this._priId = this.getRandomId();
         this.createElement();
 
-        this.x = 0;
-        this.y = 0;
-        this.width = 100;
-        this.height = 100;
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
@@ -536,8 +534,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function hasApp():Bool {
-        var priAppId:String = PriApp.g().getPrid();
-        if (this.getElement().parents("#" + priAppId).length > 0) return true;
+        var app:PriApp = PriApp.g();
+        if (this == app) return true;
+        else {
+            if (this._parent == null) return false;
+            else if (this._parent == app) return true;
+            else return this._parent.hasApp();
+        }
         return false;
     }
 
@@ -564,13 +567,8 @@ class PriDisplay extends PriEventDispatcher {
         return this._element;
     }
 
-    private function setCSS(property:String, value:String):Void {
-        this.getElement().css(property, value);
-    }
-
-    private function getCSS(property:String):String {
-        return this.getElement().css(property);
-    }
+    private function setCSS(property:String, value:String):Void this._element.css(property, value);
+    private function getCSS(property:String):String return this.getElement().css(property);
 
     private function set_bgColor(value:Int):Int {
         this.bgColor = value;
@@ -798,7 +796,7 @@ class PriDisplay extends PriEventDispatcher {
         jsElement.setAttribute("id", this._priId);
         jsElement.setAttribute("prioriid", this._priId);
         jsElement.setAttribute("class", "priori_noselect");
-        jsElement.setAttribute("style", "position:absolute;margin:0px;padding:0px;overflow:hidden;");
+        jsElement.setAttribute("style", "left:0px;top:0px;width:100px;height:100px;position:absolute;margin:0px;padding:0px;overflow:hidden;");
 
         this._jselement = jsElement;
         this._element = new JQuery(jsElement);
@@ -806,8 +804,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function removeFromParent():Void {
-        if (this.parent != null) {
-            this.parent.removeChild(this);
+        if (this._parent != null) {
+            this._parent.removeChild(this);
         }
     }
 
@@ -853,11 +851,6 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    private function isDisabledByInherit():Bool {
-        return !(this.getElement().attr("priori-disabled") == "disabled");
-    }
-
-
 
     private function get_mouseEnabled():Bool {
         return (this.getElement().css("pointer-events") != "none");
@@ -873,24 +866,38 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
+
+    public function hasDisabledParent():Bool {
+        if (this.parent != null) {
+            if (this.parent.disabled) return true;
+            else if (this.parent.hasDisabledParent()) return true;
+        }
+        return false;
+    }
+
     private function get_disabled():Bool {
-        if (this.getElement().is("[disabled]")) return true;
+        if (this._disabled) return true;
+        if (this._element.is("[disabled]")) return true;
+
         return false;
     }
 
     private function set_disabled(value:Bool) {
-        if (value == true) {
-            this.getElement().attr("priori-disabled", "disabled");
-            this.getElement().attr("disabled", "disabled");
-            this.getElement().find("*").attr("disabled", "disabled");
-        } else {
+        this._disabled = value;
 
-            this.getElement().removeAttr("priori-disabled");
+        if (value) {
+            this._element.attr("priori-disabled", "disabled");
+
+            this._element.attr("disabled", "disabled");
+            this._element.find("*").attr("disabled", "disabled");
+
+        } else {
+            this._element.removeAttr("priori-disabled");
 
             // verifica se algum parent esta desabilitado
-            if (this.getElement().parents("*[priori-disabled='disabled']").length == 0) {
-                this.getElement().removeAttr("disabled");
-                this.getElement().find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
+            if (!this.hasDisabledParent()) {
+                this._element.removeAttr("disabled");
+                this._element.find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
             }
         }
 
