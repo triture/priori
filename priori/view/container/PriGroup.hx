@@ -51,7 +51,6 @@ class PriGroup extends PriContainer {
         this.removeEventListener(PriEvent.ADDED_TO_APP, this._onAddedToApp);
         this.addEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
 
-
         if (this._setupCalled == false) {
             this._setupCalled = true;
             this.setup();
@@ -142,24 +141,6 @@ class PriGroup extends PriContainer {
 
             this._invalidateTimer = Timer.delay(this._updateScheduled, PriApp.g().getMSUptate());
         }
-    }
-
-    @:noCompletion override private function set_width(value:Float) {
-        if (value != this.width) {
-            super.set_width(value);
-            this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
-        }
-
-        return value;
-    }
-
-    @:noCompletion override private function set_height(value:Float):Float {
-        if (value != this.height) {
-            super.set_height(value);
-            this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
-        }
-
-        return value;
     }
 
     override public function getContentBox():PriGeomBox {

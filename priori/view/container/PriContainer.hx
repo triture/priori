@@ -142,18 +142,24 @@ class PriContainer extends PriDisplay {
     }
 
     @:noCompletion override private function set_width(value:Float):Float {
-        var result:Float = super.set_width(value);
+        if (value != this.width) {
+            super.set_width(value);
+            this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
+        }
 
         this.updateBorderDisplay();
 
-        return result;
+        return value;
     }
 
     @:noCompletion override private function set_height(value:Float):Float {
-        var result:Float = super.set_height(value);
+        if (value != this.height) {
+            super.set_height(value);
+            this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
+        }
 
         this.updateBorderDisplay();
 
-        return result;
+        return value;
     }
 }
