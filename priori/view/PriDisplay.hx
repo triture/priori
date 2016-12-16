@@ -921,4 +921,60 @@ class PriDisplay extends PriEventDispatcher {
     }
 
 
+    public function getGlobalBox():PriGeomBox {
+        var result:PriGeomBox = new PriGeomBox();
+
+        if (this.hasApp()) {
+            if (this._jselement.getBoundingClientRect != null) {
+                var box:DOMRect = this._jselement.getBoundingClientRect();
+
+                var body:Element = Browser.document.body;
+                var docElem:Element = Browser.document.documentElement;
+                var window:Window = Browser.window;
+
+                var scrollTop:Int =
+                    window.pageYOffset != null ? window.pageYOffset :
+                    docElem.scrollTop != null ? docElem.scrollTop : body.scrollTop;
+
+                var scrollLeft:Int =
+                    window.pageXOffset != null ? window.pageXOffset :
+                    docElem.scrollLeft != null ? docElem.scrollLeft : body.scrollLeft;
+
+                var clientTop:Int =
+                    docElem.clientTop != null ? docElem.clientTop :
+                    body.clientTop != null ? body.clientTop : 0;
+
+                var clientLeft:Int =
+                    docElem.clientLeft != null ? docElem.clientLeft :
+                    body.clientLeft != null ? body.clientLeft : 0;
+
+                var top:Int  = Std.int(box.top +  scrollTop - clientTop);
+                var left:Int = Std.int(box.left + scrollLeft - clientLeft);
+
+                result.x = Math.fround(left);
+                result.y = Math.fround(top);
+            } else {
+                var el:Element = this._jselement;
+
+                var top:Int = 0;
+                var left:Int = 0;
+
+                while (el != null) {
+                    top += el.offsetTop;
+                    left += el.offsetLeft;
+
+                    el = el.offsetParent;
+                }
+
+                result.x = top;
+                result.y = top;
+            }
+        }
+
+        result.width = this.width;
+        result.height = this.height;
+
+        return result;
+    }
+
 }
