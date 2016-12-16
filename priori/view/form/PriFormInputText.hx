@@ -2,7 +2,6 @@ package priori.view.form;
 
 import priori.app.PriApp;
 import jQuery.Event;
-import js.JQuery;
 import priori.event.PriEvent;
 
 class PriFormInputText extends PriFormElementBase {
@@ -11,12 +10,27 @@ class PriFormInputText extends PriFormElementBase {
     @:isVar public var placeholder(default, set):String;
     @:isVar public var password(default, set):Bool;
 
+    @:isVar public var marginLeft(default, set):Float;
+    @:isVar public var marginRight(default, set):Float;
+
     public function new() {
         super();
 
         this.placeholder = "";
         this.password = false;
         this.clipping = false;
+    }
+
+    private function set_marginLeft(value:Float):Float {
+        this.marginLeft = value;
+        this._baseElement.css("padding-left", value == null ? "" : value + "px");
+        return value;
+    }
+
+    private function set_marginRight(value:Float):Float {
+        this.marginRight = value;
+        this._baseElement.css("padding-right", value == null ? "" : value + "px");
+        return value;
     }
 
     override public function getComponentCode():String {
