@@ -1,5 +1,6 @@
 package helper.browser;
 
+import priori.event.PriFocusEvent;
 import priori.event.PriKeyboardEvent;
 import priori.event.PriTapEvent;
 import priori.event.PriEvent;
@@ -14,10 +15,15 @@ class BrowserEventEngine {
     private static var SPECIAL_EVENT_LIST:Array<String> = [
         "mouseleave",
         "mouseenter",
+        "mousedown",
+        "mouseup",
         "click",
 
         "keyup",
-        "keydown"
+        "keydown",
+
+        "focusin",
+        "focusout"
     ];
 
     public var registeredEvent:Array<String> = [];
@@ -78,8 +84,12 @@ class BrowserEventEngine {
             case "mouseleave" : this.jqel.on("mouseleave", this.on_mouse_leave);
             case "mouseenter" : this.jqel.on("mouseenter", this.on_mouse_enter);
             case "click" : this.jqel.on("click", this.on_mouse_click);
+            case "mousedown" : this.jqel.on("mousedown", this.on_mouse_down);
+            case "mouseup" : this.jqel.on("mouseup", this.on_mouse_up);
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
+            case "focusin" : this.jqel.on("focusin", this.on_focus_in);
+            case "focusout" : this.jqel.on("focusout", this.on_focus_out);
         }
     }
 
@@ -90,8 +100,23 @@ class BrowserEventEngine {
             case "click" : this.jqel.off("click", this.on_mouse_click);
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);
+            case "focusin" : this.jqel.off("focusin", this.on_focus_in);
+            case "focusout" : this.jqel.off("focusout", this.on_focus_out);
         }
     }
+
+    private function on_focus_in(e:Dynamic):Void {
+        if (!this.display.visible || this.display.disabled) return;
+        var pe:PriFocusEvent = new PriFocusEvent(PriFocusEvent.FOCUS_IN);
+        this.display.dispatchEvent(pe);
+    }
+
+    private function on_focus_out(e:Dynamic):Void {
+        if (!this.display.visible || this.display.disabled) return;
+        var pe:PriFocusEvent = new PriFocusEvent(PriFocusEvent.FOCUS_OUT);
+        this.display.dispatchEvent(pe);
+    }
+
 
     private function on_keyboard_up(e:Dynamic):Void {
         if (this.display.disabled) return;
@@ -112,9 +137,21 @@ class BrowserEventEngine {
         this.display.dispatchEvent(pe);
     }
 
+    private function on_mouse_down(e:Dynamic):Void {
+        if (this.display.disabled) return;
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN);
+        this.display.dispatchEvent(pe);
+    }
+
+    private function on_mouse_up(e:Dynamic):Void {
+        if (this.display.disabled) return;
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP);
+        this.display.dispatchEvent(pe);
+    }
+
     private function on_mouse_click(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = new PriMouseEvent(PriTapEvent.TAP);
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP);
         this.display.dispatchEvent(pe);
     }
     private function on_mouse_enter(e:Dynamic):Void {

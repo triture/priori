@@ -1,17 +1,16 @@
 package priori.event;
 
-class PriMouseEvent extends PriEvent {
+class PriFocusEvent extends PriEvent {
 
-    inline public static var MOUSE_OVER:String = "mouseenter";
-    inline public static var MOUSE_OUT:String = "mouseleave";
-
+    inline public static var FOCUS_IN:String = "focusin";
+    inline public static var FOCUS_OUT:String = "focusout";
 
     public function new(type:String, propagate:Bool = false, bubble:Bool = false, data:Dynamic = null) {
         super(type, propagate, bubble, data);
     }
 
     override public function clone():PriEvent {
-        var clone:PriMouseEvent = new PriMouseEvent(this.type, this.propagate, this.bubble);
+        var clone:PriFocusEvent = new PriFocusEvent(this.type, this.propagate, this.bubble);
 
         clone.target = this.target;
         clone.currentTarget = this.currentTarget;
@@ -19,4 +18,5 @@ class PriMouseEvent extends PriEvent {
 
         return clone;
     }
+
 }
