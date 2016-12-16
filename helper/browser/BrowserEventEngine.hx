@@ -83,9 +83,10 @@ class BrowserEventEngine {
         switch event {
             case "mouseleave" : this.jqel.on("mouseleave", this.on_mouse_leave);
             case "mouseenter" : this.jqel.on("mouseenter", this.on_mouse_enter);
-            case "click" : this.jqel.on("click", this.on_mouse_click);
             case "mousedown" : this.jqel.on("mousedown", this.on_mouse_down);
             case "mouseup" : this.jqel.on("mouseup", this.on_mouse_up);
+            case "click" : this.jqel.on("click", this.on_mouse_click);
+
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
             case "focusin" : this.jqel.on("focusin", this.on_focus_in);
@@ -97,7 +98,10 @@ class BrowserEventEngine {
         switch event {
             case "mouseleave" : this.jqel.off("mouseleave", this.on_mouse_leave);
             case "mouseenter" : this.jqel.off("mouseenter", this.on_mouse_enter);
+            case "mousedown" : this.jqel.off("mousedown", this.on_mouse_down);
+            case "mouseup" : this.jqel.off("mouseup", this.on_mouse_up);
             case "click" : this.jqel.off("click", this.on_mouse_click);
+
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);
             case "focusin" : this.jqel.off("focusin", this.on_focus_in);
