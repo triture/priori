@@ -61,6 +61,15 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.4.0 - 12/18/2016
+- New Feature : Filters for PriDisplay: blur, contrast, grayscale, etc (do not work on IE)
+- New Feature : getGlobalBox() method to get the object position on window
+- Improvements : LOT OF performance improvements (more to come).
+- Improvements : Uses text-shadow on PriText instead of box-shadow
+- Improvements : PriImage scales conflicts
+- Improvements : PriContainer now supports PriEvents.RESIZE.
+- Improvements : Better way to handle Browser events
+
 ### 0.3.0 - 12/11/2016
 - New Feature : Scale and Rotation
 - Updated jQuery version to 2.2.1
