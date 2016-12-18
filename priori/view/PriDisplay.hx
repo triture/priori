@@ -1,5 +1,12 @@
 package priori.view;
 
+import js.html.Window;
+import js.Browser;
+import js.Browser;
+import js.html.BodyElement;
+import js.html.DOMRect;
+import priori.geom.PriGeomBox;
+import helper.browser.BrowserEventEngine;
 import js.html.Element;
 import jQuery.Event;
 import jQuery.JQuery;
@@ -7,13 +14,11 @@ import priori.style.border.PriBorderStyle;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.filter.PriFilterStyle;
 import priori.event.PriEvent;
-import priori.event.PriMouseEvent;
 import priori.event.PriSwipeEvent;
 import priori.event.PriTapEvent;
 import priori.view.container.PriContainer;
 import priori.event.PriEventDispatcher;
 import priori.app.PriApp;
-
 
 class PriDisplay extends PriEventDispatcher {
 
@@ -153,6 +158,8 @@ class PriDisplay extends PriEventDispatcher {
     private var _specialEventList:Array<String>;
     private var _specialEventStack:Array<Dynamic>;
 
+    private var __eventHelper:BrowserEventEngine;
+
     public function new() {
         super();
 
@@ -163,6 +170,11 @@ class PriDisplay extends PriEventDispatcher {
         this._priId = this.getRandomId();
         this.createElement();
 
+        this.__eventHelper = new BrowserEventEngine();
+        this.__eventHelper.jqel = this._element;
+        this.__eventHelper.jsel = this._jselement;
+        this.__eventHelper.display = this;
+        this.addEventListener(PriEvent.ADDED_TO_APP, this.__eventHelper.onAddedToApp);
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
@@ -235,6 +247,8 @@ class PriDisplay extends PriEventDispatcher {
         if (value != null) filterString = value.toString();
 
         this.setCSS("-webkit-filter", filterString);
+        this.setCSS("-ms-filter", filterString);
+        this.setCSS("-o-filter", filterString);
         this.setCSS("filter", filterString);
 
         return value;
@@ -601,13 +615,7 @@ class PriDisplay extends PriEventDispatcher {
     override public function addEventListener(event:String, listener:Dynamic->Void):Void {
 
         // tap events
-        if (event == PriTapEvent.TAP && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP, _onJTouch_tap);
-        } else if (event == PriTapEvent.TAP_DOWN && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP_DOWN, _onJTouch_tapdown);
-        } else if (event == PriTapEvent.TAP_UP && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP_UP, _onJTouch_tapup);
-        } else if (event == PriTapEvent.TAP_START && this._specialEventList.indexOf(event) == -1) {
+        if (event == PriTapEvent.TAP_START && this._specialEventList.indexOf(event) == -1) {
             this.addSpecialEvent(PriTapEvent.TAP_START, _onJTouch_tapstart);
         } else if (event == PriTapEvent.TAP_END && this._specialEventList.indexOf(event) == -1) {
             this.addSpecialEvent(PriTapEvent.TAP_END, _onJTouch_tapend);
@@ -630,11 +638,7 @@ class PriDisplay extends PriEventDispatcher {
             this.addSpecialEvent(PriSwipeEvent.SWIPE_END, _onJTouch_swipeend);
         }
 
-        if (event == PriMouseEvent.MOUSE_OUT && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent("mouseleave", _SPEVENT_mouseleave);
-        } else if (event == PriMouseEvent.MOUSE_OVER && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent("mouseenter", _SPEVENT_mouseenter);
-        }
+        this.__eventHelper.registerEvent(event);
 
 
         if (event == PriTapEvent.TAP) {
@@ -685,69 +689,6 @@ class PriDisplay extends PriEventDispatcher {
         this._specialEventStack = [];
     }
 
-
-    private function _SPEVENT_mouseenter(e:Event, d):Void {
-        //e.stopPropagation();
-
-        // todo fazer o bubble dos eventos atraves dos evrntos priori
-        // todo criar o clone de event de forma melhorada usando serializacao
-
-        var event:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-
-    private function _SPEVENT_mouseleave(e:Event, d):Void {
-        //e.stopPropagation();
-
-        var event:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OUT);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-
-    private function _onJTouch_tap(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_tapdown(e:Dynamic, touch):Void {
-        e.stopPropagation();
-
-        var data:Dynamic = {
-            //screenY : e.screenY,
-            //screenX : e.screenX,
-            //clientY : e.clientY,
-            //clientX : e.clientX,
-            pageY : e.pageY,
-            pageX : e.pageX,
-            y : e.offsetY,
-            x : e.offsetX
-
-        };
-
-        //trace(data);
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN, false, false, data);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_tapup(e:Dynamic, touch):Void {
-        e.stopPropagation();
-
-        var data:Dynamic = {
-            //screenY : e.screenY,
-            //screenX : e.screenX,
-            //clientY : e.clientY,
-            //clientX : e.clientX,
-            pageY : e.pageY,
-            pageX : e.pageX,
-            y : e.offsetY,
-            x : e.offsetX
-        };
-
-        //trace(data);
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP, false, false, data);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
     private function _onJTouch_tapstart(e:Event, touch):Void {
         e.stopPropagation();
 
@@ -827,6 +768,8 @@ class PriDisplay extends PriEventDispatcher {
 
     override public function kill():Void {
         this.killSpecialEvents();
+
+        this.__eventHelper.kill();
 
         // remove todos os eventos do elemento
         this.getElement().off();
