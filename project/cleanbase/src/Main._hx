@@ -1,6 +1,6 @@
 package ;
 
-import priori.style.font.PriFontSyleWeight;
+import priori.style.font.PriFontStyleWeight;
 import priori.style.font.PriFontStyle;
 import priori.view.text.PriText;
 import priori.app.PriApp;
@@ -16,7 +16,7 @@ class Main extends PriApp {
     override private function setup():Void {
         this.example = new PriText();
         this.example.text = "Hello World!";
-        this.example.fontStyle = new PriFontStyle(PriFontSyleWeight.BOLD);
+        this.example.fontStyle = new PriFontStyle(PriFontStyleWeight.BOLD);
         this.addChild(this.example);
     }
 
