@@ -9,6 +9,7 @@ class PriGridCellRendererDefault extends PriGridCellRenderer {
 
     public function new() {
         super();
+        this.clipping = true;
     }
 
     override public function update():Void {
@@ -19,10 +20,7 @@ class PriGridCellRendererDefault extends PriGridCellRenderer {
 
     override private function setup():Void {
         this.label = new PriText();
-        this.label.autoSize = false;
-        this.label.multiLine = false;
         this.label.text = this.value;
-        this.label.height = null;
 
         this.addChild(this.label);
     }
@@ -30,11 +28,7 @@ class PriGridCellRendererDefault extends PriGridCellRenderer {
     override private function paint():Void {
         var space:Float = 10;
 
-        this.label.width = this.width - space*2;
-        this.label.height = null;
-
         this.label.x = space;
         this.label.centerY = this.height/2;
-
     }
 }
