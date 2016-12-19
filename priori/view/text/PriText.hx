@@ -6,36 +6,46 @@ import jQuery.JQuery;
 
 class PriText extends PriDisplay {
 
-    @:isVar public var text(default, set):String;
-    @:isVar public var html(default, set):String;
+    inline private static var INITIAL_FONT_SIZE:Int = 13;
+
+
+    public var html(get, set):String;
 
     @:isVar public var fontStyle(default, set):PriFontStyle;
-    @:isVar public var fontSize(default, set):Float;
 
-    @:isVar public var autoSize(default, set):Bool;
-    @:isVar public var multiLine(default, set):Bool;
 
+    public var text(get, set):String;
+    private var __text:String = "";
+
+    public var fontSize(get, set):Float;
+    private var __fontSize:Float = INITIAL_FONT_SIZE;
+
+    public var autoSize(get, set):Bool;
+    private var __autoSize:Bool = true;
+
+
+    public var multiLine(get, set):Bool;
+    private var __multiLine:Bool = false;
 
     public function new() {
         super();
 
-        this.text = "";
-        this.fontSize = null;
-        this.autoSize = true;
-        this.multiLine = false;
+        this.__text = "";
+
+        this.___height = null;
+        this.___width = null;
     }
 
+    public function get_text():String return this.__text;
     private function set_text(value:String):String {
-        this.text = value;
-        this._element.text(value);
-
+        this.__text = value;
+        this._jselement.innerText = value;
         return value;
     }
 
+    private function get_html():String return this._jselement.innerHTML;
     private function set_html(value:String):String {
-        this.html = value;
-        this._element.html(value);
-
+        this._jselement.innerHTML = value;
         return value;
     }
 
@@ -52,58 +62,47 @@ class PriText extends PriDisplay {
         return value;
     }
 
+    private function get_fontSize():Float return this.__fontSize;
     private function set_fontSize(value:Float):Float {
-        if (this.fontSize != value) {
+        if (this.__fontSize != value) {
             if (value == null) {
-                this.getElement().css("font-size", "");
+                this.__fontSize = INITIAL_FONT_SIZE;
+                this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
             } else {
-                this.fontSize = value;
-                this.getElement().css("font-size", Std.int(value) + "px");
+                this.__fontSize = value;
+                this._jselement.style.fontSize = Std.int(value) + "px";
             }
         }
 
         return value;
     }
 
-    private function get_fontSize():Float {
-        if (this.fontSize == null) {
-            return 12;
-        }
-
-        return this.fontSize;
-    }
-
+    private function get_autoSize():Bool return this.__autoSize;
     private function set_autoSize(value:Bool):Bool {
-        if (this.autoSize != value) {
-            this.autoSize = value;
+        if (this.__autoSize != value) {
+            this.__autoSize = value;
 
-            if (!this.multiLine) {
-                super.set_width(null);
-            }
-
-            super.set_height(null);
+            if (!this.__multiLine) super.set_width(null);
+            if (this.__autoSize) super.set_height(null);
         }
 
         return value;
     }
 
+    private function get_multiLine():Bool return this.__multiLine;
     private function set_multiLine(value:Bool):Bool {
-        if (this.multiLine != value) {
+        if (this.__multiLine != value) {
+            this.__multiLine = value;
 
-            this.multiLine = value;
-
-            if (value) {
-                this.getElement().css("white-space", "");
-            } else {
-                this.getElement().css("white-space", "nowrap");
-            }
+            if (value) this._jselement.style.whiteSpace = "";
+            else this._jselement.style.whiteSpace = "nowrap";
         }
 
         return value;
     }
 
     override private function set_width(value:Float):Float {
-        if (this.autoSize == false || this.multiLine == true) {
+        if (this.__autoSize == false || this.__multiLine == true) {
             super.set_width(value);
         }
 
@@ -111,7 +110,7 @@ class PriText extends PriDisplay {
     }
 
     override private function set_height(value:Float):Float {
-        if (this.autoSize == false) {
+        if (this.__autoSize == false) {
             super.set_height(value);
         }
 
@@ -132,6 +131,15 @@ class PriText extends PriDisplay {
         this.setCSS("text-shadow", shadowString);
 
         return value;
+    }
+
+    override private function createElement():Void {
+        super.createElement();
+
+        this._jselement.style.whiteSpace = "nowrap";
+        this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+        this._jselement.style.width = "";
+        this._jselement.style.height = "";
     }
 
 }
