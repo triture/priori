@@ -1,5 +1,6 @@
 package priori.view.container;
 
+import helper.browser.DomHelper;
 import priori.style.border.PriBorderStyle;
 import jQuery.JQuery;
 import priori.geom.PriGeomBox;
@@ -10,13 +11,13 @@ class PriContainer extends PriDisplay {
     private var _childList:Array<PriDisplay> = [];
     private var _migratingView:Bool = false;
 
-    @:isVar public var numChildren(get, null):Int;
+    public var numChildren(get, null):Int;
 
     public function new() {
         super();
     }
 
-    @:noCompletion private function get_numChildren():Int {
+    private function get_numChildren():Int {
         return this._childList.length;
     }
 
@@ -62,12 +63,10 @@ class PriContainer extends PriDisplay {
 
         if (this.hasApp()) {
             if (this.disabled) {
-                child.getElement().attr("disabled", "disabled");
-                child.getElement().find("*").attr("disabled", "disabled");
+                DomHelper.disableAll(child.getJSElement());
             } else {
                 if (!this.hasDisabledParent()) {
-                    child.getElement().removeAttr("disabled");
-                    child.getElement().find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
+                    DomHelper.enableAllUpPrioriDisabled(child.getJSElement());
                 }
             }
         }

@@ -1,5 +1,6 @@
 package priori.view;
 
+import helper.browser.DomHelper;
 import js.html.Window;
 import js.Browser;
 import js.Browser;
@@ -824,9 +825,7 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_disabled():Bool {
-        if (this._disabled) return true;
-        if (this._element.is("[disabled]")) return true;
-
+        if (this._disabled || this._jselement.hasAttribute("disabled")) return true;
         return false;
     }
 
@@ -834,18 +833,13 @@ class PriDisplay extends PriEventDispatcher {
         this._disabled = value;
 
         if (value) {
-            this._element.attr("priori-disabled", "disabled");
-
-            this._element.attr("disabled", "disabled");
-            this._element.find("*").attr("disabled", "disabled");
-
+            this._jselement.setAttribute("priori-disabled", "disabled");
+            DomHelper.disableAll(this._jselement);
         } else {
-            this._element.removeAttr("priori-disabled");
+            this._jselement.removeAttribute("priori-disabled");
 
-            // verifica se algum parent esta desabilitado
             if (!this.hasDisabledParent()) {
-                this._element.removeAttr("disabled");
-                this._element.find("*").not("*[priori-disabled='disabled'], *[priori-disabled='disabled'] *").removeAttr("disabled");
+                DomHelper.enableAllUpPrioriDisabled(this._jselement);
             }
         }
 
