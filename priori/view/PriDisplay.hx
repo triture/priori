@@ -409,17 +409,10 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    private function get_maxX():Float {
-        return this.x + this.width;
-    }
 
     private function set_maxX(value:Float) {
         this.x = value - this.width;
         return value;
-    }
-
-    private function get_maxY():Float {
-        return this.y + this.height;
     }
 
     private function set_maxY(value:Float) {
@@ -427,14 +420,9 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-
     private function set_centerX(value:Float) {
         this.x = value - this.width/2;
         return value;
-    }
-
-    private function get_centerX():Float {
-        return this.x + this.width/2;
     }
 
     private function set_centerY(value:Float) {
@@ -442,24 +430,25 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    private function get_centerY():Float {
-        return this.y + this.height/2;
-    }
-
-
-    private function get_x():Float return this.___x;
     private function set_x(value:Float) {
         this.___x = value;
         this._jselement.style.left = value + "px";
         return value;
     }
 
-    private function get_y():Float return this.___y;
+
     private function set_y(value:Float) {
         this.___y = value;
         this._jselement.style.top = value + "px";
         return value;
     }
+
+    private function get_x():Float return this.___x;
+    private function get_y():Float return this.___y;
+    private function get_maxX():Float return this.x + this.width;
+    private function get_maxY():Float return this.y + this.height;
+    private function get_centerX():Float return this.x + this.width/2;
+    private function get_centerY():Float return this.y + this.height/2;
 
     private function get_scaleX():Float return this._scaleX;
     private function set_scaleX(value:Float):Float {
