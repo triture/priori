@@ -125,8 +125,12 @@ class PriDisplay extends PriEventDispatcher {
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
 
+    private var ___x:Float = 0;
+    private var ___y:Float = 0;
     private var ___width:Float = 100;
     private var ___height:Float = 100;
+
+    private var ___depth:Int = 1000;
 
     /**
     * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
@@ -361,13 +365,14 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_width(value:Float) {
-        this.___width = value;
-
         if (value == null) {
-            this.setCSS("width", "");
+            this.___width = null;
+            this._jselement.style.width = "";
         } else {
-            this.setCSS("width", Std.int(value) + "px");
+            this.___width = Math.max(0, value);
+            this._jselement.style.width = this.___width + "px";
         }
+
         return value;
     }
 
@@ -383,12 +388,12 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_height(value:Float):Float {
-        this.___height = value;
-
         if (value == null) {
-            this.setCSS("height", "");
+            this.___height = null;
+            this._jselement.style.height = "";
         } else {
-            this.setCSS("height", Std.int(value) + "px");
+            this.___height = Math.max(0, value);
+            this._jselement.style.height = this.___height + "px";
         }
 
         return value;
@@ -442,22 +447,18 @@ class PriDisplay extends PriEventDispatcher {
     }
 
 
+    private function get_x():Float return this.___x;
     private function set_x(value:Float) {
-        this.getJSElement().style.left = untyped value.toString(10) + "px";
+        this.___x = value;
+        this._jselement.style.left = value + "px";
         return value;
     }
 
-    private function get_x():Float {
-        return Std.parseInt(this.getJSElement().style.left.split("px")[0]);
-    }
-
+    private function get_y():Float return this.___y;
     private function set_y(value:Float) {
-        this.getJSElement().style.top = untyped value.toString(10) + "px";
+        this.___y = value;
+        this._jselement.style.top = value + "px";
         return value;
-    }
-
-    private function get_y():Float {
-        return Std.parseInt(this.getJSElement().style.top.split("px")[0]);
     }
 
     private function get_scaleX():Float return this._scaleX;
@@ -583,9 +584,10 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function updateDepth():Void {
-        var dep:Int = this.getElement().parents().length;
-        this.getElement().css("z-index", 1000 - dep);
-        if (this._elementBorder != null) this._elementBorder.css("z-index", 1000 - dep);
+        this.___depth = this._parent.___depth - 1;
+        this._jselement.style.zIndex = Std.string(this.___depth);
+
+        if (this._elementBorder != null) this._elementBorder.css("z-index", this.___depth);
 
     }
 
@@ -604,9 +606,9 @@ class PriDisplay extends PriEventDispatcher {
         this.bgColor = value;
 
         if (value == null) {
-            this.setCSS("background-color", "");
+            this._jselement.style.backgroundColor = "";
         } else {
-            this.setCSS("background-color", "#" + StringTools.hex(value, 6));
+            this._jselement.style.backgroundColor = "#" + StringTools.hex(value, 6);
         }
 
         return value;
@@ -750,10 +752,10 @@ class PriDisplay extends PriEventDispatcher {
     private function createElement():Void {
         
         var jsElement:Element = js.Browser.document.createElement("div");
-        jsElement.setAttribute("id", this._priId);
         jsElement.setAttribute("prioriid", this._priId);
-        jsElement.setAttribute("class", "priori_noselect");
-        jsElement.setAttribute("style", 'left:0px;top:0px;width:${___width}px;height:${___height}px;position:absolute;margin:0px;padding:0px;overflow:hidden;');
+        jsElement.id = this._priId;
+        jsElement.className = "priori_stylebase";
+        jsElement.style.cssText = 'left:0px;top:0px;width:${___width}px;height:${___height}px;overflow:hidden;';
 
         this._jselement = jsElement;
         this._element = new JQuery(jsElement);
@@ -774,8 +776,6 @@ class PriDisplay extends PriEventDispatcher {
         // remove todos os eventos do elemento
         this.getElement().off();
         this.getElement().find("*").off();
-
-        this.removeFromParent();
 
         super.kill();
     }

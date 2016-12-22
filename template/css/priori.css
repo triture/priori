@@ -1,5 +1,5 @@
 
-.priori_noselect {
+.priori_stylebase {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -9,6 +9,10 @@
 
     -webkit-user-drag: none;
     user-drag: none;
+
+    margin:0px;
+    padding:0px;
+    position:absolute;
 }
 
 * {
@@ -17,12 +21,4 @@
 
 *:focus {
     outline :none !important;
-}
-
-.ps-scrollbar-y-rail {
-    z-index:999;
-}
-
-.ps-scrollbar-x-rail {
-    z-index:999;
 }

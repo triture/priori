@@ -101,20 +101,10 @@ class PriContainer extends PriDisplay {
     }
 
     override public function kill():Void {
-        var i:Int;
-        var n:Int;
 
-        var childListCopy:Array<PriDisplay> = this._childList.copy();
-
-        i = 0;
-        n = childListCopy.length;
-
-        while (i < n) {
-            childListCopy[i].kill();
-            i++;
+        for (i in 0 ... this._childList.length) {
+            this._childList[i].kill();
         }
-
-        childListCopy = null;
 
         this._childList = [];
 

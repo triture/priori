@@ -15,6 +15,9 @@ class PriGridCellRendererDefault extends PriGridCellRenderer {
     override public function update():Void {
         if (this.canPaint()) {
             this.label.text = this.value;
+
+            this.invalidate();
+            this.validate();
         }
     }
 
