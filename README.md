@@ -61,6 +61,10 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.4.1 - 12/24/2016
+- Improvements : More performance improvements.
+- Bugfix : Template for "create" command error
+
 ### 0.4.0 - 12/18/2016
 - New Feature : Filters for PriDisplay: blur, contrast, grayscale, etc (do not work on IE)
 - New Feature : getGlobalBox() method to get the object position on window
