@@ -2,7 +2,6 @@ package priori.view.grid.cell;
 
 import priori.event.PriTapEvent;
 import priori.event.PriMouseEvent;
-import haxe.Json;
 import priori.event.PriEvent;
 import priori.view.grid.column.PriGridColumn;
 import priori.view.container.PriGroup;
@@ -17,11 +16,12 @@ class PriGridCellRenderer extends PriGroup {
     private var __rowIndex:Int;
     private var __colIndex:Int;
 
-    @:isVar public var data(get, null):Dynamic;
-    @:isVar public var value(get, null):Dynamic;
-    @:isVar public var dataField(get, null):String;
-    @:isVar public var rowIndex(get, null):Int;
-    @:isVar public var colIndex(get, null):Int;
+    public var data(get, null):Dynamic;
+    public var value(get, null):Dynamic;
+    public var dataField(get, null):String;
+
+    public var rowIndex(get, null):Int;
+    public var colIndex(get, null):Int;
 
     public function new() {
         super();
@@ -29,18 +29,10 @@ class PriGridCellRenderer extends PriGroup {
         this.addEventListener(PriEvent.CHANGE, this.__onCellDataChange);
         this.addEventListener(PriTapEvent.TAP, this.__onTap);
         this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
+
         this.pointer = false;
         this.clipping = false;
     }
-
-//    public function activateCellOver():Void {
-//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
-//    }
-//
-//    public function removeCellOver():Void {
-//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
-//    }
-
 
     private function __onTap(e:PriTapEvent):Void {
         var event:PriDataGridEvent = new PriDataGridEvent(PriDataGridEvent.GRID_CLICK, false, true, this.data);
@@ -54,8 +46,6 @@ class PriGridCellRenderer extends PriGroup {
         var event:PriDataGridEvent = new PriDataGridEvent(PriDataGridEvent.CELL_OVER, false, true, this.data);
         event.colIndex = this.colIndex;
         event.rowIndex = this.rowIndex;
-
-//        trace(this.colIndex, this.rowIndex);
 
         this.dispatchEvent(event);
     }
@@ -74,19 +64,11 @@ class PriGridCellRenderer extends PriGroup {
         this.update();
     }
 
-    @:noCompletion private function get_data():Dynamic {
-        return this.__data;
-    }
+    private function get_data():Dynamic return this.__data;
+    private function get_rowIndex():Int return this.__rowIndex;
+    private function get_colIndex():Int return this.__colIndex;
 
-    @:noCompletion private function get_rowIndex():Int {
-        return this.__rowIndex;
-    }
-
-    @:noCompletion private function get_colIndex():Int {
-        return this.__colIndex;
-    }
-
-    @:noCompletion private function get_dataField():String {
+    private function get_dataField():String {
         var result:String = "";
 
         if (this.__column != null && this.__column.dataField != null) {
@@ -96,7 +78,7 @@ class PriGridCellRenderer extends PriGroup {
         return result;
     }
 
-    @:noCompletion private function get_value():Dynamic {
+    private function get_value():Dynamic {
         var result:Dynamic = null;
 
         if (this.__column == null) return null;

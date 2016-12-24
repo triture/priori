@@ -1,8 +1,6 @@
 package priori.view.container;
 
 import helper.browser.DomHelper;
-import priori.style.border.PriBorderStyle;
-import jQuery.JQuery;
 import priori.geom.PriGeomBox;
 import priori.event.PriEvent;
 

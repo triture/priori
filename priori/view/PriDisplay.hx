@@ -3,8 +3,6 @@ package priori.view;
 import helper.browser.DomHelper;
 import js.html.Window;
 import js.Browser;
-import js.Browser;
-import js.html.BodyElement;
 import js.html.DOMRect;
 import priori.geom.PriGeomBox;
 import helper.browser.BrowserEventEngine;
@@ -130,8 +128,9 @@ class PriDisplay extends PriEventDispatcher {
     private var ___y:Float = 0;
     private var ___width:Float = 100;
     private var ___height:Float = 100;
-
+    private var ___clipping:Bool = true;
     private var ___depth:Int = 1000;
+    private var ___pointer:Bool = false;
 
     /**
     * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
@@ -300,16 +299,14 @@ class PriDisplay extends PriEventDispatcher {
         }
     }
 
-    private function get_clipping():Bool {
-        if (this.getCSS("overflow") == "hidden") return true;
-        return false;
-    }
-
+    private function get_clipping():Bool return this.___clipping;
     private function set_clipping(value:Bool) {
         if (value) {
-            this.setCSS("overflow", "hidden");
+            this.___clipping = true;
+            this._jselement.style.overflow = "hidden";
         } else {
-            this.setCSS("overflow", "");
+            this.___clipping = false;
+            this._jselement.style.overflow = "";
         }
 
         return value;
@@ -556,12 +553,11 @@ class PriDisplay extends PriEventDispatcher {
 
     public function hasApp():Bool {
         var app:PriApp = PriApp.g();
-        if (this == app) return true;
-        else {
-            if (this._parent == null) return false;
-            else if (this._parent == app) return true;
-            else return this._parent.hasApp();
-        }
+
+        if (this._parent == null) return false;
+        else if (this._parent == app || this == app) return true;
+        else return this._parent.hasApp();
+
         return false;
     }
 
@@ -785,16 +781,14 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    private function get_pointer():Bool {
-        if (this.getCSS("cursor") == "pointer") return false;
-        return true;
-    }
-
+    private function get_pointer():Bool return this.___pointer;
     private function set_pointer(value:Bool) {
         if (value == true) {
-            this.setCSS("cursor", "pointer");
+            this.___pointer = true;
+            this._jselement.style.cursor = "pointer";
         } else {
-            this.setCSS("cursor", "");
+            this.___pointer = false;
+            this._jselement.style.cursor = "";
         }
 
         return value;
