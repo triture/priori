@@ -114,4 +114,24 @@ class PriImage extends PriDisplay {
         this.height = this._originalImageHeight * val;
         return value;
     }
+
+    public function resizeToWidth(width:Float):Void {
+        this.width = width;
+        this.imageScaleY = this.imageScaleX;
+    }
+
+    public function resizeToHeight(height:Float):Void {
+        this.height = height;
+        this.imageScaleX = this.imageScaleY;
+    }
+
+    public function resizeToLetterBox(width:Float, height:Float):Void {
+        this.resizeToWidth(width);
+        if (this.height > height) this.resizeToHeight(height);
+    }
+
+    public function resizeToZoom(width:Float, height:Float):Void {
+        this.resizeToWidth(width);
+        if (this.height < height) this.resizeToHeight(height);
+    }
 }
