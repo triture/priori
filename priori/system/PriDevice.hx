@@ -5,40 +5,33 @@ import js.Browser;
 
 class PriDevice {
 
-    private static var _g:PriDevice;
+    private static var _detectedBrowser:PriDeviceBrowser = null;
 
-    private var _detectedBrowser:PriDeviceBrowser = null;
-
-    public function new() {
-        _g = this;
-    }
-
-
-    public function browser():PriDeviceBrowser {
-        if (this._detectedBrowser == null) {
+    public static function browser():PriDeviceBrowser {
+        if (_detectedBrowser == null) {
 
             var navigator:Navigator = Browser.navigator;
             var userAgent:String = navigator.userAgent;
 
             if(userAgent.indexOf("Chrome") > -1) {
-                this._detectedBrowser = PriDeviceBrowser.CHROME;
+                _detectedBrowser = PriDeviceBrowser.CHROME;
             } else if (userAgent.indexOf("Safari") > -1) {
-                this._detectedBrowser = PriDeviceBrowser.SAFARI;
+                _detectedBrowser = PriDeviceBrowser.SAFARI;
             } else if (userAgent.indexOf("Opera") > -1) {
-                this._detectedBrowser = PriDeviceBrowser.OPERA;
+                _detectedBrowser = PriDeviceBrowser.OPERA;
             } else if (userAgent.indexOf("Firefox") > -1) {
-                this._detectedBrowser = PriDeviceBrowser.MOZILLA;
+                _detectedBrowser = PriDeviceBrowser.MOZILLA;
             } else if (userAgent.indexOf("MSIE") > -1) {
-                this._detectedBrowser = PriDeviceBrowser.MSIE;
+                _detectedBrowser = PriDeviceBrowser.MSIE;
             } else {
-                this._detectedBrowser = PriDeviceBrowser.UNKNOW;
+                _detectedBrowser = PriDeviceBrowser.UNKNOW;
             }
         }
 
-        return this._detectedBrowser;
+        return _detectedBrowser;
     }
 
-    public function deviceSystem():PriDeviceSystem {
+    public static function deviceSystem():PriDeviceSystem {
         var navigator:Navigator = Browser.navigator;
         var userAgent:String = navigator.userAgent;
 
@@ -63,8 +56,8 @@ class PriDevice {
         return PriDeviceSystem.UNKNOW;
     }
 
-    public function isMobileDevice():Bool {
-        var system:PriDeviceSystem = this.deviceSystem();
+    public static function isMobileDevice():Bool {
+        var system:PriDeviceSystem = deviceSystem();
 
         if (system == PriDeviceSystem.ANDROID ||
             system == PriDeviceSystem.IOS ||
@@ -76,13 +69,6 @@ class PriDevice {
         }
 
         return false;
-    }
-
-
-
-    public static function g():PriDevice {
-        if (_g == null) new PriDevice();
-        return _g;
     }
 
 }

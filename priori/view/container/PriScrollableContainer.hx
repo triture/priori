@@ -24,7 +24,7 @@ class PriScrollableContainer extends PriGroup {
     public function new() {
         super();
 
-        if (PriDevice.g().isMobileDevice()) {
+        if (PriDevice.isMobileDevice()) {
             this.__mouseIsOver = true;
             this.scrollerY = true;
         } else {
@@ -62,7 +62,7 @@ class PriScrollableContainer extends PriGroup {
 
         var canUpdate:Bool = true;
 
-        if (PriDevice.g().browser() == PriDeviceBrowser.MOZILLA) {
+        if (PriDevice.browser() == PriDeviceBrowser.MOZILLA) {
             /* TODO
             / esta é uma solucao temporaria para um problema que faz com que
             / a caixa de selecao de um Select seja fechada quando modificar o overflow

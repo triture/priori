@@ -454,7 +454,7 @@ class PriDataGrid extends PriGroup {
 
         // todo : another way to better performance on firefox ???
         // https://developer.mozilla.org/en-US/docs/Mozilla/Performance/Scroll-linked_effects
-        if (PriDevice.g().browser() == PriDeviceBrowser.MOZILLA) {
+        if (PriDevice.browser() == PriDeviceBrowser.MOZILLA) {
 
             this.updateRowContainerHeight();
 
