@@ -6,6 +6,7 @@ import priori.event.PriEvent;
 
 class PriContainer extends PriDisplay {
 
+    @:allow(priori.event.PriEventDispatcher)
     private var _childList:Array<PriDisplay> = [];
     private var _migratingView:Bool = false;
 
@@ -15,9 +16,7 @@ class PriContainer extends PriDisplay {
         super();
     }
 
-    private function get_numChildren():Int {
-        return this._childList.length;
-    }
+    private function get_numChildren():Int return this._childList.length;
 
     public function getChild(index:Int):PriDisplay {
         var result:PriDisplay = null;
@@ -67,9 +66,7 @@ class PriContainer extends PriDisplay {
                     DomHelper.enableAllUpPrioriDisabled(child.getJSElement());
                 }
             }
-        }
 
-        if (child.hasApp()) {
             child.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         }
 
@@ -81,7 +78,7 @@ class PriContainer extends PriDisplay {
         if (this == child.parent) {
 
             // verifica se a view ja esta no app
-            var viewHasAppBefore:Bool = child.hasApp();
+            var viewHasAppBefore:Bool = this.hasApp();
 
             this._childList.remove(child);
             this._jselement.removeChild(child.getJSElement());
@@ -128,7 +125,7 @@ class PriContainer extends PriDisplay {
         return result;
     }
 
-    @:noCompletion override private function set_width(value:Float):Float {
+    override private function set_width(value:Float):Float {
         if (value != this.width) {
             super.set_width(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
@@ -139,7 +136,7 @@ class PriContainer extends PriDisplay {
         return value;
     }
 
-    @:noCompletion override private function set_height(value:Float):Float {
+    override private function set_height(value:Float):Float {
         if (value != this.height) {
             super.set_height(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
