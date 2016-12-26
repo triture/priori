@@ -1,6 +1,7 @@
 package priori.app;
 
-import haxe.ds.StringMap;
+import priori.system.PriDevice;
+import js.Browser;
 import priori.assets.AssetManagerEvent;
 import priori.view.container.PriGroup;
 import priori.assets.AssetManager;
@@ -28,12 +29,8 @@ class PriApp extends PriGroup {
 
     public function new() {
 
-        if (_g != null) {
-            throw "Do not create PriApp instance";
-        } else {
-            _g = this;
-        }
-
+        if (_g != null) throw "Do not create PriApp instance";
+        else _g = this;
 
         this._fps = 60;
 
@@ -45,80 +42,53 @@ class PriApp extends PriGroup {
         trace("Browser : ", priori.system.PriDevice.browser());
         #end
 
-        this.setupApp();
-    }
 
-    @noCompletion override private function set_width(value:Float) {
-        return value;
-    }
+        this._jselement.style.width = "100%";
+        this._jselement.style.height = "100%";
+        this._jselement.style.position = "fixed";
 
-    @noCompletion override private function get_width():Float {
-        return this.getAppSize().width;
-    }
+        Browser.window.document.body.style.border = "0px";
+        Browser.window.document.body.style.margin = "0px";
+        Browser.window.onresize = this.___onWindowResize;
 
-    @noCompletion override private function set_height(value:Float):Float {
-        return value;
-    }
+        this.___applyPreventBackspace();
 
-    @noCompletion override private function get_height():Float {
-        return this.getAppSize().height;
-    }
-
-    @noCompletion override private function set_x(value:Float) {
-        return 0;
-    }
-
-    @noCompletion override private function get_x():Float {
-        return 0;
-    }
-
-    @noCompletion override private function set_y(value:Float) {
-        return 0;
-    }
-
-    @noCompletion override private function get_y():Float {
-        return 0;
-    }
-
-    public function getMSUptate():Int {
-        return Std.int(1000 / this._fps);
-    }
-
-    private function setupApp():Void {
-
-        var box:PriGeomBox = this.getAppSize();
-
-        this.getElement().css("width", "100%");
-        this.getElement().css("height", "100%");
-        this.getElement().css("position", "fixed");
-
-        this.getWindow().resize(
-            function(e:Event):Void {
-                this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
-            }
-        );
-
-
-        // prevent backspace
-        this.getDocument().keydown(function (e) {
-            if (e.which == 8 && !(new JQuery(e.target).is("input:not([readonly]):not([type=radio]):not([type=checkbox]), textarea, [contentEditable], [contentEditable=true]"))) {
-                e.preventDefault();
-            }
-        });
-
-
-        var body:JQuery = this.getBody();
-        body.css("border", "0px");
-        body.css("margin", "0px");
-
-        body.append(this.getElement());
+        Browser.window.document.body.appendChild(this._jselement);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
 
-
         this.invalidate();
         this.validate();
+    }
+
+    private function ___onWindowResize():Void this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
+
+
+    override private function set_width(value:Float) return value;
+    override private function get_width():Float return this.getAppSize().width;
+
+    override private function set_height(value:Float):Float return value;
+    override private function get_height():Float return this.getAppSize().height;
+
+    override private function set_x(value:Float) return 0;
+    override private function get_x():Float return 0;
+
+    override private function set_y(value:Float) return 0;
+    override private function get_y():Float return 0;
+
+
+    public function getMSUptate():Int return Std.int(1000 / this._fps);
+
+
+    private function ___applyPreventBackspace():Void {
+        if (!PriDevice.isMobileDevice()) {
+            this.getDocument().keydown(function (e) {
+                if (e.which == 8 && !(new JQuery(e.target).is("input:not([readonly]):not([type=radio]):not([type=checkbox]), textarea, [contentEditable], [contentEditable=true]"))) {
+                    e.preventDefault();
+                }
+            });
+        }
     }
 
     public function getAppSize():PriGeomBox {
@@ -134,30 +104,22 @@ class PriApp extends PriGroup {
     }
 
     private function getDocument():JQuery {
-        return new JQuery(js.Browser.document);
+        if (_document == null) _document = new JQuery(js.Browser.document);
+        return _document;
     }
 
     private function getWindow():JQuery {
-        if (_window == null) {
-            _window = new JQuery(js.Browser.window);
-        }
-
+        if (_window == null) _window = new JQuery(js.Browser.window);
         return _window;
     }
 
     public function getBody():JQuery {
-        if (_body == null) {
-            _body = new JQuery("body");
-        }
-
+        if (_body == null) _body = new JQuery("body");
         return _body;
     }
 
     public static function g():PriApp {
-        if (_g == null) {
-            throw "Application not yet created";
-        }
-
+        if (_g == null) throw "Application not yet created";
         return _g;
     }
 
