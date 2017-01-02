@@ -496,18 +496,22 @@ class PriDisplay extends PriEventDispatcher {
         // sinX  cosX   0
         //  0     0     1
 
-        var rot:Float = this._rotation;
+        var rot:Float = this._rotation*-1;
         var sx:Float = this._scaleX;
         var sy:Float = this._scaleY;
+
+        var anchorX:Float = this._anchorX*100;
+        var anchorY:Float = this._anchorY*100;
 
         var valOrigin:String = '';
         var valMatrix:String = '';
 
+        if ((sx != 1 || sy != 1) && rot == 0) {
 
-        if (sx != 1 || sy != 1 || rot != 0) {
+            valOrigin = '$anchorX% $anchorY%';
+            valMatrix = 'matrix($sx, 0, 0, $sy, 0, 0)';
 
-            var anchorX:Float = this._anchorX*100;
-            var anchorY:Float = this._anchorY*100;
+        } else if (sx != 1 || sy != 1 || rot != 0) {
 
             var angle:Float = rot * (Math.PI/180);
             var aSin:Float = Math.sin(angle);
