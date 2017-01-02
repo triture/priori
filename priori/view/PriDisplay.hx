@@ -159,16 +159,10 @@ class PriDisplay extends PriEventDispatcher {
 
     private var _parent:PriContainer;
 
-    private var _specialEventList:Array<String>;
-    private var _specialEventStack:Array<Dynamic>;
-
     private var __eventHelper:BrowserEventEngine;
 
     public function new() {
         super();
-
-        this._specialEventStack = [];
-        this._specialEventList = [];
 
         // initialize display
         this._priId = this.getRandomId();
@@ -606,30 +600,6 @@ class PriDisplay extends PriEventDispatcher {
 
     override public function addEventListener(event:String, listener:Dynamic->Void):Void {
 
-        // tap events
-        if (event == PriTapEvent.TAP_START && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP_START, _onJTouch_tapstart);
-        } else if (event == PriTapEvent.TAP_END && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP_END, _onJTouch_tapend);
-        } else if (event == PriTapEvent.TAP_MOVE && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriTapEvent.TAP_MOVE, _onJTouch_tapmove);
-        }
-
-        // swipe events
-        if (event == PriSwipeEvent.SWIPE && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE, _onJTouch_swipe);
-        } else if (event == PriSwipeEvent.SWIPE_UP && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE_UP, _onJTouch_swipeup);
-        }else if (event == PriSwipeEvent.SWIPE_RIGHT && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE_RIGHT, _onJTouch_swiperight);
-        }else if (event == PriSwipeEvent.SWIPE_DOWN && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE_DOWN, _onJTouch_swipedown);
-        }else if (event == PriSwipeEvent.SWIPE_LEFT && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE_LEFT, _onJTouch_swipeleft);
-        }else if (event == PriSwipeEvent.SWIPE_END && this._specialEventList.indexOf(event) == -1) {
-            this.addSpecialEvent(PriSwipeEvent.SWIPE_END, _onJTouch_swipeend);
-        }
-
         this.__eventHelper.registerEvent(event);
 
 
@@ -647,97 +617,6 @@ class PriDisplay extends PriEventDispatcher {
             this.pointer = false;
         }
     }
-
-    private function addSpecialEvent(event:String, callback:Dynamic):Void {
-        this._specialEventList.push(event);
-        this._specialEventStack.push({
-            event : event,
-            callback : callback
-        });
-
-        (new JQuery("body")).on(event, "#" + this.getPrid(), callback);
-    }
-
-    private function killSpecialEvents():Void {
-        var i:Int = 0;
-        var n:Int = this._specialEventStack.length;
-
-        // TODO : Verificar forma de nao remover o clique de todo sistema - problema do plugin de taps
-
-        while (i < n) {
-
-            (new JQuery("body")).off(
-                this._specialEventStack[i].event,
-                "#" + this._priId,
-                this._specialEventStack[i].callback
-            );
-
-            i++;
-        }
-
-
-        // remove todos os eventos associados ao objeto
-        this._specialEventList = [];
-        this._specialEventStack = [];
-    }
-
-    private function _onJTouch_tapstart(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_START, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_tapend(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_END, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_tapmove(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_MOVE, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-
-
-    private function _onJTouch_swipe(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_swipeup(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_UP, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_swiperight(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_RIGHT, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_swipedown(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_DOWN, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_swipeleft(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_LEFT, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-    private function _onJTouch_swipeend(e:Event, touch):Void {
-        e.stopPropagation();
-
-        var event:PriTapEvent = new PriTapEvent(PriSwipeEvent.SWIPE_END, false);
-        if (!this.disabled) this.dispatchEvent(event);
-    }
-
 
     private function createElement():Void {
         
@@ -759,8 +638,6 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     override public function kill():Void {
-        this.killSpecialEvents();
-
         this.__eventHelper.kill();
 
         // remove todos os eventos do elemento
