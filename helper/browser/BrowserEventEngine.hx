@@ -17,6 +17,7 @@ class BrowserEventEngine {
         "mouseenter",
         "mousedown",
         "mouseup",
+        "mousemove",
         "click",
 
         "keyup",
@@ -85,6 +86,7 @@ class BrowserEventEngine {
             case "mouseenter" : this.jqel.on("mouseenter", this.on_mouse_enter);
             case "mousedown" : this.jqel.on("mousedown", this.on_mouse_down);
             case "mouseup" : this.jqel.on("mouseup", this.on_mouse_up);
+            case "mousemove" : this.jqel.on("mousemove", this.on_mouse_move);
             case "click" : this.jqel.on("click", this.on_mouse_click);
 
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
@@ -100,6 +102,7 @@ class BrowserEventEngine {
             case "mouseenter" : this.jqel.off("mouseenter", this.on_mouse_enter);
             case "mousedown" : this.jqel.off("mousedown", this.on_mouse_down);
             case "mouseup" : this.jqel.off("mouseup", this.on_mouse_up);
+            case "mousemove" : this.jqel.off("mousemove", this.on_mouse_move);
             case "click" : this.jqel.off("click", this.on_mouse_click);
 
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
@@ -143,32 +146,50 @@ class BrowserEventEngine {
 
     private function on_mouse_down(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN);
+        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP_DOWN), e);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_up(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP);
+        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP_UP), e);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_click(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP);
+        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP), e);
         this.display.dispatchEvent(pe);
     }
     private function on_mouse_enter(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
+        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_OVER), e);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_leave(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OUT);
+        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_OUT), e);
         this.display.dispatchEvent(pe);
     }
+
+    private function on_mouse_move(e:Dynamic):Void {
+        if (this.display.disabled) return;
+        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_MOVE), e);
+        this.display.dispatchEvent(pe);
+    }
+
+    private function applyMouseValues(e:Dynamic, jevent:Dynamic):Dynamic {
+        var o = this.jqel.offset();
+
+        e.x = jevent.pageX - o.left;
+        e.y = jevent.pageY - o.top;
+        e.xGlobal = jevent.pageX;
+        e.yGlobal = jevent.pageY;
+
+        return e;
+    }
+
 
     public function kill():Void {
         this.removeAllActions();
