@@ -553,8 +553,8 @@ class PriDisplay extends PriEventDispatcher {
     public function hasApp():Bool {
         var app:PriApp = PriApp.g();
 
-        if (this._parent == null) return false;
-        else if (this._parent == app || this == app) return true;
+        if (this == app) return true;
+        else if (this._parent == null) return false;
         else return this._parent.hasApp();
 
         return false;
