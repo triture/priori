@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.geom.PriGeomPoint;
 import helper.browser.DomHelper;
 import js.html.Window;
 import js.Browser;
@@ -774,6 +775,39 @@ class PriDisplay extends PriEventDispatcher {
 
         result.width = this.width;
         result.height = this.height;
+
+        return result;
+    }
+
+
+    public function getTreeList():Array<PriDisplay> {
+        var result:Array<PriDisplay> = [];
+
+        result.push(this);
+
+        var p:PriDisplay = this.parent;
+
+        while(p != null) {
+            result.push(p);
+            p = p.parent;
+        }
+
+        return result;
+    }
+
+    public function globalToLocal(point:PriGeomPoint):PriGeomPoint {
+        var result:PriGeomPoint = point.clone();
+        var list:Array<PriDisplay> = this.getTreeList();
+
+        list.reverse();
+
+        for (i in 0 ... list.length) {
+            var el:PriDisplay = list[i];
+
+            result.x -= el.x;
+            result.y -= el.y;
+
+        }
 
         return result;
     }
