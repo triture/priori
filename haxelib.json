@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Single-page web applications (SPA) framework for Haxe",
-  "version": "0.4.1",
-  "releasenote": "More performance improvements. Please, check Changelog section on readme file",
+  "version": "0.4.2",
+  "releasenote": "Mouse position on mouse and tap events. Please, check Changelog section on readme file",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""

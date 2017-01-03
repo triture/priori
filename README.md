@@ -55,12 +55,17 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - ~~Fix scroller on mobile devices~~ **Done**
 - Remove JQuery dependency for better performance
 - Better accessibility for Priori Apps
-- Better support for Mouse and Keyboard events
+- ~~Better support for Mouse events~~ **Done**
+- Better support for Keyboard events
 - Form Container
 - Form validation support
 - Several bug fixes
 
 ## Changelog
+### 0.4.2 - 01/03/2017
+- Improvements : Mouse position on MouseEvent
+- Lot of bugfix and optimizations
+
 ### 0.4.1 - 12/24/2016
 - Improvements : More performance improvements.
 - Bugfix : Template for "create" command error
