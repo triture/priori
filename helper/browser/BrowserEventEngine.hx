@@ -1,5 +1,6 @@
 package helper.browser;
 
+import priori.geom.PriGeomPoint;
 import priori.event.PriFocusEvent;
 import priori.event.PriKeyboardEvent;
 import priori.event.PriTapEvent;
@@ -180,10 +181,11 @@ class BrowserEventEngine {
     }
 
     private function applyMouseValues(e:Dynamic, jevent:Dynamic):Dynamic {
-        var o = this.jqel.offset();
 
-        e.x = jevent.pageX - o.left;
-        e.y = jevent.pageY - o.top;
+        var p:PriGeomPoint = this.display.globalToLocal(new PriGeomPoint(jevent.pageX, jevent.pageY));
+        e.x = p.x;
+        e.y = p.y;
+
         e.xGlobal = jevent.pageX;
         e.yGlobal = jevent.pageY;
 
