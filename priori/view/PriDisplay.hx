@@ -552,10 +552,9 @@ class PriDisplay extends PriEventDispatcher {
 
     public function hasApp():Bool {
         var app:PriApp = PriApp.g();
+        var tree:Array<PriDisplay> = this.getTreeList();
 
-        if (this == app) return true;
-        else if (this._parent == null) return false;
-        else return this._parent.hasApp();
+        if (tree[tree.length - 1] == app) return true;
 
         return false;
     }
