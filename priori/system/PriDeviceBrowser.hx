@@ -5,6 +5,7 @@ enum PriDeviceBrowser {
     WEBKIT;
     OPERA;
     MSIE;
+    EDGE;
     MOZILLA;
     CHROME;
     UNKNOW;

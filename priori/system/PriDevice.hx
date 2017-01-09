@@ -13,18 +13,20 @@ class PriDevice {
             var navigator:Navigator = Browser.navigator;
             var userAgent:String = navigator.userAgent;
 
-            if(userAgent.indexOf("Chrome") > -1) {
+            if (userAgent.toLowerCase().indexOf("edge") > -1) {
+                _detectedBrowser = PriDeviceBrowser.EDGE;
+            } else if(userAgent.toLowerCase().indexOf("chrome") > -1) {
                 _detectedBrowser = PriDeviceBrowser.CHROME;
-            } else if (userAgent.indexOf("Safari") > -1) {
+            } else if (userAgent.toLowerCase().indexOf("safari") > -1) {
                 _detectedBrowser = PriDeviceBrowser.SAFARI;
-            } else if (userAgent.indexOf("Opera") > -1) {
+            } else if (userAgent.toLowerCase().indexOf("opera") > -1) {
                 _detectedBrowser = PriDeviceBrowser.OPERA;
-            } else if (userAgent.indexOf("Firefox") > -1) {
+            } else if (userAgent.toLowerCase().indexOf("firefox") > -1) {
                 _detectedBrowser = PriDeviceBrowser.MOZILLA;
-            } else if (userAgent.indexOf("MSIE") > -1) {
+            } else if (userAgent.toLowerCase().indexOf("msie") > -1) {
                 _detectedBrowser = PriDeviceBrowser.MSIE;
             } else {
-                _detectedBrowser = PriDeviceBrowser.UNKNOW;
+                _detectedBrowser = PriDeviceBrowser.MSIE;
             }
         }
 
