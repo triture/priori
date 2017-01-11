@@ -62,6 +62,10 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.5.0 - 01/11/2017
+- New Feature: startDrag() and stopDrag() methods
+- Bugfixes
+
 ### 0.4.2 - 01/03/2017
 - Improvements : Mouse position on MouseEvent
 - Lot of bugfix and optimizations
