@@ -1,5 +1,6 @@
 package priori.app;
 
+import priori.geom.PriGeomPoint;
 import priori.system.PriDevice;
 import js.Browser;
 import priori.assets.AssetManagerEvent;
@@ -16,6 +17,9 @@ import priori.view.PriDisplay;
 class PriApp extends PriGroup {
 
     private static var _g:PriApp;
+
+    private var ___xmouse:Float = 0;
+    private var ___ymouse:Float = 0;
 
     private var _body:JQuery;
     private var _window:JQuery;
@@ -49,6 +53,8 @@ class PriApp extends PriGroup {
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
+        Browser.window.document.onmousemove = this.___onMouseMove;
+
         Browser.window.onresize = this.___onWindowResize;
 
         this.___applyPreventBackspace();
@@ -61,6 +67,14 @@ class PriApp extends PriGroup {
         this.invalidate();
         this.validate();
     }
+
+    override private function get_mousePoint():PriGeomPoint return new PriGeomPoint(this.___xmouse, this.___ymouse);
+
+    private function ___onMouseMove(e):Void {
+        this.___xmouse = e.pageX;
+        this.___ymouse = e.pageY;
+    }
+
 
     private function ___onWindowResize():Void this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
 

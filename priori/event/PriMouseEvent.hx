@@ -6,11 +6,6 @@ class PriMouseEvent extends PriEvent {
     inline public static var MOUSE_OUT:String = "mouseleave";
     inline public static var MOUSE_MOVE:String = "mousemove";
 
-    public var x:Float;
-    public var y:Float;
-
-    public var xGlobal:Float;
-    public var yGlobal:Float;
 
     public function new(type:String, propagate:Bool = false, bubble:Bool = false, data:Dynamic = null) {
         super(type, propagate, bubble, data);
@@ -22,11 +17,6 @@ class PriMouseEvent extends PriEvent {
         clone.target = this.target;
         clone.currentTarget = this.currentTarget;
         clone.data = this.data;
-
-        clone.x = this.x;
-        clone.y = this.y;
-        clone.xGlobal = this.xGlobal;
-        clone.yGlobal = this.yGlobal;
 
         return clone;
     }

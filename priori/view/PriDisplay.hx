@@ -70,6 +70,8 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var y(get, set):Float;
 
+    public var mousePoint(get, null):PriGeomPoint;
+
     public var centerX(get, set):Float;
     public var centerY(get, set):Float;
     public var maxX(get, set):Float;
@@ -599,9 +601,7 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     override public function addEventListener(event:String, listener:Dynamic->Void):Void {
-
         this.__eventHelper.registerEvent(event);
-
 
         if (event == PriTapEvent.TAP) {
             this.pointer = true;
@@ -792,6 +792,11 @@ class PriDisplay extends PriEventDispatcher {
         }
 
         return result;
+    }
+
+    private function get_mousePoint():PriGeomPoint {
+        var app:PriApp = PriApp.g();
+        return this.globalToLocal(new PriGeomPoint(app.mousePoint.x, app.mousePoint.y));
     }
 
     public function globalToLocal(point:PriGeomPoint):PriGeomPoint {

@@ -17,11 +17,6 @@ class PriTapEvent extends PriMouseEvent {
         clone.currentTarget = this.currentTarget;
         clone.data = this.data;
 
-        clone.x = this.x;
-        clone.y = this.y;
-        clone.xGlobal = this.xGlobal;
-        clone.yGlobal = this.yGlobal;
-
         return clone;
     }
 }

@@ -147,49 +147,37 @@ class BrowserEventEngine {
 
     private function on_mouse_down(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP_DOWN), e);
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_up(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP_UP), e);
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_click(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriTapEvent = this.applyMouseValues(new PriTapEvent(PriTapEvent.TAP), e);
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP);
         this.display.dispatchEvent(pe);
     }
     private function on_mouse_enter(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_OVER), e);
+        var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_leave(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_OUT), e);
+        var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OUT);
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_move(e:Dynamic):Void {
         if (this.display.disabled) return;
-        var pe:PriMouseEvent = this.applyMouseValues(new PriMouseEvent(PriMouseEvent.MOUSE_MOVE), e);
+        var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_MOVE);
         this.display.dispatchEvent(pe);
-    }
-
-    private function applyMouseValues(e:Dynamic, jevent:Dynamic):Dynamic {
-
-        var p:PriGeomPoint = this.display.globalToLocal(new PriGeomPoint(jevent.pageX, jevent.pageY));
-        e.x = p.x;
-        e.y = p.y;
-
-        e.xGlobal = jevent.pageX;
-        e.yGlobal = jevent.pageY;
-
-        return e;
     }
 
 
