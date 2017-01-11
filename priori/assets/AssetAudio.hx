@@ -33,7 +33,7 @@ class AssetAudio extends Asset {
 
             if (dom.canPlayType != null) {
 
-                if (PriDevice.g().deviceSystem() == PriDeviceSystem.IOS) {
+                if (PriDevice.deviceSystem() == PriDeviceSystem.IOS) {
                     this._element.on("progress", this._onLoadAudio);
                 } else {
                     this._element.on("loadeddata", this._onLoadAudio);
