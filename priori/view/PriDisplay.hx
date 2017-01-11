@@ -135,6 +135,8 @@ class PriDisplay extends PriEventDispatcher {
     private var ___depth:Int = 1000;
     private var ___pointer:Bool = false;
 
+    private var ___dragdata:Dynamic;
+
     /**
     * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
     *
@@ -810,10 +812,77 @@ class PriDisplay extends PriEventDispatcher {
 
             result.x -= el.x;
             result.y -= el.y;
-
         }
 
         return result;
+    }
+
+    public function localToGlobal(point:PriGeomPoint):PriGeomPoint {
+        var result:PriGeomPoint = point.clone();
+        var list:Array<PriDisplay> = this.getTreeList();
+
+        list.shift();
+
+        for (i in 0 ... list.length) {
+            var el:PriDisplay = list[i];
+
+            result.x += el.x;
+            result.y += el.y;
+        }
+
+        return result;
+    }
+
+
+    /**
+    * Lets the user drag the specified object. The object remains draggable
+    * until explicitly stopped through a call to the PriDisplay.stopDrag() method.
+    **/
+    public function startDrag(lockCenter:Bool = false, bounds:PriGeomBox = null):Void {
+        this.stopDrag();
+
+        if (lockCenter) {
+            if (this.parent != null) {
+                var parentMouse:PriGeomPoint = this.parent.mousePoint;
+                this.centerX = parentMouse.x;
+                this.centerY = parentMouse.y;
+            }
+        }
+
+        this.___dragdata = {};
+        this.___dragdata.originalPointMouse = PriApp.g().mousePoint;
+        this.___dragdata.originalPosition = new PriGeomPoint(this.x, this.y);
+
+        var r = function():Void {
+            var curPoint:PriGeomPoint = PriApp.g().mousePoint;
+            var diffx:Float = curPoint.x - this.___dragdata.originalPointMouse.x;
+            var diffy:Float = curPoint.y - this.___dragdata.originalPointMouse.y;
+
+            if (bounds == null) {
+                this.x = this.___dragdata.originalPosition.x + diffx;
+                this.y = this.___dragdata.originalPosition.y + diffy;
+            } else {
+                this.x = Math.max(Math.min(this.___dragdata.originalPosition.x + diffx, bounds.x + bounds.width), bounds.x);
+                this.y = Math.max(Math.min(this.___dragdata.originalPosition.y + diffy, bounds.y + bounds.height), bounds.y);
+            }
+        }
+
+        var t:haxe.Timer = new haxe.Timer(30);
+        t.run = r;
+        this.___dragdata.t = t;
+
+        r();
+    }
+    
+    /**
+    * Ends the startDrag() method. An object that was made draggable with the startDrag() method
+    * remains draggable until a stopDrag() method is called.
+    **/
+    public function stopDrag():Void {
+        if (this.___dragdata != null) {
+            this.___dragdata.t.stop();
+            this.___dragdata = null;
+        }
     }
 
 }

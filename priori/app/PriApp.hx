@@ -1,5 +1,6 @@
 package priori.app;
 
+import priori.event.PriTapEvent;
 import priori.geom.PriGeomPoint;
 import priori.system.PriDevice;
 import js.Browser;
@@ -56,6 +57,7 @@ class PriApp extends PriGroup {
         Browser.window.document.onmousemove = this.___onMouseMove;
 
         Browser.window.onresize = this.___onWindowResize;
+        Browser.window.onmouseup = this.___onWindowMouseUp;
 
         this.___applyPreventBackspace();
 
@@ -76,8 +78,9 @@ class PriApp extends PriGroup {
     }
 
 
-    private function ___onWindowResize():Void this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
 
+    private function ___onWindowResize():Void this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
+    private function ___onWindowMouseUp():Void this.dispatchEvent(new PriTapEvent(PriTapEvent.TAP_UP, false));
 
     override private function set_width(value:Float) return value;
     override private function get_width():Float return this.getAppSize().width;
