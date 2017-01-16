@@ -16,10 +16,10 @@ class BrowserEventEngine {
     private static var SPECIAL_EVENT_LIST:Array<String> = [
         "mouseleave",
         "mouseenter",
-        "mousedown",
-        "mouseup",
-        "mousemove",
-        "click",
+        PriTapEvent.TAP_DOWN,
+        PriTapEvent.TAP_UP,
+        PriMouseEvent.MOUSE_MOVE,
+        PriTapEvent.TAP,
 
         "keyup",
         "keydown",
@@ -85,10 +85,10 @@ class BrowserEventEngine {
         switch event {
             case "mouseleave" : this.jqel.on("mouseleave", this.on_mouse_leave);
             case "mouseenter" : this.jqel.on("mouseenter", this.on_mouse_enter);
-            case "mousedown" : this.jqel.on("mousedown", this.on_mouse_down);
-            case "mouseup" : this.jqel.on("mouseup", this.on_mouse_up);
-            case "mousemove" : this.jqel.on("mousemove", this.on_mouse_move);
-            case "click" : this.jqel.on("click", this.on_mouse_click);
+            case PriTapEvent.TAP_DOWN : this.jqel.on(PriTapEvent.TAP_DOWN, this.on_mouse_down);
+            case PriTapEvent.TAP_UP : this.jqel.on(PriTapEvent.TAP_UP, this.on_mouse_up);
+            case PriMouseEvent.MOUSE_MOVE : this.jqel.on(PriMouseEvent.MOUSE_MOVE, this.on_mouse_move);
+            case PriTapEvent.TAP : this.jqel.on(PriTapEvent.TAP, this.on_mouse_click);
 
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
@@ -101,10 +101,10 @@ class BrowserEventEngine {
         switch event {
             case "mouseleave" : this.jqel.off("mouseleave", this.on_mouse_leave);
             case "mouseenter" : this.jqel.off("mouseenter", this.on_mouse_enter);
-            case "mousedown" : this.jqel.off("mousedown", this.on_mouse_down);
-            case "mouseup" : this.jqel.off("mouseup", this.on_mouse_up);
-            case "mousemove" : this.jqel.off("mousemove", this.on_mouse_move);
-            case "click" : this.jqel.off("click", this.on_mouse_click);
+            case PriTapEvent.TAP_DOWN : this.jqel.off(PriTapEvent.TAP_DOWN, this.on_mouse_down);
+            case PriTapEvent.TAP_UP : this.jqel.off(PriTapEvent.TAP_UP, this.on_mouse_up);
+            case PriMouseEvent.MOUSE_MOVE : this.jqel.off(PriMouseEvent.MOUSE_MOVE, this.on_mouse_move);
+            case PriTapEvent.TAP : this.jqel.off(PriTapEvent.TAP, this.on_mouse_click);
 
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);

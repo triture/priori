@@ -112,8 +112,6 @@ class PriEventDispatcher {
             clone.propagate = false;
 
             this.bubbleEvent(clone);
-
-            clone = null;
         }
 
     }

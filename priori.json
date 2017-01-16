@@ -15,7 +15,6 @@
     "<!--[if lt IE 9]> \n <script type=\"text/javascript\" src=\"js/html5shiv.min.js\"></script> \n <![endif]-->",
     "<!--[if lt IE 9]> \n <script type=\"text/javascript\" src=\"js/respond.min.js\"></script> \n <![endif]-->",
     "<script type=\"text/javascript\" src=\"js/jquery-2.2.1.min.js\"></script>",
-    "<script type=\"text/javascript\" src=\"js/jquery.mobile-events.min.js\"></script>",
     "<link href=\"css/priori.css\" rel=\"stylesheet\">"
   ],
 
