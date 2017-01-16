@@ -40,12 +40,16 @@ class PriScrollableContainer extends PriGroup {
 
     override private function _onAddedToApp(e:PriEvent):Void {
         this.getElement().on("scroll", this._onJScroll);
+
+        this.addEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
+
         super._onAddedToApp(e);
     }
 
-    override private function _onRemovedFromApp(e:PriEvent):Void {
+    private function _onRemovedFromApp(e:PriEvent):Void {
         this.getElement().off("scroll", this._onJScroll);
-        super._onRemovedFromApp(e);
+
+        this.removeEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
     }
 
     private function onOver(e:PriMouseEvent):Void {

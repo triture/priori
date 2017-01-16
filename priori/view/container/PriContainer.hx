@@ -29,23 +29,11 @@ class PriContainer extends PriDisplay {
     }
 
     public function addChildList(childList:Array<Dynamic>):Void {
-        var i:Int = 0;
-        var n:Int = childList.length;
-
-        while (i < n) {
-            if (Std.is(childList[i], PriDisplay)) this.addChild(childList[i]);
-            i++;
-        }
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) this.addChild(childList[i]);
     }
 
     public function removeChildList(childList:Array<Dynamic>):Void {
-        var i:Int = 0;
-        var n:Int = childList.length;
-
-        while (i < n) {
-            if (Std.is(childList[i], PriDisplay)) this.removeChild(childList[i]);
-            i++;
-        }
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) this.removeChild(childList[i]);
     }
 
     public function addChild(child:PriDisplay):Void {

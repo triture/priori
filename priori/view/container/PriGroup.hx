@@ -35,21 +35,28 @@ class PriGroup extends PriContainer {
         super.kill();
     }
 
+    override public function addChildList(childList:Array<Dynamic>):Void {
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.addChild(childList[i]);
+        this.invalidate();
+    }
+
+    override public function removeChildList(childList:Array<Dynamic>):Void {
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.removeChild(childList[i]);
+        this.invalidate();
+    }
+
     override public function addChild(view:PriDisplay):Void {
         super.addChild(view);
-
         this.invalidate();
     }
 
     override public function removeChild(view:PriDisplay):Void {
         super.removeChild(view);
-
         this.invalidate();
     }
 
     private function _onAddedToApp(e:PriEvent):Void {
         this.removeEventListener(PriEvent.ADDED_TO_APP, this._onAddedToApp);
-        this.addEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
 
         if (this._setupCalled == false) {
             this._setupCalled = true;
@@ -57,17 +64,6 @@ class PriGroup extends PriContainer {
         }
 
         this.validate();
-    }
-
-    private function _onRemovedFromApp(e:PriEvent):Void {
-        this.removeEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
-        this.addEventListener(PriEvent.ADDED_TO_APP, this._onAddedToApp);
-    }
-
-    public function _updateScheduled():Void {
-        if (this._invalid && !this._isKilled) {
-            this.validate();
-        }
     }
 
     private function setup():Void {
@@ -78,16 +74,10 @@ class PriGroup extends PriContainer {
 
     }
 
-    public function isInvalid():Bool {
-        return _invalid;
-    }
-
-    public function canPaint():Bool {
-        return this._setupCalled;
-    }
+    public function isInvalid():Bool return _invalid;
+    public function canPaint():Bool return this._setupCalled;
 
     public function validate():Void {
-
         if (this._invalidateTimer != null) {
             this._invalidateTimer.stop();
             this._invalidateTimer = null;
@@ -95,20 +85,13 @@ class PriGroup extends PriContainer {
 
         if (!this._isKilled && this._invalid && this.canPaint()) {
 
-            var i:Int = 0;
-            var n:Int = this.numChildren;
-            var object:Dynamic;
+            var child:PriGroup;
 
             this.paint();
 
-            i = 0;
-            while (i < n) {
-                if (Std.is(this.getChild(i), PriGroup)) {
-                    object = this.getChild(i);
-                    object.validate();
-                }
-
-                i++;
+            for (i in 0 ... this.numChildren) {
+                child = cast this.getChild(i);
+                if (child.validate != null) child.validate();
             }
 
             this._invalid = false;
@@ -117,30 +100,14 @@ class PriGroup extends PriContainer {
 
 
     public function invalidate():Void {
-        if (this._invalid == false) {
-            this._invalid = true;
+        this._invalid = true;
 
-            if (this._invalidateTimer != null) {
-                this._invalidateTimer.stop();
-                this._invalidateTimer = null;
-            }
-
-//            var i:Int = 0;
-//            var n:Int = this.numChildren;
-//            var object:Dynamic;
-//
-//            i = 0;
-//            while (i < n) {
-//                if (Std.is(this.getChild(i), PriGroup)) {
-//                    object = this.getChild(i);
-//                    object.invalidate();
-//                }
-//
-//                i++;
-//            }
-
-            this._invalidateTimer = Timer.delay(this._updateScheduled, PriApp.g().getMSUptate());
+        if (this._invalidateTimer != null) {
+            this._invalidateTimer.stop();
+            this._invalidateTimer = null;
         }
+
+        this._invalidateTimer = Timer.delay(this.validate, 33);
     }
 
     override public function getContentBox():PriGeomBox {
