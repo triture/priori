@@ -54,7 +54,8 @@ class PriApp extends PriGroup {
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
-        Browser.window.document.onmousemove = this.___onMouseMove;
+        Browser.window.document.onmousemove = this.___onPointerMove;
+        Browser.window.document.ontouchmove = this.___onPointerMove;
 
         Browser.window.onresize = this.___onWindowResize;
         Browser.window.onmouseup = this.___onWindowMouseUp;
@@ -72,15 +73,20 @@ class PriApp extends PriGroup {
 
     override private function get_mousePoint():PriGeomPoint return new PriGeomPoint(this.___xmouse, this.___ymouse);
 
-    private function ___onMouseMove(e):Void {
-        this.___xmouse = e.pageX;
-        this.___ymouse = e.pageY;
+    private function ___onPointerMove(e:Dynamic):Void {
+        if (e.touches != null) {
+            if (e.touches.length > 0) {
+                this.___xmouse = e.touches[0].pageX;
+                this.___ymouse = e.touches[0].pageY;
+            }
+        } else {
+            this.___xmouse = e.pageX;
+            this.___ymouse = e.pageY;
+        }
     }
 
-
-
     private function ___onWindowResize():Void this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
-    private function ___onWindowMouseUp():Void this.dispatchEvent(new PriTapEvent(PriTapEvent.TAP_UP, false));
+    private function ___onWindowMouseUp(e:Dynamic):Void this.dispatchEvent(new PriTapEvent(PriTapEvent.TAP_UP, false));
 
     override private function set_width(value:Float) return value;
     override private function get_width():Float return this.getAppSize().width;

@@ -14,8 +14,8 @@ import jQuery.JQuery;
 class BrowserEventEngine {
 
     private static var SPECIAL_EVENT_LIST:Array<String> = [
-        "mouseleave",
-        "mouseenter",
+        PriMouseEvent.MOUSE_OUT,
+        PriMouseEvent.MOUSE_OVER,
         PriTapEvent.TAP_DOWN,
         PriTapEvent.TAP_UP,
         PriMouseEvent.MOUSE_MOVE,
@@ -48,6 +48,13 @@ class BrowserEventEngine {
         this.removeAllActions();
         this.display.removeEventListener(PriEvent.REMOVED_FROM_APP, this.onRemovedFromApp);
         this.display.addEventListener(PriEvent.ADDED_TO_APP, this.onAddedToApp);
+    }
+
+    public function removeEvent(event:String):Void {
+        if (!this.isSpecial(event)) return;
+
+        this.registeredEvent.remove(event);
+        this.dettachFromElement(event);
     }
 
     public function registerEvent(event:String):Void {
@@ -83,12 +90,12 @@ class BrowserEventEngine {
 
     public function attachToElement(event:String):Void {
         switch event {
-            case "mouseleave" : this.jqel.on("mouseleave", this.on_mouse_leave);
-            case "mouseenter" : this.jqel.on("mouseenter", this.on_mouse_enter);
-            case PriTapEvent.TAP_DOWN : this.jqel.on(PriTapEvent.TAP_DOWN, this.on_mouse_down);
-            case PriTapEvent.TAP_UP : this.jqel.on(PriTapEvent.TAP_UP, this.on_mouse_up);
-            case PriMouseEvent.MOUSE_MOVE : this.jqel.on(PriMouseEvent.MOUSE_MOVE, this.on_mouse_move);
-            case PriTapEvent.TAP : this.jqel.on(PriTapEvent.TAP, this.on_mouse_click);
+            case PriMouseEvent.MOUSE_OUT : this.jsel.onmouseleave = this.on_mouse_leave;
+            case PriMouseEvent.MOUSE_OVER : this.jsel.onmouseenter = this.on_mouse_enter;
+            case PriTapEvent.TAP_DOWN : this.jsel.onmousedown = this.on_mouse_down;
+            case PriTapEvent.TAP_UP : this.jsel.onmouseup = this.on_mouse_up;
+            case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = this.on_mouse_move;
+            case PriTapEvent.TAP : this.jsel.onclick = this.on_mouse_click;
 
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
@@ -99,12 +106,12 @@ class BrowserEventEngine {
 
     public function dettachFromElement(event:String):Void {
         switch event {
-            case "mouseleave" : this.jqel.off("mouseleave", this.on_mouse_leave);
-            case "mouseenter" : this.jqel.off("mouseenter", this.on_mouse_enter);
-            case PriTapEvent.TAP_DOWN : this.jqel.off(PriTapEvent.TAP_DOWN, this.on_mouse_down);
-            case PriTapEvent.TAP_UP : this.jqel.off(PriTapEvent.TAP_UP, this.on_mouse_up);
-            case PriMouseEvent.MOUSE_MOVE : this.jqel.off(PriMouseEvent.MOUSE_MOVE, this.on_mouse_move);
-            case PriTapEvent.TAP : this.jqel.off(PriTapEvent.TAP, this.on_mouse_click);
+            case PriMouseEvent.MOUSE_OUT : this.jsel.onmouseleave = null;
+            case PriMouseEvent.MOUSE_OVER : this.jsel.onmouseenter = null;
+            case PriTapEvent.TAP_DOWN : this.jsel.onmousedown = null;
+            case PriTapEvent.TAP_UP : this.jsel.onmouseup = null;
+            case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = null;
+            case PriTapEvent.TAP : this.jsel.onclick = null;
 
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);

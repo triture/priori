@@ -615,6 +615,8 @@ class PriDisplay extends PriEventDispatcher {
     override public function removeEventListener(event:String, listener:Dynamic->Void):Void {
         super.removeEventListener(event, listener);
 
+        if (!this.hasEvent(event)) this.__eventHelper.removeEvent(event);
+
         if (event == PriTapEvent.TAP && this.hasEvent(PriTapEvent.TAP) == false) {
             this.pointer = false;
         }
