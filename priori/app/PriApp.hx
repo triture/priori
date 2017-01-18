@@ -54,8 +54,13 @@ class PriApp extends PriGroup {
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
-        Browser.window.document.onmousemove = this.___onPointerMove;
-        Browser.window.document.ontouchmove = this.___onPointerMove;
+        if (Browser.window.document.addEventListener != null) {
+            Browser.window.document.addEventListener("mousemove", this.___onPointerMove, true);
+            Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
+        } else {
+            Browser.window.document.onmousemove = this.___onPointerMove;
+            Browser.window.document.ontouchmove = this.___onPointerMove;
+        }
 
         Browser.window.onresize = this.___onWindowResize;
         Browser.window.onmouseup = this.___onWindowMouseUp;
