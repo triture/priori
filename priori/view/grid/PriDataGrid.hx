@@ -217,42 +217,34 @@ class PriDataGrid extends PriGroup {
     private function updateVerticalLines():Void {
         var columnSize = PriGridColumnSize.calculate(this.width, this.columns);
 
-        var i:Int = 0;
-        var n:Int = this.verticalLinesList.length;
-
-        while (i < n) {
-            this.removeChild(this.verticalLinesList[i]);
-            this.verticalLinesList[i].kill();
-            i++;
-        }
+        var oldVerticalLines:Array<PriDisplay> = this.verticalLinesList;
 
         this.verticalLinesList = [];
 
         if (this.verticalGridLines) {
-            i = 0;
-            n = columnSize.widthList.length - 1;
 
             var lastX:Float = 0;
+            var h:Float = this.height;
 
-            while (i < n) {
+            for (i in 0 ... columnSize.widthList.length - 1) {
 
-                this.verticalLinesList.push(new PriDisplay());
+                this.verticalLinesList.push(
+                    oldVerticalLines.length > 0 ?
+                    oldVerticalLines.shift() :
+                    new PriDisplay()
+                );
 
                 this.verticalLinesList[i].width = 1;
-                this.verticalLinesList[i].height = this.height;
-                this.verticalLinesList[i].y = 0;
+                this.verticalLinesList[i].height = h;
 
                 lastX = lastX + columnSize.widthList[i];
                 this.verticalLinesList[i].x = lastX;
                 this.verticalLinesList[i].bgColor = this.verticalGridLineColor;
-
-
-
-                this.addChild(this.verticalLinesList[i]);
-
-                i++;
             }
         }
+
+        this.addChildList(this.verticalLinesList);
+        this.removeChildList(oldVerticalLines);
     }
 
     public function getTotalRows():Int {

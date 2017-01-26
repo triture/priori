@@ -1,6 +1,5 @@
 package priori.view.grid.row;
 
-//import priori.event.PriMouseEvent;
 import priori.event.PriEvent;
 import priori.view.grid.column.PriGridColumnSize;
 import priori.view.grid.column.PriGridColumn;
@@ -26,36 +25,6 @@ class PriGridRow extends PriGroup {
         this.clipping = false;
         this.rowColor = 0xFFFFFF;
     }
-
-//    public function activateRowOver():Void {
-//        this.addEventListener(PriMouseEvent.MOUSE_OVER, this.__onRowOver);
-//        this.addEventListener(PriMouseEvent.MOUSE_OUT, this.__onRowOut);
-//    }
-//
-//    public function removeRowOver():Void {
-//        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onRowOver);
-//        this.removeEventListener(PriMouseEvent.MOUSE_OUT, this.__onRowOut);
-//    }
-//
-//    private function __onRowOver(e:PriMouseEvent):Void {
-//        var i:Int = 0;
-//        var n:Int = this.cellList.length;
-//
-//        while (i < n) {
-//            this.cellList[i].activateCellOver();
-//            i++;
-//        }
-//    }
-//
-//    private function __onRowOut(e:PriMouseEvent):Void {
-//        var i:Int = 0;
-//        var n:Int = this.cellList.length;
-//
-//        while (i < n) {
-//            this.cellList[i].removeCellOver();
-//            i++;
-//        }
-//    }
 
     override private function setup():Void {
 
@@ -116,8 +85,10 @@ class PriGridRow extends PriGroup {
 
     @:noCompletion private function set_columns(value:Array<PriGridColumn>):Array<PriGridColumn> {
         if (this.columns != value) {
+            var oldColumns:Array<PriGridColumn> = this.columns;
+
             this.columns = value;
-            this.generateCells();
+            this.generateCells(oldColumns);
         }
 
         return value;
@@ -173,45 +144,73 @@ class PriGridRow extends PriGroup {
         this.updateSelection();
     }
 
-    private function generateCells():Void {
-        this.removeCells();
-
-        if (this.columns != null) {
-            var i:Int = 0;
-            var n:Int = this.columns.length;
-
-            var cell:PriGridCellRenderer;
-
-            while (i < n) {
-
-                cell = Type.createInstance(this.columns[i].cellRenderer, this.columns[i].cellRendererParams);
-
-                this.cellList.push(cell);
-                this.addChild(cell);
-
-                i++;
-            }
-
-            this.updateData();
-        }
-
-        this.invalidate();
+    private function createCell(cellClass:Class<PriGridCellRenderer>, cellParams:Array<Dynamic>):PriGridCellRenderer {
+        return Type.createInstance(cellClass, cellParams);
     }
 
-    private function removeCells():Void {
-        var i:Int = 0;
-        var n:Int = this.cellList.length;
+    private function generateCells(oldColumns:Array<PriGridColumn>):Void {
+        var u:Int = 0;
+        var c:Int = 0;
+        var log:String = "";
 
-        while (i < n) {
-            this.removeChild(this.cellList[i]);
+        if (oldColumns == null) oldColumns = [];
 
-            this.cellList[i].kill();
+        log += oldColumns.length + ";";
 
-            i++;
+        var oldCellList:Array<PriGridCellRenderer> = this.cellList;
+        var newCellList:Array<PriGridCellRenderer> = [];
+
+        if (this.columns == null) {
+            log += "killcels;";
+            this.killCells();
+        } else {
+
+            this.removeChildList(this.cellList);
+
+            for (i in 0 ... this.columns.length) {
+
+                var cell:PriGridCellRenderer = null;
+
+                var cellClass:Class<PriGridCellRenderer> = this.columns[i].cellRenderer;
+                var cellParams:Array<Dynamic> = this.columns[i].cellRendererParams;
+
+//                log += cellClass + " " + cellParams + "; ";
+
+                if (cellParams == null || cellParams.length == 0) {
+                    for (j in 0 ... oldColumns.length) {
+                        if (oldColumns[j].cellRenderer == cellClass && (oldColumns[j].cellRendererParams == null || oldColumns[j].cellRendererParams.length == 0)) {
+                            cell = oldCellList[j];
+
+                            oldColumns.splice(j, 1);
+                            oldCellList.splice(j, 1);
+
+                            u++;
+                            break;
+                        }
+                    }
+                }
+
+                if (cell == null) {
+                    c++;
+                    cell = this.createCell(cellClass, cellParams);
+                }
+
+                newCellList.push(cell);
+            }
         }
 
+//        trace('$log - create $c used $u');
+
+        this.cellList = newCellList;
+        this.addChildList(newCellList);
+        this.updateData();
+    }
+
+
+    private function killCells():Void {
+        this.removeChildList(this.cellList);
+        for (i in 0 ... this.cellList.length) this.cellList[i].kill();
         this.cellList = [];
     }
-
 
 }
