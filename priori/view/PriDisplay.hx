@@ -848,14 +848,17 @@ class PriDisplay extends PriEventDispatcher {
                 var parentMouse:PriGeomPoint = this.parent.mousePoint;
                 this.centerX = parentMouse.x;
                 this.centerY = parentMouse.y;
+
+                this.dispatchEvent(new PriEvent(PriEvent.DRAG));
             }
         }
 
         this.___dragdata = {};
         this.___dragdata.originalPointMouse = PriApp.g().mousePoint;
         this.___dragdata.originalPosition = new PriGeomPoint(this.x, this.y);
+        this.___dragdata.lastPosition = new PriGeomPoint(this.x, this.y);
 
-        var r = function():Void {
+        var runFunction = function():Void {
             var curPoint:PriGeomPoint = PriApp.g().mousePoint;
             var diffx:Float = curPoint.x - this.___dragdata.originalPointMouse.x;
             var diffy:Float = curPoint.y - this.___dragdata.originalPointMouse.y;
@@ -867,13 +870,19 @@ class PriDisplay extends PriEventDispatcher {
                 this.x = Math.max(Math.min(this.___dragdata.originalPosition.x + diffx, bounds.x + bounds.width), bounds.x);
                 this.y = Math.max(Math.min(this.___dragdata.originalPosition.y + diffy, bounds.y + bounds.height), bounds.y);
             }
+
+            if (this.___dragdata.lastPosition.x != this.x || this.___dragdata.lastPosition.y != this.y) {
+                this.dispatchEvent(new PriEvent(PriEvent.DRAG));
+                this.___dragdata.lastPosition.x = this.x;
+                this.___dragdata.lastPosition.y = this.y;
+            }
         }
 
-        var t:haxe.Timer = new haxe.Timer(30);
-        t.run = r;
-        this.___dragdata.t = t;
+        var timer:haxe.Timer = new haxe.Timer(30);
+        timer.run = runFunction;
+        this.___dragdata.t = timer;
 
-        r();
+        runFunction();
     }
     
     /**
