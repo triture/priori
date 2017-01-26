@@ -67,17 +67,17 @@ class PriFormElementBase extends PriExtendable {
         this.applyIdToFormElement();
     }
 
-    public function setFocus():Void {
+    override public function setFocus():Void {
         var el:Element = Browser.document.getElementById(this.fieldId);
         if (el != null) el.focus();
     }
 
-    public function removeFocus():Void {
+    override public function removeFocus():Void {
         var el:Element = Browser.document.getElementById(this.fieldId);
         if (el != null) el.blur();
     }
 
-    public function hasFocus():Bool {
+    override public function hasFocus():Bool {
         var el:Element = Browser.document.getElementById(this.fieldId);
 
         if (el != null) {

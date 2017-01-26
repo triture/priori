@@ -70,6 +70,9 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var y(get, set):Float;
 
+    /**
+    * Indicates the coordinates of the mouse or user input device position relative to this object.
+    **/
     public var mousePoint(get, null):PriGeomPoint;
 
     public var centerX(get, set):Float;
@@ -89,6 +92,11 @@ class PriDisplay extends PriEventDispatcher {
 
     public var rotation(get, set):Float;
 
+    /**
+    * Indicates the object can be focused by mouse or keyboard tab key.
+    **/
+    public var focusable(get, set):Bool;
+
 
     /**
     * Indicates the alpha transparency value of the object specified.
@@ -97,7 +105,6 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : 1`
     **/
     public var alpha(get, set):Float;
-    private var _alpha:Float = 1;
 
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var tooltip(default, set):String;
@@ -126,6 +133,7 @@ class PriDisplay extends PriEventDispatcher {
     private var _rotation:Float = 0;
     private var _scaleX:Float = 1;
     private var _scaleY:Float = 1;
+    private var _alpha:Float = 1;
 
     private var ___x:Float = 0;
     private var ___y:Float = 0;
@@ -134,6 +142,7 @@ class PriDisplay extends PriEventDispatcher {
     private var ___clipping:Bool = true;
     private var ___depth:Int = 1000;
     private var ___pointer:Bool = false;
+    private var ___focusable:Bool = false;
 
     private var ___dragdata:Dynamic;
 
@@ -894,6 +903,35 @@ class PriDisplay extends PriEventDispatcher {
             this.___dragdata.t.stop();
             this.___dragdata = null;
         }
+    }
+
+
+    public function get_focusable():Bool return this.___focusable;
+    public function set_focusable(value:Bool):Bool {
+        if (this.focusable != value) this._jselement.tabIndex = value ? 0 : -1;
+        return value;
+    }
+
+    /**
+    * Sets focus to this object if focusable. Does not check for visibility, enabled state, or any other conditions.
+    **/
+    public function setFocus():Void if (this.focusable) this._jselement.focus();
+
+    /**
+    * Removes focus of this object if focusable. Does not check for visibility, enabled state, or any other conditions.
+    **/
+    public function removeFocus():Void if (this.focusable) this._jselement.blur();
+
+    /**
+    * Check if this object has the browser focus at the moment.
+    **/
+    public function hasFocus():Bool {
+        try {
+            var curEl:Element = Browser.document.activeElement;
+            if (curEl == this._jselement) return true;
+        } catch (e:Dynamic) {}
+
+        return false;
     }
 
 }
