@@ -3,30 +3,31 @@ package priori.event;
 
 class PriEvent {
 
-    public static var COMPLETE:String = "prievent_base_complete";
-    public static var START:String = "prievent_base_start";
-    public static var STOP:String = "prievent_base_stop";
-    public static var CANCEL:String = "prievent_base_cancel";
-    public static var OK:String = "prievent_base_ok";
-    public static var SAVE:String = "prievent_base_save";
-    public static var DELETE:String = "prievent_base_delete";
-    public static var ERROR:String = "prievent_base_error";
-    public static var CHANGE:String = "prievent_base_change";
-    public static var RESIZE:String = "prievent_base_resize";
-    public static var TICK:String = "prievent_base_tick";
-    public static var SCROLL:String = "prievent_base_scroll";
-    public static var ADD_ITEM:String = "prievent_base_add_item";
-    public static var REMOVE_ITEM:String = "prievent_base_remove_item";
-    public static var OPEN:String = "prievent_base_open";
-    public static var CLOSE:String = "prievent_base_close";
+    inline public static var COMPLETE:String = "prievent_base_complete";
+    inline public static var START:String = "prievent_base_start";
+    inline public static var STOP:String = "prievent_base_stop";
+    inline public static var CANCEL:String = "prievent_base_cancel";
+    inline public static var OK:String = "prievent_base_ok";
+    inline public static var SAVE:String = "prievent_base_save";
+    inline public static var DELETE:String = "prievent_base_delete";
+    inline public static var ERROR:String = "prievent_base_error";
+    inline public static var CHANGE:String = "prievent_base_change";
+    inline public static var RESIZE:String = "prievent_base_resize";
+    inline public static var TICK:String = "prievent_base_tick";
+    inline public static var SCROLL:String = "prievent_base_scroll";
+    inline public static var ADD_ITEM:String = "prievent_base_add_item";
+    inline public static var REMOVE_ITEM:String = "prievent_base_remove_item";
+    inline public static var OPEN:String = "prievent_base_open";
+    inline public static var CLOSE:String = "prievent_base_close";
 
-    public static var PRESS_ENTER:String = "prievent_base_pressenter";
+    inline public static var PRESS_ENTER:String = "prievent_base_pressenter";
 
-    public static var ADDED_TO_APP:String = "prievent_base_addedToApp";
-    public static var REMOVED_FROM_APP:String = "prievent_base_removedFromApp";
-    public static var ADDED:String = "prievent_base_addedToContainer";
-    public static var REMOVED:String = "prievent_base_removedFromContainer";
+    inline public static var ADDED_TO_APP:String = "prievent_base_addedToApp";
+    inline public static var REMOVED_FROM_APP:String = "prievent_base_removedFromApp";
+    inline public static var ADDED:String = "prievent_base_addedToContainer";
+    inline public static var REMOVED:String = "prievent_base_removedFromContainer";
 
+    inline public static var DRAG:String = "prievent_base_drag";
 
     public var type:String;
     public var propagate:Bool;
