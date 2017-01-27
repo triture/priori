@@ -1,5 +1,6 @@
 package priori.view.grid.header;
 
+import helper.pool.PoolGridHead;
 import priori.event.PriTapEvent;
 import priori.view.grid.column.PriGridColumnSort;
 import priori.view.grid.column.PriGridColumnSort.PriGridColumnSortOrder;
@@ -9,7 +10,7 @@ import priori.view.container.PriGroup;
 
 class PriGridHeader extends PriGroup {
 
-    @:isVar public var columns(get, set):Array<PriGridColumn>;
+    @:isVar public var columns(default, set):Array<PriGridColumn>;
 
     private var headerList:Array<PriGridHeaderRenderer>;
     private var headerCaret:Array<PriGridHeaderSortCaret>;
@@ -57,7 +58,7 @@ class PriGridHeader extends PriGroup {
         }
     }
 
-    @noCompletion private function set_columns(value:Array<PriGridColumn>):Array<PriGridColumn> {
+    private function set_columns(value:Array<PriGridColumn>):Array<PriGridColumn> {
         this.columns = value;
 
         this.generateHeaders();
@@ -65,43 +66,41 @@ class PriGridHeader extends PriGroup {
         return value;
     }
 
-    @noCompletion private function get_columns():Array<PriGridColumn> {
-        return this.columns;
-    }
 
-    private function generateHeaders():Void {
-
-        this.removeHeaders();
-
-        if (this.columns != null) {
-            var i:Int = 0;
-            var n:Int = this.columns.length;
-
-            var header:PriGridHeaderRenderer;
-
-            while (i < n) {
-
-                header = Type.createInstance(this.columns[i].headerRenderer, this.columns[i].headerRendererParams);
-                header.title = this.columns[i].title;
-
-                this.headerList.push(header);
-                this.addChild(header);
-
-                if (this.columns[i].sortable) {
-                    this.headerCaret.push(Type.createInstance(this.columns[i].headerSortCaret, []));
-                    this.headerCaret[i].addEventListener(PriTapEvent.TAP, onCaretClick);
-                    this.addChild(this.headerCaret[i]);
-                } else {
-                    this.headerCaret.push(null);
-                }
-
-                i++;
-            }
-        }
-
-        this.invalidate();
-        this.validate();
-    }
+//    private function generateHeaders():Void {
+//
+//        this.removeHeaders();
+//
+//        if (this.columns != null) {
+//            var i:Int = 0;
+//            var n:Int = this.columns.length;
+//
+//            var header:PriGridHeaderRenderer;
+//
+//            while (i < n) {
+//                var params:Array<Dynamic> = this.columns[i].headerRendererParams;
+//
+//                header = Type.createInstance(this.columns[i].headerRenderer, params == null ? [] : params);
+//                header.title = this.columns[i].title;
+//
+//                this.headerList.push(header);
+//                this.addChild(header);
+//
+//                if (this.columns[i].sortable) {
+//                    this.headerCaret.push(Type.createInstance(this.columns[i].headerSortCaret, []));
+//                    this.headerCaret[i].addEventListener(PriTapEvent.TAP, onCaretClick);
+//                    this.addChild(this.headerCaret[i]);
+//                } else {
+//                    this.headerCaret.push(null);
+//                }
+//
+//                i++;
+//            }
+//        }
+//
+//        this.invalidate();
+//        this.validate();
+//    }
 
     public function applySort(field:String, order:PriGridColumnSortOrder):Void {
         var i:Int = 0;
@@ -160,23 +159,62 @@ class PriGridHeader extends PriGroup {
         this.validate();
     }
 
-    private function removeHeaders():Void {
-        var i:Int = 0;
-        var n:Int = this.headerList.length;
+//    private function removeHeaders():Void {
+//        var i:Int = 0;
+//        var n:Int = this.headerList.length;
+//
+//        while (i < n) {
+//            this.removeChild(this.headerList[i]);
+//            this.headerList[i].kill();
+//
+//            if (this.headerCaret[i] != null) {
+//                this.removeChild(this.headerCaret[i]);
+//                this.headerCaret[i].kill();
+//            }
+//
+//            i++;
+//        }
+//
+//        this.headerList = [];
+//        this.headerCaret = [];
+//    }
 
-        while (i < n) {
-            this.removeChild(this.headerList[i]);
-            this.headerList[i].kill();
 
-            if (this.headerCaret[i] != null) {
-                this.removeChild(this.headerCaret[i]);
-                this.headerCaret[i].kill();
+    private function generateHeaders():Void {
+        this.killHeaders();
+
+        if (this.columns != null) {
+            for (i in 0 ... this.columns.length) {
+                var headerRenderer:Class<PriGridHeaderRenderer> = this.columns[i].headerRenderer;
+                var headerParams:Array<Dynamic> = this.columns[i].headerRendererParams;
+
+                var header:PriGridHeaderRenderer = PoolGridHead.instance.createCell(headerRenderer, headerParams);
+                header.title = this.columns[i].title;
+
+                this.headerList.push(header);
+
+                if (this.columns[i].sortable) {
+                    this.headerCaret.push(Type.createInstance(this.columns[i].headerSortCaret, []));
+                    this.headerCaret[i].addEventListener(PriTapEvent.TAP, onCaretClick);
+                } else {
+                    this.headerCaret.push(null);
+                }
             }
-
-            i++;
         }
 
+        this.addChildList(this.headerList);
+        this.addChildList(this.headerCaret);
+
+        this.invalidate();
+        this.validate();
+    }
+
+    private function killHeaders():Void {
+        this.removeChildList(this.headerList);
+        for (i in 0 ... this.headerList.length) PoolGridHead.instance.returnCell(this.headerList[i]);
         this.headerList = [];
+
+        this.removeChildList(this.headerCaret);
         this.headerCaret = [];
     }
 }

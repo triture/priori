@@ -35,42 +35,25 @@ class PriGridColumn {
         ?headerRendererParams:Array<Dynamic> = null,
         ?sortable:Bool = null
     ) {
+        if (cellRenderer == null) this.cellRenderer = PriGridCellRendererDefault;
+        else this.cellRenderer = cellRenderer;
 
+        if (headerRenderer == null) this.headerRenderer = PriGridHeaderRendererDefault;
+        else this.headerRenderer = headerRenderer;
+
+        if (sizeType == null) this.sizeType = PriGridColumnSizeType.FIT;
+        else this.sizeType = sizeType;
+
+        if (sortable == null) this.sortable = true;
+        else this.sortable = sortable;
+
+        this.cellRendererParams = cellRendererParams;
+        this.headerRendererParams = headerRendererParams;
+        this.headerSortCaret = PriGridHeaderSortCaretDefault;
+
+        this.width = width;
         this.title = title;
         this.dataField = dataField;
 
-        this.cellRendererParams = cellRendererParams;
-        if (this.cellRendererParams == null) this.cellRendererParams = [];
-
-        this.headerRendererParams = headerRendererParams;
-        if (this.headerRendererParams == null) this.headerRendererParams = [];
-
-        if (cellRenderer == null) {
-            this.cellRenderer = PriGridCellRendererDefault;
-        } else {
-            this.cellRenderer = cellRenderer;
-        }
-
-        this.headerSortCaret = PriGridHeaderSortCaretDefault;
-
-        if (headerRenderer == null) {
-            this.headerRenderer = PriGridHeaderRendererDefault;
-        } else {
-            this.headerRenderer = headerRenderer;
-        }
-
-        if (sizeType == null) {
-            this.sizeType = PriGridColumnSizeType.FIT;
-        } else {
-            this.sizeType = sizeType;
-        }
-
-        if (sortable == null) {
-            this.sortable = true;
-        } else {
-            this.sortable = sortable;
-        }
-
-        this.width = width;
     }
 }
