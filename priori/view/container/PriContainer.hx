@@ -1,5 +1,7 @@
 package priori.view.container;
 
+import js.Browser;
+import js.html.DocumentFragment;
 import helper.browser.DomHelper;
 import priori.geom.PriGeomBox;
 import priori.event.PriEvent;
@@ -29,58 +31,64 @@ class PriContainer extends PriDisplay {
     }
 
     public function addChildList(childList:Array<Dynamic>):Void {
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) this.addChild(childList[i]);
+        var realItens:Array<Dynamic> = [];
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
+
+        var thisHasApp:Bool = this.hasApp();
+        var thisDisabled:Bool = this.disabled;
+        var thisHasDisabledParent:Bool = this.hasDisabledParent();
+
+        var docFrag:DocumentFragment = Browser.document.createDocumentFragment();
+
+        for (i in 0 ... realItens.length) {
+            var child:PriDisplay = realItens[i];
+
+            child.removeFromParent();
+
+            this._childList.push(child);
+            child._parent = this;
+
+
+            if (thisHasApp) {
+                if (thisDisabled) DomHelper.disableAll(child.getJSElement());
+                else if (!thisHasDisabledParent) DomHelper.enableAllUpPrioriDisabled(child.getJSElement());
+            }
+
+            docFrag.appendChild(child.getJSElement());
+        }
+
+        this._jselement.appendChild(docFrag);
+
+        for (i in 0 ... realItens.length) {
+            var child:PriDisplay = realItens[i];
+            if (thisHasApp) child.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
+            child.dispatchEvent(new PriEvent(PriEvent.ADDED, true));
+        }
     }
 
     public function removeChildList(childList:Array<Dynamic>):Void {
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) this.removeChild(childList[i]);
-    }
+        var realItens:Array<Dynamic> = [];
+        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
 
-    public function addChild(child:PriDisplay):Void {
+        var hasAppBefore:Bool = this.hasApp();
 
-        // remove o objeto de algum parent, caso ja tenha algum
-        child.removeFromParent();
+        for (i in 0 ... realItens.length) {
+            var child:PriDisplay = realItens[i];
 
-        this._childList.push(child);
-        this._jselement.appendChild(child.getJSElement());
+            if (child.parent == this) {
+                this._childList.remove(child);
+                this._jselement.removeChild(child.getJSElement());
 
-        child._parent = this;
+                child._parent = null;
 
-        if (this.hasApp()) {
-            if (this.disabled) {
-                DomHelper.disableAll(child.getJSElement());
-            } else {
-                if (!this.hasDisabledParent()) {
-                    DomHelper.enableAllUpPrioriDisabled(child.getJSElement());
-                }
+                if (hasAppBefore) child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));
+                child.dispatchEvent(new PriEvent(PriEvent.REMOVED, true));
             }
-
-            child.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
-        }
-
-        child.dispatchEvent(new PriEvent(PriEvent.ADDED, true));
-    }
-
-    public function removeChild(child:PriDisplay):Void {
-        // verifica se a view é filha deste container
-        if (this == child.parent) {
-
-            // verifica se a view ja esta no app
-            var viewHasAppBefore:Bool = this.hasApp();
-
-            this._childList.remove(child);
-            this._jselement.removeChild(child.getJSElement());
-            //child.getElement().remove();
-
-            child._parent = null;
-
-            if (viewHasAppBefore) {
-                child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));
-            }
-
-            child.dispatchEvent(new PriEvent(PriEvent.REMOVED, true));
         }
     }
+
+    public function addChild(child:PriDisplay):Void this.addChildList([child]);
+    public function removeChild(child:PriDisplay):Void this.removeChildList([child]);
 
     override public function kill():Void {
 

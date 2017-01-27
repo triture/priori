@@ -36,12 +36,14 @@ class PriGroup extends PriContainer {
     }
 
     override public function addChildList(childList:Array<Dynamic>):Void {
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.addChild(childList[i]);
+        super.addChildList(childList);
+//        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.addChild(childList[i]);
         this.invalidate();
     }
 
     override public function removeChildList(childList:Array<Dynamic>):Void {
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.removeChild(childList[i]);
+//        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) super.removeChild(childList[i]);
+        super.removeChildList(childList);
         this.invalidate();
     }
 
