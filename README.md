@@ -62,6 +62,12 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.5.1 - 01/30/2017
+- Fixes and some improvements
+- Improvements : Remove jquery from mouse event manager
+- Improvements : Using object pool for PriDataGrid cells
+- Improvements : PriDisplay dispatching Drag event
+
 ### 0.5.0 - 01/11/2017
 - New Feature: startDrag() and stopDrag() methods
 - Bugfixes
