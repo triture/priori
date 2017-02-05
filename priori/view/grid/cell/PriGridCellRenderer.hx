@@ -96,11 +96,5 @@ class PriGridCellRenderer extends PriGroup {
         return result;
     }
 
-    override public function kill():Void {
-
-        this.removeEventListener(PriEvent.CHANGE, this.__onCellDataChange);
-        this.removeEventListener(PriMouseEvent.MOUSE_OVER, this.__onMouse);
-
-        super.kill();
-    }
+    override public function kill():Void {}
 }

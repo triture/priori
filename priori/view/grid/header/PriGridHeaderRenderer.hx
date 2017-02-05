@@ -22,4 +22,6 @@ class PriGridHeaderRenderer extends PriGroup {
         return value;
     }
 
+    override public function kill():Void {}
+
 }

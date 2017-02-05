@@ -66,42 +66,6 @@ class PriGridHeader extends PriGroup {
         return value;
     }
 
-
-//    private function generateHeaders():Void {
-//
-//        this.removeHeaders();
-//
-//        if (this.columns != null) {
-//            var i:Int = 0;
-//            var n:Int = this.columns.length;
-//
-//            var header:PriGridHeaderRenderer;
-//
-//            while (i < n) {
-//                var params:Array<Dynamic> = this.columns[i].headerRendererParams;
-//
-//                header = Type.createInstance(this.columns[i].headerRenderer, params == null ? [] : params);
-//                header.title = this.columns[i].title;
-//
-//                this.headerList.push(header);
-//                this.addChild(header);
-//
-//                if (this.columns[i].sortable) {
-//                    this.headerCaret.push(Type.createInstance(this.columns[i].headerSortCaret, []));
-//                    this.headerCaret[i].addEventListener(PriTapEvent.TAP, onCaretClick);
-//                    this.addChild(this.headerCaret[i]);
-//                } else {
-//                    this.headerCaret.push(null);
-//                }
-//
-//                i++;
-//            }
-//        }
-//
-//        this.invalidate();
-//        this.validate();
-//    }
-
     public function applySort(field:String, order:PriGridColumnSortOrder):Void {
         var i:Int = 0;
         var n:Int = this.columns == null ? 0 : this.columns.length;
@@ -158,27 +122,6 @@ class PriGridHeader extends PriGroup {
         this.invalidate();
         this.validate();
     }
-
-//    private function removeHeaders():Void {
-//        var i:Int = 0;
-//        var n:Int = this.headerList.length;
-//
-//        while (i < n) {
-//            this.removeChild(this.headerList[i]);
-//            this.headerList[i].kill();
-//
-//            if (this.headerCaret[i] != null) {
-//                this.removeChild(this.headerCaret[i]);
-//                this.headerCaret[i].kill();
-//            }
-//
-//            i++;
-//        }
-//
-//        this.headerList = [];
-//        this.headerCaret = [];
-//    }
-
 
     private function generateHeaders():Void {
         this.killHeaders();
