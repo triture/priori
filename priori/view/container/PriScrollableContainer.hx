@@ -4,8 +4,6 @@ import priori.system.PriDeviceBrowser;
 import priori.event.PriMouseEvent;
 import priori.system.PriDevice;
 import priori.event.PriEvent;
-import jQuery.JQuery;
-import jQuery.Event;
 
 class PriScrollableContainer extends PriGroup {
 
@@ -13,11 +11,11 @@ class PriScrollableContainer extends PriGroup {
     @:isVar public var scrollerX(default, set):Bool;
     @:isVar public var scrollerY(default, set):Bool;
 
-    @:isVar public var scrollY(get, set):Float;
-    @:isVar public var scrollX(get, set):Float;
+    public var scrollY(get, set):Float;
+    public var scrollX(get, set):Float;
 
-    @:isVar public var maxScrollY(get, null):Float;
-    @:isVar public var maxScrollX(get, null):Float;
+    public var maxScrollY(get, null):Float;
+    public var maxScrollX(get, null):Float;
 
     private var __mouseIsOver:Bool = false;
 
@@ -36,20 +34,6 @@ class PriScrollableContainer extends PriGroup {
         }
 
 
-    }
-
-    override private function _onAddedToApp(e:PriEvent):Void {
-        this.getElement().on("scroll", this._onJScroll);
-
-        this.addEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
-
-        super._onAddedToApp(e);
-    }
-
-    private function _onRemovedFromApp(e:PriEvent):Void {
-        this.getElement().off("scroll", this._onJScroll);
-
-        this.removeEventListener(PriEvent.REMOVED_FROM_APP, this._onRemovedFromApp);
     }
 
     private function onOver(e:PriMouseEvent):Void {
@@ -92,81 +76,54 @@ class PriScrollableContainer extends PriGroup {
         }
     }
 
-    private function _onJScroll(e:Event):Void {
-        e.stopPropagation();
-        this.dispatchEvent(new PriEvent(PriEvent.SCROLL));
-    }
 
-    @:noCompletion override private function get_clipping():Bool {
-        return true;
-    }
+    override private function get_clipping():Bool return true;
+    override private function set_clipping(value:Bool) return value;
 
-    @:noCompletion override private function set_clipping(value:Bool) {
-        return value;
-    }
 
-    @:noCompletion private function set_scrollerX(value:Bool) {
+    private function set_scrollerX(value:Bool) {
         this.scrollerX = value;
         if (this.__mouseIsOver) this.updateScrollerView();
-
         return value;
     }
 
-    @:noCompletion private function set_scrollerY(value:Bool) {
+    private function set_scrollerY(value:Bool) {
         this.scrollerY = value;
         if (this.__mouseIsOver) this.updateScrollerView();
-
         return value;
     }
 
-    @:noCompletion private function set_scroller(value:Bool) {
+    private function set_scroller(value:Bool) {
         this.scrollerX = value;
         this.scrollerY = value;
-
-        if (this.__mouseIsOver) this.updateScrollerView();
-
         return value;
     }
 
 
-    @:noCompletion private function set_scrollY(value:Float) {
+    private function get_scrollY():Float return this.getElement().scrollTop();
+    private function set_scrollY(value:Float) {
         this.getElement().scrollTop(value);
         return value;
     }
 
-    @:noCompletion private function get_scrollY():Float {
-        return this.getElement().scrollTop();
-    }
-
-    @:noCompletion private function set_scrollX(value:Float) {
+    private function get_scrollX():Float return this.getElement().scrollLeft();
+    private function set_scrollX(value:Float) {
         this.getElement().scrollLeft(value);
         return value;
     }
 
-    @:noCompletion private function get_scrollX():Float {
-        return this.getElement().scrollLeft();
-    }
-
-    @:noCompletion private function get_maxScrollY():Float {
+    private function get_maxScrollY():Float {
         var result:Float = Std.parseFloat(this.getElement().prop("scrollHeight"));
         if (result == null || Math.isNaN(result)) result = 0;
 
         return result;
     }
 
-    @:noCompletion private function get_maxScrollX():Float {
+    private function get_maxScrollX():Float {
         var result:Float = Std.parseFloat(this.getElement().prop("scrollWidth"));
         if (result == null || Math.isNaN(result)) result = 0;
 
         return result;
     }
-
-    override public function kill():Void {
-        this.getElement().off("scroll", this._onJScroll);
-
-        super.kill();
-    }
-
-
 
 }

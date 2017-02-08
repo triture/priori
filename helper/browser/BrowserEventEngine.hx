@@ -21,6 +21,8 @@ class BrowserEventEngine {
         PriMouseEvent.MOUSE_MOVE,
         PriTapEvent.TAP,
 
+        PriEvent.SCROLL,
+
         "keyup",
         "keydown",
 
@@ -101,6 +103,8 @@ class BrowserEventEngine {
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
             case "focusin" : this.jqel.on("focusin", this.on_focus_in);
             case "focusout" : this.jqel.on("focusout", this.on_focus_out);
+
+            case PriEvent.SCROLL : this.jsel.onscroll = this.on_scroll;
         }
     }
 
@@ -117,7 +121,14 @@ class BrowserEventEngine {
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);
             case "focusin" : this.jqel.off("focusin", this.on_focus_in);
             case "focusout" : this.jqel.off("focusout", this.on_focus_out);
+
+            case PriEvent.SCROLL : this.jsel.onscroll = null;
         }
+    }
+
+    private function on_scroll(e:Dynamic):Void {
+        e.stopPropagation(); // TODO validate if is needed
+        this.display.dispatchEvent(new PriEvent(PriEvent.SCROLL));
     }
 
     private function on_focus_in(e:Dynamic):Void {
