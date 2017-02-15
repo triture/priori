@@ -1,5 +1,6 @@
 package priori.view.grid.header;
 
+import priori.style.font.PriFontStyle;
 import priori.view.text.PriText;
 
 class PriGridHeaderRendererDefault extends PriGridHeaderRenderer {
@@ -22,7 +23,7 @@ class PriGridHeaderRendererDefault extends PriGridHeaderRenderer {
 
         this.label = new PriText();
         this.label.autoSize = false;
-        this.label.multiLine = false;
+        this.label.fontStyle = new PriFontStyle();
         this.label.text = this.title;
         this.label.height = null;
 

@@ -1,5 +1,6 @@
 package priori.view.grid.cell;
 
+import priori.style.font.PriFontStyle;
 import priori.view.text.PriText;
 
 class PriGridCellRendererDefault extends PriGridCellRenderer {
@@ -24,6 +25,7 @@ class PriGridCellRendererDefault extends PriGridCellRenderer {
     override private function setup():Void {
         this.label = new PriText();
         this.label.text = this.value;
+        this.label.fontStyle = new PriFontStyle();
 
         this.addChild(this.label);
     }
