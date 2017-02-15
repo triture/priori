@@ -1,5 +1,7 @@
 package priori.view.form;
 
+import priori.style.font.PriFontStyle;
+import helper.browser.StyleHelper;
 import priori.event.PriEvent;
 import priori.app.PriApp;
 import js.html.Element;
@@ -9,12 +11,47 @@ import priori.view.component.PriExtendable;
 
 class PriFormElementBase extends PriExtendable {
 
+    inline private static var INITIAL_FONT_SIZE:Int = 14;
+
+    @:isVar public var fontStyle(default, set):PriFontStyle;
     @:isVar public var fieldId(get, null):String;
+
+    /**
+    * Changes the font size of the text.
+    *
+    * `default value : 14`
+    **/
+    public var fontSize(get, set):Float;
+    private var __fontSize:Float = INITIAL_FONT_SIZE;
 
     private var _fieldId:String;
 
     public function new() {
         super();
+    }
+
+    private function get_fontSize():Float return this.__fontSize;
+    private function set_fontSize(value:Float):Float {
+        if (this.__fontSize != value) {
+            if (value == null) {
+                this.__fontSize = INITIAL_FONT_SIZE;
+                this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+            } else {
+                this.__fontSize = value;
+                this._jselement.style.fontSize = Std.int(value) + "px";
+            }
+        }
+
+        return value;
+    }
+
+    private function set_fontStyle(value:PriFontStyle):PriFontStyle {
+        this.fontStyle = value;
+
+        if (value == null) StyleHelper.applyCleanFontStyle(this._jselement);
+        else StyleHelper.applyFontStyle(this._jselement, value);
+
+        return value;
     }
 
     override private function onAddedToApp():Void {
