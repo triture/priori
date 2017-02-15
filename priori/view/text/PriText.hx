@@ -12,7 +12,7 @@ import jQuery.JQuery;
 
 class PriText extends PriDisplay {
 
-    inline private static var INITIAL_FONT_SIZE:Int = 13;
+    inline private static var INITIAL_FONT_SIZE:Int = 14;
 
     /**
     * Set or retrieve the HTML representation of the text field contents.
@@ -34,7 +34,7 @@ class PriText extends PriDisplay {
     /**
     * Changes the font size of the text.
     *
-    * `default value : 13`
+    * `default value : 14`
     **/
     public var fontSize(get, set):Float;
     private var __fontSize:Float = INITIAL_FONT_SIZE;
