@@ -1,5 +1,6 @@
 package priori.view.text;
 
+import helper.browser.StyleHelper;
 import priori.system.PriDeviceBrowser;
 import priori.system.PriDevice;
 import priori.event.PriFocusEvent;
@@ -106,8 +107,8 @@ class PriText extends PriDisplay {
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) this._element.css(PriFontStyle.getFontStyleObjectBase());
-        else this._element.css(value.getFontStyleObject());
+        if (value == null) StyleHelper.applyCleanFontStyle(this._jselement);
+        else StyleHelper.applyFontStyle(this._jselement, value);
 
         return value;
     }
