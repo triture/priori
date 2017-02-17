@@ -1,5 +1,6 @@
 package priori.view.form;
 
+import priori.style.font.PriFontStyle;
 import priori.app.PriApp;
 import jQuery.Event;
 import priori.event.PriEvent;
@@ -19,6 +20,7 @@ class PriFormInputText extends PriFormElementBase {
         this.placeholder = "";
         this.password = false;
         this.clipping = false;
+        this.width = 160;
     }
 
     private function set_marginLeft(value:Float):Float {
@@ -34,7 +36,7 @@ class PriFormInputText extends PriFormElementBase {
     }
 
     override public function getComponentCode():String {
-        return "<input type=\"text\" />";
+        return '<input type="text" style="height:100%;padding:0px;box-sizing:border-box;" />';
     }
 
     override private function onAddedToApp():Void {

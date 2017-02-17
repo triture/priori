@@ -17,7 +17,19 @@
     position:absolute;
 }
 
+input {
+    background-color:transparent;
+    border:transparent;
+    color:inherit;
+    font-family:inherit;
+    font-variant:inherit;
+    font-style:inherit;
+    font-weight:inherit;
+    text-align:inherit;
+}
+
 * {
+    -webkit-tap-highlight-color: transparent;
     outline: none !important;
 }
 

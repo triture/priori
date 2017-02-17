@@ -1,5 +1,7 @@
 package priori.app;
 
+import priori.style.font.PriFontStyle;
+import helper.browser.StyleHelper;
 import priori.event.PriTapEvent;
 import priori.geom.PriGeomPoint;
 import priori.system.PriDevice;
@@ -51,6 +53,8 @@ class PriApp extends PriGroup {
         this._jselement.style.width = "100%";
         this._jselement.style.height = "100%";
         this._jselement.style.position = "fixed";
+
+        StyleHelper.applyFontStyle(this._jselement, new PriFontStyle());
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
