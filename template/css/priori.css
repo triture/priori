@@ -17,7 +17,7 @@
     position:absolute;
 }
 
-input {
+input, button {
     background-color:transparent;
     border:transparent;
     color:inherit;

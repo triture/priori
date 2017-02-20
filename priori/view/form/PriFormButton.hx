@@ -8,10 +8,13 @@ class PriFormButton extends PriFormElementBase {
         super();
 
         this.text = "Button";
+
+        // default button align
+        this._jselement.style.textAlign = "center";
     }
 
     override private function getComponentCode():String {
-        return "<button type=\"button\"></button>";
+        return '<button type="button"></button>';
     }
 
     @:noCompletion private function set_text(value:String) {
