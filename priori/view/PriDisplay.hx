@@ -1,5 +1,6 @@
 package priori.view;
 
+import helper.display.DisplayHelper;
 import priori.geom.PriGeomPoint;
 import helper.browser.DomHelper;
 import js.html.Window;
@@ -84,8 +85,7 @@ class PriDisplay extends PriEventDispatcher {
     public var visible(get, set):Bool;
 
     public var disabled(get, set):Bool;
-    private var _disabled:Bool = false;
-
+    
     public var mouseEnabled(get, set):Bool;
     public var pointer(get, set):Bool;
     public var clipping(get, set):Bool;
@@ -128,24 +128,6 @@ class PriDisplay extends PriEventDispatcher {
     public var anchorX(get, set):Float;
     public var anchorY(get, set):Float;
 
-    private var _anchorX:Float = 0.5;
-    private var _anchorY:Float = 0.5;
-    private var _rotation:Float = 0;
-    private var _scaleX:Float = 1;
-    private var _scaleY:Float = 1;
-    private var _alpha:Float = 1;
-
-    private var ___x:Float = 0;
-    private var ___y:Float = 0;
-    private var ___width:Float = 100;
-    private var ___height:Float = 100;
-    private var ___clipping:Bool = true;
-    private var ___depth:Int = 1000;
-    private var ___pointer:Bool = false;
-    private var ___focusable:Bool = false;
-
-    private var ___dragdata:Dynamic;
-
     /**
     * Indicates the horizontal scale (percentage) of the object as applied from the anchorX point.
     *
@@ -166,27 +148,22 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var scaleY(get, set):Float;
 
-    private var _priId:String;
-    private var _element:JQuery;
-    private var _elementBorder:JQuery;
-    private var _jselement:Element;
-
     private var _parent:PriContainer;
 
-    private var __eventHelper:BrowserEventEngine;
+    private var dh:DisplayHelper = new DisplayHelper();
 
     public function new() {
         super();
 
         // initialize display
-        this._priId = this.getRandomId();
+        this.dh.priId = this.getRandomId();
         this.createElement();
 
-        this.__eventHelper = new BrowserEventEngine();
-        this.__eventHelper.jqel = this._element;
-        this.__eventHelper.jsel = this._jselement;
-        this.__eventHelper.display = this;
-        this.addEventListener(PriEvent.ADDED_TO_APP, this.__eventHelper.onAddedToApp);
+        this.dh.eventHelper = new BrowserEventEngine();
+        this.dh.eventHelper.jqel = this.dh.element;
+        this.dh.eventHelper.jsel = this.dh.jselement;
+        this.dh.eventHelper.display = this;
+        this.addEventListener(PriEvent.ADDED_TO_APP, this.dh.eventHelper.onAddedToApp);
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
@@ -267,20 +244,20 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function applyBorder():Void {
-        if (this._elementBorder == null) {
-            this._elementBorder = new JQuery('<div style="
+        if (this.dh.elementBorder == null) {
+            this.dh.elementBorder = new JQuery('<div style="
                 box-sizing:border-box !important;
                 position:absolute;
                 width:inherit;
                 height:inherit;
                 pointer-events:none;"></div>');
 
-            this.getElement().append(this._elementBorder);
+            this.getElement().append(this.dh.elementBorder);
 
             this.addEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
         }
 
-        this._elementBorder.css("border", this.border.toString());
+        this.dh.elementBorder.css("border", this.border.toString());
 
         this.updateBorderDisplay();
     }
@@ -290,31 +267,31 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function updateBorderDisplay():Void {
-        if (this._elementBorder != null) {
-            this._elementBorder.css("top", this.getElement().scrollTop() + "px");
-            this._elementBorder.css("left", this.getElement().scrollLeft() + "px");
-            this._elementBorder.css("border-radius", this.getElement().css("border-radius"));
-            this._elementBorder.css("z-index", this.getElement().css("z-index"));
+        if (this.dh.elementBorder != null) {
+            this.dh.elementBorder.css("top", this.getElement().scrollTop() + "px");
+            this.dh.elementBorder.css("left", this.getElement().scrollLeft() + "px");
+            this.dh.elementBorder.css("border-radius", this.getElement().css("border-radius"));
+            this.dh.elementBorder.css("z-index", this.getElement().css("z-index"));
         }
     }
 
     private function removeBorder():Void {
-        if (_elementBorder != null) {
+        if (this.dh.elementBorder != null) {
             this.removeEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
 
-            this._elementBorder.remove();
-            this._elementBorder = null;
+            this.dh.elementBorder.remove();
+            this.dh.elementBorder = null;
         }
     }
 
-    private function get_clipping():Bool return this.___clipping;
+    private function get_clipping():Bool return this.dh.clipping;
     private function set_clipping(value:Bool) {
         if (value) {
-            this.___clipping = true;
-            this._jselement.style.overflow = "hidden";
+            this.dh.clipping = true;
+            this.dh.jselement.style.overflow = "hidden";
         } else {
-            this.___clipping = false;
-            this._jselement.style.overflow = "";
+            this.dh.clipping = false;
+            this.dh.jselement.style.overflow = "";
         }
 
         return value;
@@ -340,7 +317,7 @@ class PriDisplay extends PriEventDispatcher {
         var w:Float = 0;
         var h:Float = 0;
 
-        var clone:JQuery = this._element.clone(false);
+        var clone:JQuery = this.dh.element.clone(false);
 
         var body:JQuery = new JQuery("body");
         body.append(clone);
@@ -358,13 +335,13 @@ class PriDisplay extends PriEventDispatcher {
         };
     }
 
-    private function get_widthScaled():Float return this.width*this._scaleX;
+    private function get_widthScaled():Float return this.width*this.dh.scaleX;
     private function set_widthScaled(value:Float):Float {
         this.scaleX = value / this.width;
         return value;
     }
 
-    private function get_heightScaled():Float return this.height*this._scaleY;
+    private function get_heightScaled():Float return this.height*this.dh.scaleY;
     private function set_heightScaled(value:Float):Float {
         this.scaleY = value / this.height;
         return value;
@@ -372,21 +349,21 @@ class PriDisplay extends PriEventDispatcher {
 
     private function set_width(value:Float) {
         if (value == null) {
-            this.___width = null;
-            this._jselement.style.width = "";
+            this.dh.width = null;
+            this.dh.jselement.style.width = "";
         } else {
-            this.___width = Math.max(0, value);
-            this._jselement.style.width = this.___width + "px";
+            this.dh.width = Math.max(0, value);
+            this.dh.jselement.style.width = this.dh.width + "px";
         }
 
         return value;
     }
 
     private function get_width():Float {
-        var result:Float = this.___width;
+        var result:Float = this.dh.width;
 
         if (result == null) {
-            result = this._element.width();
+            result = this.dh.element.width();
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().w;
         }
 
@@ -395,21 +372,21 @@ class PriDisplay extends PriEventDispatcher {
 
     private function set_height(value:Float):Float {
         if (value == null) {
-            this.___height = null;
-            this._jselement.style.height = "";
+            this.dh.height = null;
+            this.dh.jselement.style.height = "";
         } else {
-            this.___height = Math.max(0, value);
-            this._jselement.style.height = this.___height + "px";
+            this.dh.height = Math.max(0, value);
+            this.dh.jselement.style.height = this.dh.height + "px";
         }
 
         return value;
     }
 
     private function get_height():Float {
-        var result:Float = this.___height;
+        var result:Float = this.dh.height;
 
         if (result == null) {
-            result = this._element.height();
+            result = this.dh.element.height();
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().h;
         }
         return result;
@@ -437,56 +414,56 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_x(value:Float) {
-        this.___x = value;
-        this._jselement.style.left = value + "px";
+        this.dh.x = value;
+        this.dh.jselement.style.left = value + "px";
         return value;
     }
 
 
     private function set_y(value:Float) {
-        this.___y = value;
-        this._jselement.style.top = value + "px";
+        this.dh.y = value;
+        this.dh.jselement.style.top = value + "px";
         return value;
     }
 
-    private function get_x():Float return this.___x;
-    private function get_y():Float return this.___y;
+    private function get_x():Float return this.dh.x;
+    private function get_y():Float return this.dh.y;
     private function get_maxX():Float return this.x + this.width;
     private function get_maxY():Float return this.y + this.height;
     private function get_centerX():Float return this.x + this.width/2;
     private function get_centerY():Float return this.y + this.height/2;
 
-    private function get_scaleX():Float return this._scaleX;
+    private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
-        this._scaleX = value == null ? 1 : value;
+        this.dh.scaleX = value == null ? 1 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
-    private function get_scaleY():Float return this._scaleY;
+    private function get_scaleY():Float return this.dh.scaleY;
     private function set_scaleY(value:Float):Float {
-        this._scaleY = value == null ? 1 : value;
+        this.dh.scaleY = value == null ? 1 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
-    private function get_anchorX():Float return this._anchorX;
+    private function get_anchorX():Float return this.dh.anchorX;
     private function set_anchorX(value:Float):Float {
-        this._anchorX = value == null ? 0 : value;
+        this.dh.anchorX = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
-    private function get_anchorY():Float return this._anchorY;
+    private function get_anchorY():Float return this.dh.anchorY;
     private function set_anchorY(value:Float):Float {
-        this._anchorY = value == null ? 0 : value;
+        this.dh.anchorY = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
 
-    private function get_rotation():Float return this._rotation;
+    private function get_rotation():Float return this.dh.rotation;
     private function set_rotation(value:Float):Float {
-        this._rotation = value == null ? 0 : value;
+        this.dh.rotation = value == null ? 0 : value;
         this.__applyMatrixTransformation();
         return value;
     }
@@ -504,12 +481,12 @@ class PriDisplay extends PriEventDispatcher {
         // sinX  cosX   0
         //  0     0     1
 
-        var rot:Float = this._rotation*-1;
-        var sx:Float = this._scaleX;
-        var sy:Float = this._scaleY;
+        var rot:Float = this.dh.rotation*-1;
+        var sx:Float = this.dh.scaleX;
+        var sy:Float = this.dh.scaleY;
 
-        var anchorX:Float = this._anchorX*100;
-        var anchorY:Float = this._anchorY*100;
+        var anchorX:Float = this.dh.anchorX*100;
+        var anchorY:Float = this.dh.anchorY*100;
 
         var valOrigin:String = '';
         var valMatrix:String = '';
@@ -555,10 +532,10 @@ class PriDisplay extends PriEventDispatcher {
         this.setCSS("transform", valMatrix);
     }
 
-    private function get_alpha():Float return this._alpha;
+    private function get_alpha():Float return this.dh.alpha;
     private function set_alpha(value:Float) {
-        this._alpha = value;
-        if (this._alpha == 1) this.setCSS("opacity", "");
+        this.dh.alpha = value;
+        if (this.dh.alpha == 1) this.setCSS("opacity", "");
         else this.setCSS("opacity", Std.string(value));
         return value;
     }
@@ -577,42 +554,42 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function getPrid():String {
-        return this._priId;
+        return this.dh.priId;
     }
 
     private function updateDepth():Void {
-        this.___depth = this._parent.___depth - 1;
-        this._jselement.style.zIndex = Std.string(this.___depth);
+        this.dh.depth = this._parent.dh.depth - 1;
+        this.dh.jselement.style.zIndex = Std.string(this.dh.depth);
 
-        if (this._elementBorder != null) this._elementBorder.css("z-index", this.___depth);
+        if (this.dh.elementBorder != null) this.dh.elementBorder.css("z-index", this.dh.depth);
 
     }
 
     public function getJSElement():Element {
-        return _jselement;
+        return this.dh.jselement;
     }
 
     public function getElement():JQuery {
-        return this._element;
+        return this.dh.element;
     }
 
-    private function setCSS(property:String, value:String):Void this._element.css(property, value);
+    private function setCSS(property:String, value:String):Void this.dh.element.css(property, value);
     private function getCSS(property:String):String return this.getElement().css(property);
 
     private function set_bgColor(value:Int):Int {
         this.bgColor = value;
 
         if (value == null) {
-            this._jselement.style.backgroundColor = "";
+            this.dh.jselement.style.backgroundColor = "";
         } else {
-            this._jselement.style.backgroundColor = "#" + StringTools.hex(value, 6);
+            this.dh.jselement.style.backgroundColor = "#" + StringTools.hex(value, 6);
         }
 
         return value;
     }
 
     override public function addEventListener(event:String, listener:Dynamic->Void):Void {
-        this.__eventHelper.registerEvent(event);
+        this.dh.eventHelper.registerEvent(event);
 
         if (event == PriTapEvent.TAP) {
             this.pointer = true;
@@ -624,7 +601,7 @@ class PriDisplay extends PriEventDispatcher {
     override public function removeEventListener(event:String, listener:Dynamic->Void):Void {
         super.removeEventListener(event, listener);
 
-        if (!this.hasEvent(event)) this.__eventHelper.removeEvent(event);
+        if (!this.hasEvent(event)) this.dh.eventHelper.removeEvent(event);
 
         if (event == PriTapEvent.TAP && this.hasEvent(PriTapEvent.TAP) == false) {
             this.pointer = false;
@@ -634,13 +611,13 @@ class PriDisplay extends PriEventDispatcher {
     private function createElement():Void {
         
         var jsElement:Element = js.Browser.document.createElement("div");
-        jsElement.setAttribute("prioriid", this._priId);
-        jsElement.id = this._priId;
+        jsElement.setAttribute("prioriid", this.dh.priId);
+        jsElement.id = this.dh.priId;
         jsElement.className = "priori_stylebase";
-        jsElement.style.cssText = 'left:0px;top:0px;width:${___width}px;height:${___height}px;overflow:hidden;';
+        jsElement.style.cssText = 'left:0px;top:0px;width:${this.dh.width}px;height:${this.dh.height}px;overflow:hidden;';
 
-        this._jselement = jsElement;
-        this._element = new JQuery(jsElement);
+        this.dh.jselement = jsElement;
+        this.dh.element = new JQuery(jsElement);
 
     }
 
@@ -651,7 +628,7 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     override public function kill():Void {
-        this.__eventHelper.kill();
+        this.dh.eventHelper.kill();
 
         // remove todos os eventos do elemento
         this.getElement().off();
@@ -675,14 +652,14 @@ class PriDisplay extends PriEventDispatcher {
         return value;
     }
 
-    private function get_pointer():Bool return this.___pointer;
+    private function get_pointer():Bool return this.dh.pointer;
     private function set_pointer(value:Bool) {
         if (value == true) {
-            this.___pointer = true;
-            this._jselement.style.cursor = "pointer";
+            this.dh.pointer = true;
+            this.dh.jselement.style.cursor = "pointer";
         } else {
-            this.___pointer = false;
-            this._jselement.style.cursor = "";
+            this.dh.pointer = false;
+            this.dh.jselement.style.cursor = "";
         }
 
         return value;
@@ -713,21 +690,21 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_disabled():Bool {
-        if (this._disabled || this._jselement.hasAttribute("disabled")) return true;
+        if (this.dh.disabled || this.dh.jselement.hasAttribute("disabled")) return true;
         return false;
     }
 
     private function set_disabled(value:Bool) {
-        this._disabled = value;
+        this.dh.disabled = value;
 
         if (value) {
-            this._jselement.setAttribute("priori-disabled", "disabled");
-            DomHelper.disableAll(this._jselement);
+            this.dh.jselement.setAttribute("priori-disabled", "disabled");
+            DomHelper.disableAll(this.dh.jselement);
         } else {
-            this._jselement.removeAttribute("priori-disabled");
+            this.dh.jselement.removeAttribute("priori-disabled");
 
             if (!this.hasDisabledParent()) {
-                DomHelper.enableAllUpPrioriDisabled(this._jselement);
+                DomHelper.enableAllUpPrioriDisabled(this.dh.jselement);
             }
         }
 
@@ -739,8 +716,8 @@ class PriDisplay extends PriEventDispatcher {
         var result:PriGeomBox = new PriGeomBox();
 
         if (this.hasApp()) {
-            if (this._jselement.getBoundingClientRect != null) {
-                var box:DOMRect = this._jselement.getBoundingClientRect();
+            if (this.dh.jselement.getBoundingClientRect != null) {
+                var box:DOMRect = this.dh.jselement.getBoundingClientRect();
 
                 var body:Element = Browser.document.body;
                 var docElem:Element = Browser.document.documentElement;
@@ -768,7 +745,7 @@ class PriDisplay extends PriEventDispatcher {
                 result.x = Math.fround(left);
                 result.y = Math.fround(top);
             } else {
-                var el:Element = this._jselement;
+                var el:Element = this.dh.jselement;
 
                 var top:Int = 0;
                 var left:Int = 0;
@@ -862,34 +839,34 @@ class PriDisplay extends PriEventDispatcher {
             }
         }
 
-        this.___dragdata = {};
-        this.___dragdata.originalPointMouse = PriApp.g().mousePoint;
-        this.___dragdata.originalPosition = new PriGeomPoint(this.x, this.y);
-        this.___dragdata.lastPosition = new PriGeomPoint(this.x, this.y);
+        this.dh.dragdata = {};
+        this.dh.dragdata.originalPointMouse = PriApp.g().mousePoint;
+        this.dh.dragdata.originalPosition = new PriGeomPoint(this.x, this.y);
+        this.dh.dragdata.lastPosition = new PriGeomPoint(this.x, this.y);
 
         var runFunction = function():Void {
             var curPoint:PriGeomPoint = PriApp.g().mousePoint;
-            var diffx:Float = curPoint.x - this.___dragdata.originalPointMouse.x;
-            var diffy:Float = curPoint.y - this.___dragdata.originalPointMouse.y;
+            var diffx:Float = curPoint.x - this.dh.dragdata.originalPointMouse.x;
+            var diffy:Float = curPoint.y - this.dh.dragdata.originalPointMouse.y;
 
             if (bounds == null) {
-                this.x = this.___dragdata.originalPosition.x + diffx;
-                this.y = this.___dragdata.originalPosition.y + diffy;
+                this.x = this.dh.dragdata.originalPosition.x + diffx;
+                this.y = this.dh.dragdata.originalPosition.y + diffy;
             } else {
-                this.x = Math.max(Math.min(this.___dragdata.originalPosition.x + diffx, bounds.x + bounds.width), bounds.x);
-                this.y = Math.max(Math.min(this.___dragdata.originalPosition.y + diffy, bounds.y + bounds.height), bounds.y);
+                this.x = Math.max(Math.min(this.dh.dragdata.originalPosition.x + diffx, bounds.x + bounds.width), bounds.x);
+                this.y = Math.max(Math.min(this.dh.dragdata.originalPosition.y + diffy, bounds.y + bounds.height), bounds.y);
             }
 
-            if (this.___dragdata.lastPosition.x != this.x || this.___dragdata.lastPosition.y != this.y) {
+            if (this.dh.dragdata.lastPosition.x != this.x || this.dh.dragdata.lastPosition.y != this.y) {
                 this.dispatchEvent(new PriEvent(PriEvent.DRAG));
-                this.___dragdata.lastPosition.x = this.x;
-                this.___dragdata.lastPosition.y = this.y;
+                this.dh.dragdata.lastPosition.x = this.x;
+                this.dh.dragdata.lastPosition.y = this.y;
             }
         }
 
         var timer:haxe.Timer = new haxe.Timer(30);
         timer.run = runFunction;
-        this.___dragdata.t = timer;
+        this.dh.dragdata.t = timer;
 
         runFunction();
     }
@@ -899,28 +876,28 @@ class PriDisplay extends PriEventDispatcher {
     * remains draggable until a stopDrag() method is called.
     **/
     public function stopDrag():Void {
-        if (this.___dragdata != null) {
-            this.___dragdata.t.stop();
-            this.___dragdata = null;
+        if (this.dh.dragdata != null) {
+            this.dh.dragdata.t.stop();
+            this.dh.dragdata = null;
         }
     }
 
 
-    public function get_focusable():Bool return this.___focusable;
+    public function get_focusable():Bool return this.dh.focusable;
     public function set_focusable(value:Bool):Bool {
-        if (this.focusable != value) this._jselement.tabIndex = value ? 0 : -1;
+        if (this.focusable != value) this.dh.jselement.tabIndex = value ? 0 : -1;
         return value;
     }
 
     /**
     * Sets focus to this object if focusable. Does not check for visibility, enabled state, or any other conditions.
     **/
-    public function setFocus():Void if (this.focusable) this._jselement.focus();
+    public function setFocus():Void if (this.focusable) this.dh.jselement.focus();
 
     /**
     * Removes focus of this object if focusable. Does not check for visibility, enabled state, or any other conditions.
     **/
-    public function removeFocus():Void if (this.focusable) this._jselement.blur();
+    public function removeFocus():Void if (this.focusable) this.dh.jselement.blur();
 
     /**
     * Check if this object has the browser focus at the moment.
@@ -928,7 +905,7 @@ class PriDisplay extends PriEventDispatcher {
     public function hasFocus():Bool {
         try {
             var curEl:Element = Browser.document.activeElement;
-            if (curEl == this._jselement) return true;
+            if (curEl == this.dh.jselement) return true;
         } catch (e:Dynamic) {}
 
         return false;

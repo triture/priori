@@ -57,7 +57,7 @@ class PriContainer extends PriDisplay {
             docFrag.appendChild(child.getJSElement());
         }
 
-        this._jselement.appendChild(docFrag);
+        this.dh.jselement.appendChild(docFrag);
 
         for (i in 0 ... realItens.length) {
             var child:PriDisplay = realItens[i];
@@ -77,7 +77,7 @@ class PriContainer extends PriDisplay {
 
             if (child.parent == this) {
                 this._childList.remove(child);
-                this._jselement.removeChild(child.getJSElement());
+                this.dh.jselement.removeChild(child.getJSElement());
 
                 child._parent = null;
 

@@ -91,23 +91,23 @@ class PriText extends PriDisplay {
 
         this.__text = "";
 
-        this.___height = null;
-        this.___width = null;
+        this.dh.height = null;
+        this.dh.width = null;
     }
 
     public function get_text():String {
-        if (this.__editable) this.__text = this._jselement.innerText;
+        if (this.__editable) this.__text = this.dh.jselement.innerText;
         return this.__text;
     }
     private function set_text(value:String):String {
         this.__text = value;
-        this._jselement.innerText = value;
+        this.dh.jselement.innerText = value;
         return value;
     }
 
-    private function get_html():String return this._jselement.innerHTML;
+    private function get_html():String return this.dh.jselement.innerHTML;
     private function set_html(value:String):String {
-        this._jselement.innerHTML = value;
+        this.dh.jselement.innerHTML = value;
         return value;
     }
 
@@ -115,8 +115,8 @@ class PriText extends PriDisplay {
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) StyleHelper.applyCleanFontStyle(this._jselement);
-        else StyleHelper.applyFontStyle(this._jselement, value);
+        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.jselement);
+        else StyleHelper.applyFontStyle(this.dh.jselement, value);
 
         return value;
     }
@@ -126,10 +126,10 @@ class PriText extends PriDisplay {
         if (this.__fontSize != value) {
             if (value == null) {
                 this.__fontSize = INITIAL_FONT_SIZE;
-                this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+                this.dh.jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
             } else {
                 this.__fontSize = value;
-                this._jselement.style.fontSize = Std.int(value) + "px";
+                this.dh.jselement.style.fontSize = Std.int(value) + "px";
             }
         }
 
@@ -153,8 +153,8 @@ class PriText extends PriDisplay {
         if (this.__ellipsis != value) {
             this.__ellipsis = value;
 
-            if (this.__ellipsis) this._jselement.style.textOverflow = "ellipsis";
-            else this._jselement.style.textOverflow = "";
+            if (this.__ellipsis) this.dh.jselement.style.textOverflow = "ellipsis";
+            else this.dh.jselement.style.textOverflow = "";
         }
 
         return value;
@@ -165,8 +165,8 @@ class PriText extends PriDisplay {
         if (this.__multiLine != value) {
             this.__multiLine = value;
 
-            if (value) this._jselement.style.whiteSpace = "";
-            else this._jselement.style.whiteSpace = "nowrap";
+            if (value) this.dh.jselement.style.whiteSpace = "";
+            else this.dh.jselement.style.whiteSpace = "nowrap";
         }
 
         return value;
@@ -179,21 +179,21 @@ class PriText extends PriDisplay {
             this.__editable = value;
 
             if (value) {
-                this._jselement.setAttribute("contentEditable", "true");
+                this.dh.jselement.setAttribute("contentEditable", "true");
 
                 if (PriDevice.browser() == PriDeviceBrowser.MSIE) {
-                    this._jselement.onkeydown = this.___onchange;
-                    this._jselement.onkeyup = this.___onchange;
-                    this._jselement.onpaste = this.___onchange;
+                    this.dh.jselement.onkeydown = this.___onchange;
+                    this.dh.jselement.onkeyup = this.___onchange;
+                    this.dh.jselement.onpaste = this.___onchange;
                 } else {
-                    this._jselement.oninput = this.___onchange;
+                    this.dh.jselement.oninput = this.___onchange;
                 }
             } else {
-                this._jselement.removeAttribute("contentEditable");
-                this._jselement.oninput = null;
-                this._jselement.onkeydown = null;
-                this._jselement.onkeyup = null;
-                this._jselement.onpaste = null;
+                this.dh.jselement.removeAttribute("contentEditable");
+                this.dh.jselement.oninput = null;
+                this.dh.jselement.onkeydown = null;
+                this.dh.jselement.onkeyup = null;
+                this.dh.jselement.onpaste = null;
             }
 
             if (this.__selectable || this.__editable) this.__setSelectableField();
@@ -220,21 +220,21 @@ class PriText extends PriDisplay {
     }
 
     private function __setSelectableField():Void {
-        this._jselement.style.setProperty("-webkit-touch-callout", "default");
-        this._jselement.style.setProperty("-webkit-user-select", "text");
-        this._jselement.style.setProperty("-khtml-user-select", "text");
-        this._jselement.style.setProperty("-moz-user-select", "text");
-        this._jselement.style.setProperty("-ms-user-select", "text");
-        this._jselement.style.setProperty("user-select", "text");
+        this.dh.jselement.style.setProperty("-webkit-touch-callout", "default");
+        this.dh.jselement.style.setProperty("-webkit-user-select", "text");
+        this.dh.jselement.style.setProperty("-khtml-user-select", "text");
+        this.dh.jselement.style.setProperty("-moz-user-select", "text");
+        this.dh.jselement.style.setProperty("-ms-user-select", "text");
+        this.dh.jselement.style.setProperty("user-select", "text");
     }
 
     private function __setNotSelectableField():Void {
-        this._jselement.style.removeProperty("-webkit-touch-callout");
-        this._jselement.style.removeProperty("-webkit-user-select");
-        this._jselement.style.removeProperty("-khtml-user-select");
-        this._jselement.style.removeProperty("-moz-user-select");
-        this._jselement.style.removeProperty("-ms-user-select");
-        this._jselement.style.removeProperty("user-select");
+        this.dh.jselement.style.removeProperty("-webkit-touch-callout");
+        this.dh.jselement.style.removeProperty("-webkit-user-select");
+        this.dh.jselement.style.removeProperty("-khtml-user-select");
+        this.dh.jselement.style.removeProperty("-moz-user-select");
+        this.dh.jselement.style.removeProperty("-ms-user-select");
+        this.dh.jselement.style.removeProperty("user-select");
     }
 
     override private function set_width(value:Float):Float {
@@ -266,19 +266,19 @@ class PriText extends PriDisplay {
     override private function createElement():Void {
         super.createElement();
 
-        this._jselement.style.whiteSpace = "nowrap";
-        this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
-        this._jselement.style.width = "";
-        this._jselement.style.height = "";
-        this._jselement.style.textOverflow = "ellipsis";
+        this.dh.jselement.style.whiteSpace = "nowrap";
+        this.dh.jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+        this.dh.jselement.style.width = "";
+        this.dh.jselement.style.height = "";
+        this.dh.jselement.style.textOverflow = "ellipsis";
 
     }
 
     override public function kill():Void {
-        this._jselement.oninput = null;
-        this._jselement.onkeydown = null;
-        this._jselement.onkeyup = null;
-        this._jselement.onpaste = null;
+        this.dh.jselement.oninput = null;
+        this.dh.jselement.onkeydown = null;
+        this.dh.jselement.onkeyup = null;
+        this.dh.jselement.onpaste = null;
 
         super.kill();
     }

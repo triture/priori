@@ -50,11 +50,11 @@ class PriApp extends PriGroup {
         #end
 
 
-        this._jselement.style.width = "100%";
-        this._jselement.style.height = "100%";
-        this._jselement.style.position = "fixed";
+        this.dh.jselement.style.width = "100%";
+        this.dh.jselement.style.height = "100%";
+        this.dh.jselement.style.position = "fixed";
 
-        StyleHelper.applyFontStyle(this._jselement, new PriFontStyle());
+        StyleHelper.applyFontStyle(this.dh.jselement, new PriFontStyle());
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
@@ -71,7 +71,7 @@ class PriApp extends PriGroup {
 
         this.___applyPreventBackspace();
 
-        Browser.window.document.body.appendChild(this._jselement);
+        Browser.window.document.body.appendChild(this.dh.jselement);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
