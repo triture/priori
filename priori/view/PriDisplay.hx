@@ -9,13 +9,11 @@ import js.html.DOMRect;
 import priori.geom.PriGeomBox;
 import helper.browser.BrowserEventEngine;
 import js.html.Element;
-import jQuery.Event;
 import jQuery.JQuery;
 import priori.style.border.PriBorderStyle;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.filter.PriFilterStyle;
 import priori.event.PriEvent;
-import priori.event.PriSwipeEvent;
 import priori.event.PriTapEvent;
 import priori.view.container.PriContainer;
 import priori.event.PriEventDispatcher;
@@ -82,14 +80,14 @@ class PriDisplay extends PriEventDispatcher {
     public var maxY(get, set):Float;
 
     public var parent(get, null):PriContainer;
-    public var visible(get, set):Bool;
+    private var _parent:PriContainer;
 
+
+    public var visible(get, set):Bool;
     public var disabled(get, set):Bool;
-    
     public var mouseEnabled(get, set):Bool;
     public var pointer(get, set):Bool;
     public var clipping(get, set):Bool;
-
     public var rotation(get, set):Float;
 
     /**
@@ -109,7 +107,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var tooltip(default, set):String;
 
-    @:isVar public var bgColor(default, set):Int;
+    public var bgColor(get, set):Int;
 
 
     // STYLES PROPERTIES
@@ -148,7 +146,7 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var scaleY(get, set):Float;
 
-    private var _parent:PriContainer;
+
 
     private var dh:DisplayHelper = new DisplayHelper();
 
@@ -576,8 +574,9 @@ class PriDisplay extends PriEventDispatcher {
     private function setCSS(property:String, value:String):Void this.dh.element.css(property, value);
     private function getCSS(property:String):String return this.getElement().css(property);
 
+    private function get_bgColor():Int return this.dh.bgColor;
     private function set_bgColor(value:Int):Int {
-        this.bgColor = value;
+        this.dh.bgColor = value;
 
         if (value == null) {
             this.dh.jselement.style.backgroundColor = "";

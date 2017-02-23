@@ -6,6 +6,8 @@ import jQuery.JQuery;
 
 class DisplayHelper {
 
+    public var bgColor:Int = null;
+
     public var x:Float = 0;
     public var y:Float = 0;
     public var width:Float = 100;
