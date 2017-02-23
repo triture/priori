@@ -69,6 +69,14 @@ class PriText extends PriDisplay {
     private var __selectable:Bool = false;
 
     /**
+    * Render an ellipsis ("...") to represent clipped text.
+    *
+    * `default value : true`
+    **/
+    public var ellipsis(get, set):Bool;
+    private var __ellipsis:Bool = true;
+
+    /**
     * A Boolean value that indicates whether the text field is editable.
     *
     * Editable text fields dispacth `PriEvent.CHANGE` on user interactions.
@@ -135,6 +143,18 @@ class PriText extends PriDisplay {
 
             if (!this.__multiLine) super.set_width(null);
             if (this.__autoSize) super.set_height(null);
+        }
+
+        return value;
+    }
+
+    private function get_ellipsis():Bool return this.__ellipsis;
+    private function set_ellipsis(value:Bool):Bool {
+        if (this.__ellipsis != value) {
+            this.__ellipsis = value;
+
+            if (this.__ellipsis) this._jselement.style.textOverflow = "ellipsis";
+            else this._jselement.style.textOverflow = "";
         }
 
         return value;
@@ -250,6 +270,7 @@ class PriText extends PriDisplay {
         this._jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
         this._jselement.style.width = "";
         this._jselement.style.height = "";
+        this._jselement.style.textOverflow = "ellipsis";
 
     }
 
