@@ -610,7 +610,6 @@ class PriDisplay extends PriEventDispatcher {
     private function createElement():Void {
         
         var jsElement:Element = js.Browser.document.createElement("div");
-        jsElement.setAttribute("prioriid", this.dh.priId);
         jsElement.id = this.dh.priId;
         jsElement.className = "priori_stylebase";
         jsElement.style.cssText = 'left:0px;top:0px;width:${this.dh.width}px;height:${this.dh.height}px;overflow:hidden;';

@@ -1,6 +1,5 @@
 package priori.view.form;
 
-import priori.style.font.PriFontStyle;
 import priori.app.PriApp;
 import jQuery.Event;
 import priori.event.PriEvent;
