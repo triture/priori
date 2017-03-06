@@ -3,7 +3,6 @@ package priori.net;
 import haxe.Json;
 import priori.event.PriEvent;
 import haxe.ds.StringMap;
-import String;
 import jQuery.JqXHR;
 import jQuery.JQuery;
 import priori.event.PriEventDispatcher;
@@ -17,6 +16,8 @@ class PriURLLoader extends PriEventDispatcher {
     private var _responseHeader:Array<PriURLHeader>;
 
     private var ajax:JqXHR;
+
+    public var data:Dynamic;
 
     public function new(request:PriURLRequest = null) {
         super();
@@ -82,11 +83,7 @@ class PriURLLoader extends PriEventDispatcher {
         this._isLoaded = true;
         this._isLoading = false;
 
-        //trace("complete");
-
-        //trace(data, status, e);
-
-        //trace(e.getAllResponseHeaders());
+        this.data = data;
 
         this.ajax = null;
 
@@ -97,8 +94,7 @@ class PriURLLoader extends PriEventDispatcher {
         this._isLoaded = false;
         this._isLoading = false;
 
-        trace("* URLLOADER ERROR : " + data.responseText);
-
+        this.data = data.responseText;
         this.ajax = null;
 
         this.dispatchEvent(new PriEvent(PriEvent.ERROR, false, false, data.responseText));
