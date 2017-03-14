@@ -5,6 +5,7 @@ class PriShadowPresets {
     public static var APPLE_SHADOW(get, null):Array<PriShadowStyle>;
     public static var PAPER_SHADOW(get, null):Array<PriShadowStyle>;
     public static var SLIM_SHADOW(get, null):Array<PriShadowStyle>;
+    public static var SIMPLE_INNER_SHADOW(get, null):Array<PriShadowStyle>;
 
 
     private static function get_APPLE_SHADOW():Array<PriShadowStyle> {
@@ -54,6 +55,19 @@ class PriShadowPresets {
             .setColor(0x000000)
             .setOpacity(0.3)
             .setType(PriShadowType.OUTLINE)
+        ];
+    }
+
+    private static function get_SIMPLE_INNER_SHADOW():Array<PriShadowStyle> {
+        return [
+            new PriShadowStyle()
+            .setHorizontalOffset(0)
+            .setVerticalOffset(1)
+            .setBlur(3)
+            .setSpread(0.5)
+            .setColor(0x000000)
+            .setOpacity(0.18)
+            .setType(PriShadowType.INSET)
         ];
     }
 }
