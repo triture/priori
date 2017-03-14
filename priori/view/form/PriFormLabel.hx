@@ -10,12 +10,12 @@ class PriFormLabel extends PriFormElementBase {
     public function new() {
         super();
 
-        this.text = "";
+        this.text = "label";
         this.fontSize = 12;
     }
 
     override private function getComponentCode():String {
-        return "<label></label>";
+        return '<label style="margin:0px;padding:0px;"></label>';
     }
 
     @:noCompletion private function set_text(value:String) {
