@@ -14,4 +14,4 @@
 -js priori.js
 
 --next
--cmd haxelib run dox -i dox -o dox/pages --toplevel-package priori -in "priori" -ex "priori.plugins" --title "Priori" -D version 0.5.1 -D source-path https://github.com/triture/priori/tree/master/
+-cmd haxelib run dox -i dox -o dox/pages --toplevel-package priori -in "priori" -ex "priori.plugins" --title "Priori" -D version 0.6.0 -D source-path https://github.com/triture/priori/tree/master/

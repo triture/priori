@@ -42,7 +42,7 @@ You can also install aditional priori libs:
 Check out some Priori [examples](https://github.com/triture/priori-example).  
 
 ## Priori Roadmap for 1.0.0 Release Version  
-- Full Documentation ** 02% Completed**
+- Full Documentation **02% Completed**
 - ~~Rotation property for PriDisplay~~ **Done**
 - ~~Scale property for PriDisplay~~ **Done**
 - ~~9 Slice Images~~ **Done**
@@ -62,6 +62,12 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.6.0 - 03/20/2017
+- New Feature: Styling PriForm elements
+- Improvements: Better handling scrollable containers
+- Improvements: Better handling element styles
+- Lot of performance improvements and bugfixes
+
 ### 0.5.1 - 01/30/2017
 - Fixes and some improvements
 - Improvements : Remove jquery from mouse event manager
