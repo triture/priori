@@ -49,8 +49,7 @@ class HelperLib {
                 content = this.replace(content, PrioriData.TOKEN_LINK, link.join("\n"));
 
                 content = this.replace(content, PrioriData.TOKEN_PRIORI, [
-                    "<link href=\"css/priori.css\" rel=\"stylesheet\">",
-                    "<script type=\"text/javascript\" src=\"js/priori.js\" ></script>"
+                    '<script type="text/javascript" src="js/priori.js" ></script>'
                 ].join("\n"));
 
 
