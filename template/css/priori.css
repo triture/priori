@@ -17,7 +17,7 @@
     position:absolute;
 }
 
-input, button, label, select {
+input, button, label, select, textarea {
     background-color:transparent;
     border:transparent;
     color:inherit;

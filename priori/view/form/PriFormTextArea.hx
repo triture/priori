@@ -10,11 +10,21 @@ class PriFormTextArea extends PriFormElementBase {
     @:isVar public var value(get, set):String;
     @:isVar public var placeholder(default, set):String;
 
+    @:isVar public var margin(default, set):Float = 0;
+
     public function new() {
         super();
 
         this.placeholder = "";
         this.clipping = false;
+    }
+
+    private function set_margin(value:Float):Float {
+        this.margin = value;
+
+        this._baseElement.css("padding", value);
+
+        return value;
     }
 
     override public function getComponentCode():String {
