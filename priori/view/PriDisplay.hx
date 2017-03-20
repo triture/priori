@@ -175,7 +175,7 @@ class PriDisplay extends PriEventDispatcher {
         this.corners = value;
 
         if (value == null) {
-            this.getElement().css("border-radius", "");
+            this.dh.jselement.style.borderRadius = "";
         } else {
 
             var tempArray:Array<Int> = value.copy();
@@ -183,14 +183,14 @@ class PriDisplay extends PriEventDispatcher {
             var n:Int = tempArray.length;
 
             if (n == 0) {
-                this.getElement().css("border-radius", "");
+                this.dh.jselement.style.borderRadius = "";
             } else {
                 if (n > 4) tempArray = tempArray.splice(0, 4);
-
-                this.getElement().css("border-radius", tempArray.join("px ") + "px");
+                this.dh.jselement.style.borderRadius = tempArray.join("px ") + "px";
             }
         }
 
+        this.updateBorderDisplay();
 
         return value;
     }
@@ -243,40 +243,28 @@ class PriDisplay extends PriEventDispatcher {
 
     private function applyBorder():Void {
         if (this.dh.elementBorder == null) {
-            this.dh.elementBorder = new JQuery('<div style="
-                box-sizing:border-box !important;
-                position:absolute;
-                width:inherit;
-                height:inherit;
-                pointer-events:none;"></div>');
 
-            this.getElement().append(this.dh.elementBorder);
-
-            this.addEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
+            this.dh.elementBorder = js.Browser.document.createElement("div");
+            this.dh.elementBorder.id = this.dh.priId;
+            this.dh.elementBorder.className = "priori_stylebase";
+            this.dh.elementBorder.style.cssText = 'box-sizing:border-box !important;position:absolute;left:0px;right:0px;bottom:0px;top:0px;pointer-events:none;';
+            this.dh.jselement.appendChild(this.dh.elementBorder);
         }
 
-        this.dh.elementBorder.css("border", this.border.toString());
+        this.dh.elementBorder.style.border = this.border.toString();
 
-        this.updateBorderDisplay();
-    }
-
-    private function onScrollUpdateBorder(e:PriEvent):Void {
         this.updateBorderDisplay();
     }
 
     private function updateBorderDisplay():Void {
         if (this.dh.elementBorder != null) {
-            this.dh.elementBorder.css("top", this.getElement().scrollTop() + "px");
-            this.dh.elementBorder.css("left", this.getElement().scrollLeft() + "px");
-            this.dh.elementBorder.css("border-radius", this.getElement().css("border-radius"));
-            this.dh.elementBorder.css("z-index", this.getElement().css("z-index"));
+            this.dh.elementBorder.style.borderRadius = this.dh.jselement.style.borderRadius;
+            this.dh.elementBorder.style.zIndex = this.dh.jselement.style.zIndex;
         }
     }
 
     private function removeBorder():Void {
         if (this.dh.elementBorder != null) {
-            this.removeEventListener(PriEvent.SCROLL, onScrollUpdateBorder);
-
             this.dh.elementBorder.remove();
             this.dh.elementBorder = null;
         }
@@ -559,7 +547,7 @@ class PriDisplay extends PriEventDispatcher {
         this.dh.depth = this._parent.dh.depth - 1;
         this.dh.jselement.style.zIndex = Std.string(this.dh.depth);
 
-        if (this.dh.elementBorder != null) this.dh.elementBorder.css("z-index", this.dh.depth);
+        if (this.dh.elementBorder != null) this.dh.elementBorder.style.zIndex = Std.string(this.dh.depth);
 
     }
 

@@ -29,7 +29,7 @@ class DisplayHelper {
 
     public var priId:String;
     public var element:JQuery;
-    public var elementBorder:JQuery;
+    public var elementBorder:Element;
     public var jselement:Element;
 
     public var eventHelper:BrowserEventEngine;
