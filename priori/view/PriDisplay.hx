@@ -869,8 +869,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
 
-    public function get_focusable():Bool return this.dh.focusable;
-    public function set_focusable(value:Bool):Bool {
+    private function get_focusable():Bool return this.dh.focusable;
+    private function set_focusable(value:Bool):Bool {
         if (this.focusable != value) this.dh.jselement.tabIndex = value ? 0 : -1;
         return value;
     }
