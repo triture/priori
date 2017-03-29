@@ -112,6 +112,16 @@ class PriGroup extends PriContainer {
         this._invalidateTimer = Timer.delay(this.validate, 33);
     }
 
+    public function invalidateChildren():Void {
+        for (i in 0 ... this._childList.length) {
+            if (Std.is(this._childList[i], PriGroup)) {
+                cast(this._childList[i], PriGroup).invalidateChildren();
+            }
+        }
+
+        this.invalidate();
+    }
+
     override public function getContentBox():PriGeomBox {
         this.validate();
         return super.getContentBox();
