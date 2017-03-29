@@ -15,7 +15,7 @@ class PriURLRequest {
         this.url = url;
 
         this.method = PriRequestMethod.POST;
-        this.contentType = PriRequestContentType.MULTIPART_FORM_DATA;
+        this.contentType = PriRequestContentType.FORM_URLENCODED;
         this.cache = true;
     }
 }

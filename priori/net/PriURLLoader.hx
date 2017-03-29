@@ -57,6 +57,14 @@ class PriURLLoader extends PriEventDispatcher {
     public function load(request:PriURLRequest):Void {
         if (this._isLoaded == false && this._isLoading == false) {
 
+            var contentType:String = request.contentType;
+            var value:Dynamic = request.data;
+
+            if (Std.is(request.data, PriRequestURLEncodedValues)) {
+                contentType = PriRequestContentType.FORM_URLENCODED;
+                value = cast(request.data, PriRequestURLEncodedValues).toString();
+            }
+
 
             var ajaxObject:Dynamic = {
                 async : true,
@@ -65,8 +73,9 @@ class PriURLLoader extends PriEventDispatcher {
                 url : request.url,
                 cache : request.cache,
                 dataType : "text",
+                contentType : contentType,
 
-                data : request.data,
+                data : value,
 
                 headers : getRequestHeaders(request),
 
