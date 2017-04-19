@@ -1,5 +1,7 @@
 package priori.view;
 
+import js.html.Image;
+import priori.app.PriApp;
 import priori.event.PriEvent;
 import priori.assets.AssetManager;
 import priori.assets.Asset;
@@ -41,6 +43,29 @@ class PriImage extends PriDisplay {
         }
     }
 
+    public function loadImageData(base64ImageData:String, type:String = "jpeg"):Void {
+        var image:Image = new Image();
+        image.onload = function():Void {
+            image.onload = null;
+            image.onerror = null;
+
+            this._originalImageWidth = image.naturalWidth;
+            this._originalImageHeight = image.naturalHeight;
+            this._imageElement = new JQuery(image);
+
+            this.startImageElement();
+
+            this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
+        }
+        image.onerror = function():Void {
+            image.onload = null;
+            image.onerror = null;
+            this.dispatchEvent(new PriEvent(PriEvent.ERROR));
+        }
+
+        image.src = 'data:image/${type};base64,${base64ImageData}';
+    }
+
     public function load(imageURL:String):Void {
         if (this._loader != null) {
             _loader.kill();
@@ -75,16 +100,20 @@ class PriImage extends PriDisplay {
             this._originalImageHeight = asset.imageHeight;
 
             this._imageElement = asset.getElement();
-            this._imageElement.css("width", "100%");
-            this._imageElement.css("height", "100%");
-            this._imageElement.attr("onmousedown", "if (event.preventDefault) event.preventDefault()");
-            this._imageElement.attr("draggable", "false");
-
-            this.getElement().append(this._imageElement);
-
-            this.width = this._originalImageWidth * this._imageScaleX;
-            this.height = this._originalImageHeight * this._imageScaleY;
+            this.startImageElement();
         }
+    }
+
+    private function startImageElement():Void {
+        this._imageElement.css("width", "100%");
+        this._imageElement.css("height", "100%");
+        this._imageElement.attr("onmousedown", "if (event.preventDefault) event.preventDefault()");
+        this._imageElement.attr("draggable", "false");
+
+        this.getElement().append(this._imageElement);
+
+        this.width = this._originalImageWidth * this._imageScaleX;
+        this.height = this._originalImageHeight * this._imageScaleY;
     }
 
     private function get_imageScaleX():Float {
