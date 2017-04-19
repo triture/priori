@@ -63,8 +63,9 @@ class PriURLLoader extends PriEventDispatcher {
             if (Std.is(request.data, PriRequestURLEncodedValues)) {
                 contentType = PriRequestContentType.FORM_URLENCODED;
                 value = cast(request.data, PriRequestURLEncodedValues).toString();
+            } else if (request.contentType == PriRequestContentType.APPLICATION_JSON && !Std.is(request.data, String)) {
+                value = haxe.Json.stringify(request.data);
             }
-
 
             var ajaxObject:Dynamic = {
                 async : true,
