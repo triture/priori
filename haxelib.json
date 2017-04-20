@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Single page web applications (SPA) framework for Haxe",
-  "version": "0.6.0",
-  "releasenote": "Styles for PriForm objects. Please, check Changelog section on readme file",
+  "version": "0.7.0",
+  "releasenote": "Please, check Changelog section on readme file",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""

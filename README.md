@@ -62,10 +62,16 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.7.0 - 04/20/2017
+- New Feature : Radio Button
+- New Feature : Load images using Base64 data
+- Bugfix : Focusable property not working
+- Bugfix : Some Loader bugs
+
 ### 0.6.0 - 03/20/2017
-- New Feature: Styling PriForm elements
-- Improvements: Better handling scrollable containers
-- Improvements: Better handling element styles
+- New Feature : Styling PriForm elements
+- Improvements : Better handling scrollable containers
+- Improvements : Better handling element styles
 - Lot of performance improvements and bugfixes
 
 ### 0.5.1 - 01/30/2017
@@ -75,7 +81,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Improvements : PriDisplay dispatching Drag event
 
 ### 0.5.0 - 01/11/2017
-- New Feature: startDrag() and stopDrag() methods
+- New Feature : startDrag() and stopDrag() methods
 - Bugfixes
 
 ### 0.4.2 - 01/03/2017
