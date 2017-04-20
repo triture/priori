@@ -19,6 +19,7 @@ class PriImage extends PriDisplay {
     public var imageScaleX(get, set):Float;
     public var imageScaleY(get, set):Float;
 
+    private var _imageObject:Image;
     private var _loader:AssetImage;
     private var _imageElement:JQuery;
 
@@ -43,34 +44,58 @@ class PriImage extends PriDisplay {
         }
     }
 
-    public function loadImageData(base64ImageData:String, type:String = "jpeg"):Void {
-        var image:Image = new Image();
-        image.onload = function():Void {
-            image.onload = null;
-            image.onerror = null;
+    private function clearCurrentImage():Void {
+        if (this._imageObject != null) {
+            this._imageObject.onload = null;
+            this._imageObject.onerror = null;
+            this._imageObject = null;
+        }
 
-            this._originalImageWidth = image.naturalWidth;
-            this._originalImageHeight = image.naturalHeight;
-            this._imageElement = new JQuery(image);
+        if (this._imageElement != null) {
+            this._imageElement.remove();
+            this._imageElement.off();
+        }
+
+        this.killImageLoader();
+    }
+
+    private function killImageLoader():Void {
+        if (this._loader != null) {
+            this._loader.removeEventListener(PriEvent.COMPLETE, this.onAssetComplete);
+            this._loader.removeEventListener(PriEvent.ERROR, this.onAssetError);
+            this._loader.kill();
+            this._loader = null;
+        }
+    }
+
+    public function loadImageData(base64ImageData:String, type:String = "jpeg"):Void {
+        this.clearCurrentImage();
+
+        this._imageObject = new Image();
+        this._imageObject.onload = function():Void {
+            this._imageObject.onload = null;
+            this._imageObject.onerror = null;
+
+            this._originalImageWidth = this._imageObject.naturalWidth;
+            this._originalImageHeight = this._imageObject.naturalHeight;
+            this._imageElement = new JQuery(this._imageObject);
+            this._imageObject = null;
 
             this.startImageElement();
-
             this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
         }
-        image.onerror = function():Void {
-            image.onload = null;
-            image.onerror = null;
+        this._imageObject.onerror = function():Void {
+            this._imageObject.onload = null;
+            this._imageObject.onerror = null;
+            this._imageObject = null;
             this.dispatchEvent(new PriEvent(PriEvent.ERROR));
         }
 
-        image.src = 'data:image/${type};base64,${base64ImageData}';
+        this._imageObject.src = 'data:image/${type};base64,${base64ImageData}';
     }
 
     public function load(imageURL:String):Void {
-        if (this._loader != null) {
-            _loader.kill();
-            _loader = null;
-        }
+        this.clearCurrentImage();
 
         this._loader = new AssetImage("_internalasset", imageURL);
         this._loader.addEventListener(PriEvent.COMPLETE, this.onAssetComplete);
@@ -80,22 +105,19 @@ class PriImage extends PriDisplay {
 
     private function onAssetComplete(e:PriEvent):Void {
         this.loadByAsset(this._loader);
-
-        this._loader.kill();
-        this._loader = null;
-
+        this.killImageLoader();
         this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
     }
 
     private function onAssetError(e:PriEvent):Void {
-        this._loader.kill();
-        this._loader = null;
-
+        this.killImageLoader();
         this.dispatchEvent(new PriEvent(PriEvent.ERROR));
     }
 
     public function loadByAsset(asset:AssetImage):Void {
         if (asset != null) {
+            this.clearCurrentImage();
+
             this._originalImageWidth = asset.imageWidth;
             this._originalImageHeight = asset.imageHeight;
 
