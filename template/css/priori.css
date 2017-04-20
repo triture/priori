@@ -26,6 +26,7 @@ input, button, label, select, textarea {
     font-style:inherit;
     font-weight:inherit;
     text-align:inherit;
+    font-size:inherit;
 }
 
 * {
