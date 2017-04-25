@@ -17,7 +17,7 @@ class HaxelibController {
 
     public function load(libName:String, prioriFile:String = null):String {
 
-        var name:String = StringTools.trim(libName.toLowerCase());
+        var name:String = libName;
 
         var haxelib:HaxelibVO = ArrayHelper.getItemByFieldValue(
             PrioriRunModel.getInstance().haxelibs,
@@ -57,7 +57,7 @@ class HaxelibController {
 
     private function loadHaxelib(libName:String, filenamePrioriJson:String = null):HaxelibVO {
 
-        var name:String = StringTools.trim(libName.toLowerCase());
+        var name:String = libName;
 
 
         // try to load
