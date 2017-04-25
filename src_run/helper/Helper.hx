@@ -6,8 +6,7 @@ class Helper {
     public var path:HelperPath;
     public var platform:HelperPlatform;
     public var process:HelperProcess;
-    public var lib:HelperLib;
-    public var build:HelperBuilder;
+    public var webserver:HelperWebserver;
 
     public function new() {
         if (_g != null) throw "use static .g()";
@@ -18,8 +17,7 @@ class Helper {
         this.path = new HelperPath();
         this.platform = new HelperPlatform();
         this.process = new HelperProcess();
-        this.lib = new HelperLib();
-        this.build = new HelperBuilder();
+        this.webserver = new HelperWebserver();
     }
 
     private static var _g:Helper;

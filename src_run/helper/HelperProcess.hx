@@ -13,8 +13,14 @@ class HelperProcess {
     public function command(command:String, args:Array<String>):Int {
 
         Helper.g().output.print("");
-        Helper.g().output.print("Running " + command + " " + (command == "haxe" ? args.join(" ") : "... "));
-        Helper.g().output.print("");
+        Helper.g().output.print('- Running ${command} command...');
+
+        if (command == "haxe") {
+            Helper.g().output.print("- haxe args: " + args.join(" "));
+        }
+
+        Helper.g().output.print("", 0);
+        Helper.g().output.print("", 0);
 
         return Sys.command(command, args);
     }

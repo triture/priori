@@ -1,67 +1,115 @@
 package ;
 
+import String;
+import model.ArgsVO;
+import model.ArgsType;
 import helper.HelperPath;
-import data.PrioriArgs;
-import helper.HelperLib;
 import helper.Helper;
 
 class PrioriRun {
 
-    public static var args:PrioriArgs;
-
-    private var argList:Array<String>;
-
-
     public function new(argList:Array<String>) {
-        this.argList = argList;
 
-        var args:PrioriArgs = new PrioriArgs();
+        var args:ArgsVO = PrioriRunController.getInstance().args.parseArgs(argList);
 
-        if (!args.parse(argList)) {
+        PrioriRunModel.getInstance().args = args;
+
+
+        Helper.g().output.printLines(
+            [
+                "",
+                "",
+                "",
+                "",
+                "",
+                " __   __     __   __    ",
+                "|__| |__| | /  \\ |__| | ",
+                "|    |  \\ | \\__/ |  \\ | ",
+                "",
+                "PRIORI BUILDER"
+            ]
+        );
+
+        if (args.error) {
+
             Helper.g().output.print("");
-            Helper.g().output.print(args.error);
+            Helper.g().output.printError(args.errorMessage);
+            return;
 
         } else {
 
-            PrioriRun.args = args;
+            Helper.g().output.print("");
+            Helper.g().output.print("");
+            Helper.g().output.print("");
+            Helper.g().output.print("");
+            Helper.g().output.print("   >>> Running " + args.command.toUpperCase() + " command", 0);
 
-            if (args.command == PrioriArgs.COMMAND_BUILD) {
+
+            if (args.command == ArgsType.COMMAND_BUILD || args.command == ArgsType.COMMAND_RUN) {
 
                 var error:Bool = false;
 
                 Helper.g().output.print("");
                 Helper.g().output.print("");
-                Helper.g().output.print("Loading Libs...");
+                Helper.g().output.printWithUnderline("1. Loading Libs...");
 
-                if (!Helper.g().lib.loadLib("priori")) error = true;
-                if (!Helper.g().lib.loadLib(args.currPath, args.prioriFile)) error = true;
-
-                if (error) {
+                // try to load priori lib
+                var prioriLibResult:String = PrioriRunController.getInstance().haxelib.load("priori");
+                if (prioriLibResult.length > 0) {
                     Helper.g().output.print("");
-                    Helper.g().output.print("ERROR LOADING LIBS");
-                } else {
-
-                    Helper.g().output.print("");
-                    Helper.g().output.print("Copying template Files...");
-                    if (!Helper.g().lib.processTemplates(true)) {
-                        error = true;
-                    } else {
-                        Helper.g().output.append(" OK");
-                    }
-
-                    if (!error) {
-                        Helper.g().output.print("");
-                        Helper.g().output.print("Make Index File...");
-
-                        Helper.g().lib.processIndex();
-
-                        Helper.g().output.append(" OK");
-
-                        Helper.g().build.build();
-                    }
-
+                    Helper.g().output.printError(prioriLibResult, "Lib error");
+                    return;
                 }
-            } else if (args.command == PrioriArgs.COMMAND_CREATE) {
+
+                // try to load project lib
+                var projectLibResult:String = PrioriRunController.getInstance().haxelib.load(args.currPath, args.prioriFile);
+                if (projectLibResult.length > 0) {
+                    Helper.g().output.print("");
+                    Helper.g().output.printError(projectLibResult, "Lib error");
+                    return;
+                }
+
+
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.printWithUnderline("2. Copying template Files...");
+
+
+
+                var templateBuildResult:String = PrioriRunController.getInstance().template.build();
+
+                if (templateBuildResult.length > 0) {
+                    Helper.g().output.print("");
+                    Helper.g().output.printError(templateBuildResult    );
+                    return;
+                }
+
+
+
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.printWithUnderline("3. Generating javascript file from Haxe code...");
+
+
+                var buildResult:Bool = PrioriRunController.getInstance().builder.build();
+
+                if (buildResult) {
+                    Helper.g().output.print("");
+                    Helper.g().output.print("- Build Success");
+
+                    if (args.command == ArgsType.COMMAND_RUN) {
+                        //Helper.g().webserver.run();
+                    }
+
+                } else {
+                    Helper.g().output.print("");
+                    Helper.g().output.print("");
+                    Helper.g().output.printError("Compilation Error");
+                }
+
+            } else if (args.command == ArgsType.COMMAND_CREATE) {
 
                 var error:Bool = false;
 
@@ -70,7 +118,7 @@ class PrioriRun {
                 Helper.g().output.print("Creating new Project...");
                 Helper.g().output.print("");
 
-                var prioriPath:String = Helper.g().path.getLibPath("priori");
+                var prioriPath:String = PrioriRunController.getInstance().haxelib.getHaxelibPath("priori");
 
                 if (prioriPath != null && prioriPath != "") {
 
@@ -103,8 +151,6 @@ class PrioriRun {
                     Helper.g().output.print("Error: PRIORI LIB NOT FOUND ");
                 }
 
-
-                //Helper.g().path.copyPath(srcPath:String, dstPath:String);
             }
         }
     }

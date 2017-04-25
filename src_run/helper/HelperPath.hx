@@ -12,44 +12,12 @@ class HelperPath {
 
     }
 
-    public function getLibPath(libname:String):String {
-        var result:String = "";
-
-        var data:String = Helper.g().process.run("haxelib", ["path", libname]);
-
-        if (data == null) {
-            result = null;
-        } else {
-            var lines:Array<String> = data.split("\n");
-
-            for (i in 1...lines.length) {
-                var trim:String = StringTools.trim(lines[i]);
-
-                if (trim == "-D " + libname || StringTools.startsWith(trim, "-D " + libname + "=")) {
-                    result = StringTools.trim(lines[i - 1]);
-                }
-            }
-
-            if (result == "") {
-                try {
-                    for (line in lines) {
-
-                        if (line != "" && line.substr (0, 1) != "-") {
-                            if (FileSystem.exists(line)) {
-                                result = line;
-                                break;
-                            }
-                        }
-                    }
-                } catch (e:Dynamic) {}
-            }
-        }
-
-        return result;
-    }
-
     public function exists(path:String):Bool {
-        return FileSystem.exists(path);
+        try {
+            return FileSystem.exists(path);
+        } catch (e:Dynamic) {}
+
+        return false;
     }
 
     public function copyPath(srcPath:String, dstPath:String):Void {
