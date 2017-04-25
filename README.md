@@ -62,6 +62,10 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.7.1 - 04/25/2017
+- Update to jQueryExtern 3.0.0.
+- Better Priori Builder
+
 ### 0.7.0 - 04/20/2017
 - New Feature : Radio Button
 - New Feature : Load images using Base64 data
