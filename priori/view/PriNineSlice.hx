@@ -8,7 +8,7 @@ import priori.event.PriEvent;
 import priori.assets.AssetManager;
 import priori.assets.Asset;
 import priori.assets.AssetImage;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class PriNineSlice extends PriDisplay {
 

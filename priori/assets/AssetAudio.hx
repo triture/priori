@@ -2,9 +2,9 @@ package priori.assets;
 
 import priori.system.PriDeviceSystem;
 import priori.system.PriDevice;
-import jQuery.Event;
+import js.jquery.Event;
 import priori.event.PriEvent;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class AssetAudio extends Asset {
 

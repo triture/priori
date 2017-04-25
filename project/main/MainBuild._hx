@@ -1,7 +1,7 @@
 package ;
 
 import priori.app.PriApp;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class {MAINBUILDCLASS} {
 

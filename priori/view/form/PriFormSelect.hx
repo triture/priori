@@ -1,7 +1,7 @@
 package priori.view.form;
 
-import jQuery.JQuery;
-import jQuery.Event;
+import js.jquery.JQuery;
+import js.jquery.Event;
 import priori.event.PriEvent;
 
 class PriFormSelect extends PriFormElementBase {

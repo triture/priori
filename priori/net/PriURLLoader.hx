@@ -2,9 +2,8 @@ package priori.net;
 
 import haxe.Json;
 import priori.event.PriEvent;
-import haxe.ds.StringMap;
-import jQuery.JqXHR;
-import jQuery.JQuery;
+import js.jquery.JqXHR;
+import js.jquery.JQuery;
 import priori.event.PriEventDispatcher;
 
 class PriURLLoader extends PriEventDispatcher {
@@ -84,7 +83,7 @@ class PriURLLoader extends PriEventDispatcher {
                 success : this.onSuccess
             };
 
-            this.ajax = JQuery._static.ajax(ajaxObject);
+            this.ajax = JQuery.ajax(ajaxObject);
 
         }
     }

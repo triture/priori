@@ -4,8 +4,8 @@ import priori.assets.AssetAudio;
 import priori.assets.AssetManager;
 import priori.assets.Asset;
 import priori.event.PriEvent;
-import jQuery.Event;
-import jQuery.JQuery;
+import js.jquery.Event;
+import js.jquery.JQuery;
 
 import priori.event.PriEventDispatcher;
 

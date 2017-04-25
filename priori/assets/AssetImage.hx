@@ -1,8 +1,8 @@
 package priori.assets;
 
 import priori.event.PriEvent;
-import jQuery.Event;
-import jQuery.JQuery;
+import js.jquery.Event;
+import js.jquery.JQuery;
 
 class AssetImage extends Asset {
 

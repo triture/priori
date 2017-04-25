@@ -1,7 +1,7 @@
 package priori.view;
 
 import js.html.CanvasRenderingContext2D;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import js.html.CanvasElement;
 
 class PriCanvas extends PriDisplay {

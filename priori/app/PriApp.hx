@@ -9,11 +9,11 @@ import js.Browser;
 import priori.assets.AssetManagerEvent;
 import priori.view.container.PriGroup;
 import priori.assets.AssetManager;
-import jQuery.Event;
+import js.jquery.Event;
 import priori.event.PriEvent;
 import haxe.Timer;
 import priori.geom.PriGeomBox;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import priori.app.PriApp;
 import priori.view.PriDisplay;
 

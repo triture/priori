@@ -5,7 +5,7 @@ import priori.app.PriApp;
 import priori.event.PriEvent;
 import priori.assets.AssetManager;
 import priori.assets.Asset;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import priori.assets.AssetImage;
 
 class PriImage extends PriDisplay {

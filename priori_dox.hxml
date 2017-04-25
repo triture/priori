@@ -2,7 +2,6 @@
 -D doc-gen
 -dce no
 
---macro jQuery.haxe.Config.addPlugin('priori.plugins.PriPlugin')
 --macro include('priori')
 
 -lib jQueryExtern

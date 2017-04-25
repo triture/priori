@@ -9,7 +9,7 @@ import priori.view.PriDisplay;
 import priori.event.PriMouseEvent;
 import js.html.Element;
 import js.Browser;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class BrowserEventEngine {
 

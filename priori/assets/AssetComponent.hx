@@ -1,7 +1,7 @@
 package priori.assets;
 
 import priori.event.PriEvent;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class AssetComponent extends Asset {
 
@@ -22,7 +22,7 @@ class AssetComponent extends Asset {
 
             this._isLoading = true;
 
-            JQuery._static.ajax({
+            JQuery.ajax({
 
                 method : "GET",
 

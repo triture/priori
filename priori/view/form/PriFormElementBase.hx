@@ -6,7 +6,7 @@ import priori.event.PriEvent;
 import priori.app.PriApp;
 import js.html.Element;
 import js.Browser;
-import jQuery.Event;
+import js.jquery.Event;
 import priori.view.component.PriExtendable;
 
 class PriFormElementBase extends PriExtendable {

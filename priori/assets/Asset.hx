@@ -1,7 +1,7 @@
 package priori.assets;
 
 import priori.event.PriEventDispatcher;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import String;
 
 class Asset extends PriEventDispatcher {

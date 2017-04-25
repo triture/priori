@@ -2,7 +2,7 @@ package helper.display;
 
 import helper.browser.BrowserEventEngine;
 import js.html.Element;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class DisplayHelper {
 

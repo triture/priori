@@ -1,7 +1,7 @@
 package priori.view.form;
 
 import priori.app.PriApp;
-import jQuery.Event;
+import js.jquery.Event;
 import priori.event.PriEvent;
 
 class PriFormInputText extends PriFormElementBase {

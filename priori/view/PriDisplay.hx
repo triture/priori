@@ -9,7 +9,7 @@ import js.html.DOMRect;
 import priori.geom.PriGeomBox;
 import helper.browser.BrowserEventEngine;
 import js.html.Element;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import priori.style.border.PriBorderStyle;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.filter.PriFilterStyle;

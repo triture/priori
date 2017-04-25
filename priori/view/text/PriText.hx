@@ -9,7 +9,7 @@ import priori.system.PriKey;
 import priori.event.PriEvent;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.font.PriFontStyle;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class PriText extends PriDisplay {
 

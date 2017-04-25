@@ -1,6 +1,6 @@
 package priori.view.component;
 
-import jQuery.JQuery;
+import js.jquery.JQuery;
 import priori.assets.AssetManager;
 
 class PriComponentBase extends PriDisplay {

@@ -1,7 +1,7 @@
 package priori.view.component;
 
 import priori.event.PriEvent;
-import jQuery.JQuery;
+import js.jquery.JQuery;
 
 class PriExtendable extends PriDisplay {
 

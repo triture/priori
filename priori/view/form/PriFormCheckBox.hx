@@ -1,7 +1,7 @@
 package priori.view.form;
 
 import priori.event.PriEvent;
-import jQuery.Event;
+import js.jquery.Event;
 
 class PriFormCheckBox extends PriFormElementBase {
 
