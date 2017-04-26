@@ -12,11 +12,11 @@ class PriURLLoader extends PriEventDispatcher {
     private var _isLoading:Bool;
     private var _isLoaded:Bool;
 
-    private var _responseHeader:Array<PriURLHeader>;
-
     private var ajax:JqXHR;
 
     public var data:Dynamic;
+
+    private var _responseHeaders:String = "";
 
     public function new(request:PriURLRequest = null) {
         super();
@@ -32,8 +32,23 @@ class PriURLLoader extends PriEventDispatcher {
 
 
     public function getResponseHeaders():Array<PriURLHeader> {
-        // TODO : criar response header
-        return [];
+
+        var result:Array<PriURLHeader> = [];
+        var lines:Array<String> = this._responseHeaders.split("\n");
+
+        for (line in lines) {
+
+            var data:Array<String> = line.split(":");
+
+            if (data.length > 1) {
+                var header:String = StringTools.trim(data.shift());
+                var value:String = StringTools.trim(data.join(":"));
+
+                result.push(new PriURLHeader(header, value));
+            }
+        }
+
+        return result;
     }
 
     private function getRequestHeaders(request:PriURLRequest):Dynamic {
@@ -95,6 +110,8 @@ class PriURLLoader extends PriEventDispatcher {
         this.data = data;
 
         this.ajax = null;
+
+        this._responseHeaders = e.getAllResponseHeaders();
 
         this.dispatchEvent(new PriEvent(PriEvent.COMPLETE, false, false, data));
     }
