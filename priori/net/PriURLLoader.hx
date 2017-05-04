@@ -8,15 +8,15 @@ import priori.event.PriEventDispatcher;
 
 class PriURLLoader extends PriEventDispatcher {
 
-
     private var _isLoading:Bool;
     private var _isLoaded:Bool;
-
     private var ajax:JqXHR;
 
     public var data:Dynamic;
 
     private var _responseHeaders:String = "";
+    @:isVar public var status(default, null):Int = -1;
+    @:isVar public var statusText(default, null):String = "";
 
     public function new(request:PriURLRequest = null) {
         super();
@@ -32,6 +32,8 @@ class PriURLLoader extends PriEventDispatcher {
 
 
     public function getResponseHeaders():Array<PriURLHeader> {
+
+        if (this._responseHeaders == null) return [];
 
         var result:Array<PriURLHeader> = [];
         var lines:Array<String> = this._responseHeaders.split("\n");
@@ -51,6 +53,10 @@ class PriURLLoader extends PriEventDispatcher {
         return result;
     }
 
+    // If this is a CORS request, you may see all headers in debug tools (such as Chrome->Inspect Element->Network),
+    // but the xHR object will only retrieve the header (via xhr.getResponseHeader('Header')) if such a header is a
+    // simple response header
+    // reference: http://stackoverflow.com/questions/1557602/jquery-and-ajax-response-header
     private function getRequestHeaders(request:PriURLRequest):Dynamic {
         var result:Dynamic = {};
 
@@ -70,6 +76,12 @@ class PriURLLoader extends PriEventDispatcher {
 
     public function load(request:PriURLRequest):Void {
         if (this._isLoaded == false && this._isLoading == false) {
+
+            // reset old request data
+            this.status = -1;
+            this.statusText = "";
+            this._responseHeaders = "";
+            this.data = null;
 
             var contentType:String = request.contentType;
             var value:Dynamic = request.data;
@@ -107,11 +119,12 @@ class PriURLLoader extends PriEventDispatcher {
         this._isLoaded = true;
         this._isLoading = false;
 
+        this._responseHeaders = this.ajax.getAllResponseHeaders();
+        this.status = this.ajax.status;
+        this.statusText = this.ajax.statusText;
+
         this.data = data;
-
         this.ajax = null;
-
-        this._responseHeaders = e.getAllResponseHeaders();
 
         this.dispatchEvent(new PriEvent(PriEvent.COMPLETE, false, false, data));
     }
@@ -119,6 +132,10 @@ class PriURLLoader extends PriEventDispatcher {
     private function onError(data):Void {
         this._isLoaded = false;
         this._isLoading = false;
+
+        this._responseHeaders = this.ajax.getAllResponseHeaders();
+        this.status = this.ajax.status;
+        this.statusText = this.ajax.statusText;
 
         this.data = data.responseText;
         this.ajax = null;
