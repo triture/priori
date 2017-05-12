@@ -467,7 +467,7 @@ class PriDisplay extends PriEventDispatcher {
         // sinX  cosX   0
         //  0     0     1
 
-        var rot:Float = this.dh.rotation*-1;
+        var rot:Float = this.dh.rotation;
         var sx:Float = this.dh.scaleX;
         var sy:Float = this.dh.scaleY;
 
