@@ -26,6 +26,38 @@ class PriFontStyle {
         if (align != null) this.align = align else this.align = PriFontStyle.DEFAULT_ALIGN;
     }
 
+    public function setColor(color:Int):PriFontStyle {
+        this.color = color;
+        return this;
+    }
+
+    public function setFamily(family:String):PriFontStyle {
+        this.family = family;
+        return this;
+    }
+
+    public function setWeight(weight:PriFontStyleWeight):PriFontStyle {
+        this.weight = weight;
+        return this;
+    }
+
+    public function setItalic(italic:PriFontStyleItalic):PriFontStyle {
+        this.italic = italic;
+        return this;
+    }
+
+    public function setVariant(variant:PriFontStyleVariant):PriFontStyle {
+        this.variant = variant;
+        return this;
+    }
+
+    public function setAlign(align:PriFontStyleAlign):PriFontStyle {
+        this.align = align;
+        return this;
+    }
+
+
+
     public static function getFontStyleObjectBase():Dynamic {
         return {
             fontFamily : "",
