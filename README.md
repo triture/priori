@@ -62,6 +62,9 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.7.2 - 05/25/2017
+- Some fixes and improvements
+
 ### 0.7.1 - 04/25/2017
 - Update to jQueryExtern 3.0.0.
 - Better Priori Builder

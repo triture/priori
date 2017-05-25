@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "Single page web applications (SPA) framework for Haxe",
-  "version": "0.7.1",
-  "releasenote": "Update to jQueryExtern 3.0.0. Please, check Changelog section on readme file",
+  "version": "0.7.2",
+  "releasenote": "Fix and improvements. Please, check Changelog section on readme file",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""
