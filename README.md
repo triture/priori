@@ -27,6 +27,8 @@ Optional Parameters:
 ## Documentation
 Check the Priori api documentation ***under construction*** on (http://priori.triture.com/dox).
 
+You can find some micro tutorials at Priori Blog: (http://priori.triture.com/blog)
+
 ## Instalation  
 Requires [Haxe](http://haxe.org) 3.2.1+.
 
