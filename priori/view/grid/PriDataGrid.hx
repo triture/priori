@@ -182,11 +182,18 @@ class PriDataGrid extends PriGroup {
         var rowHeightCalculated = this.calculateRowHeight();
         var n:Int = this.data == null ? 0 : this.data.length;
 
+        var rowContainerHeight:Float = 0;
+
         if (this.horizontalGridLines) {
-            this.__rowContainer.height = n*(rowHeightCalculated.all + 1) - 1;
+            rowContainerHeight = n*(rowHeightCalculated.all + 1);
+
+            if (this.__rowAutoSize || rowContainerHeight > this.scrollerContainer.height)
+                rowContainerHeight -= 1;
         } else {
-            this.__rowContainer.height = n*rowHeightCalculated.all;
+            rowContainerHeight = n*rowHeightCalculated.all;
         }
+
+        this.__rowContainer.height = rowContainerHeight;
     }
 
     private function organizeRowPosition():Void {
