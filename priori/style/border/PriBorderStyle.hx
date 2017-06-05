@@ -4,15 +4,30 @@ import String;
 
 class PriBorderStyle {
 
-    public var width:Int;
+    public var width:Float;
     public var type:PriBorderType;
     public var color:Int;
 
-    public function new(?width:Int = 1, ?color:Int = 0xCCCCCC, ?type:PriBorderType) {
+    public function new(?width:Float = 1, ?color:Int = 0xCCCCCC, ?type:PriBorderType) {
         this.width = width;
         this.color = color;
 
         this.type = type == null ? PriBorderType.SOLID : type;
+    }
+
+    public function setColor(color:Int):PriBorderStyle {
+        this.color = color;
+        return this;
+    }
+
+    public function setType(type:PriBorderType):PriBorderStyle {
+        this.type = type;
+        return this;
+    }
+
+    public function setWidth(width:Float):PriBorderStyle {
+        this.width = width;
+        return this;
     }
 
     public function toString():String {
