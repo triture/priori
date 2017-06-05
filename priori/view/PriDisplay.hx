@@ -265,7 +265,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function removeBorder():Void {
         if (this.dh.elementBorder != null) {
-            this.dh.elementBorder.remove();
+            this.dh.jselement.removeChild(this.dh.elementBorder);
             this.dh.elementBorder = null;
         }
     }
