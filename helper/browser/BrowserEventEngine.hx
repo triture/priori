@@ -132,13 +132,13 @@ class BrowserEventEngine {
     }
 
     private function on_focus_in(e:Dynamic):Void {
-        if (!this.display.visible || this.display.disabled) return;
+        if (!this.display.visible || this.display.disabled || !this.display.focusable) return;
         var pe:PriFocusEvent = new PriFocusEvent(PriFocusEvent.FOCUS_IN);
         this.display.dispatchEvent(pe);
     }
 
     private function on_focus_out(e:Dynamic):Void {
-        if (!this.display.visible || this.display.disabled) return;
+        if (!this.display.visible || this.display.disabled || !this.display.focusable) return;
         var pe:PriFocusEvent = new PriFocusEvent(PriFocusEvent.FOCUS_OUT);
         this.display.dispatchEvent(pe);
     }
