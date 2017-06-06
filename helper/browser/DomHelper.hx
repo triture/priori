@@ -22,4 +22,17 @@ class DomHelper {
             }
         }
     }
+
+    public static function hasChild(el:Element, seekChild:Element):Bool {
+
+        if (el == seekChild) return true;
+        else
+            for (i in 0 ... el.children.length) {
+                if (hasChild(el.children.item(i), seekChild)) {
+                    return true;
+                }
+            }
+
+        return false;
+    }
 }

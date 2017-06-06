@@ -114,21 +114,6 @@ class PriFormElementBase extends PriExtendable {
         if (el != null) el.blur();
     }
 
-    override public function hasFocus():Bool {
-        var el:Element = Browser.document.getElementById(this.fieldId);
-
-        if (el != null) {
-            try {
-                var curEl:Element = Browser.document.activeElement;
-                if (curEl == el) return true;
-            } catch (e:Dynamic) {
-
-            }
-        }
-
-        return false;
-    }
-
     @noCompletion private function get_fieldId():String {
         return this._fieldId;
     }

@@ -1,5 +1,9 @@
 package priori.view;
 
+import priori.app.PriApp;
+import priori.system.PriDevice;
+import priori.app.PriApp;
+import priori.system.PriDeviceBrowser;
 import helper.display.DisplayHelper;
 import priori.geom.PriGeomPoint;
 import helper.browser.DomHelper;
@@ -894,7 +898,7 @@ class PriDisplay extends PriEventDispatcher {
     public function hasFocus():Bool {
         try {
             var curEl:Element = Browser.document.activeElement;
-            if (curEl == this.dh.jselement) return true;
+            if (curEl != null && PriApp.g().hasFocus() && DomHelper.hasChild(this.dh.jselement, curEl)) return true;
         } catch (e:Dynamic) {}
 
         return false;

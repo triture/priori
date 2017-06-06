@@ -1,5 +1,6 @@
 package priori.app;
 
+import priori.event.PriFocusEvent;
 import priori.style.font.PriFontStyle;
 import helper.browser.StyleHelper;
 import priori.event.PriTapEvent;
@@ -23,6 +24,7 @@ class PriApp extends PriGroup {
 
     private var ___xmouse:Float = 0;
     private var ___ymouse:Float = 0;
+    private var ___hasFocus:Bool = false;
 
     private var _body:JQuery;
     private var _window:JQuery;
@@ -49,6 +51,7 @@ class PriApp extends PriGroup {
         trace("Browser : ", priori.system.PriDevice.browser());
         #end
 
+        this.focusable = true;
 
         this.dh.jselement.style.width = "100%";
         this.dh.jselement.style.height = "100%";
@@ -61,9 +64,13 @@ class PriApp extends PriGroup {
         if (Browser.window.document.addEventListener != null) {
             Browser.window.document.addEventListener("mousemove", this.___onPointerMove, true);
             Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
+            Browser.window.document.addEventListener("focus", this.___onAppFocusIn, true);
+            Browser.window.document.addEventListener("blur", this.___onAppFocusOut, true);
         } else {
             Browser.window.document.onmousemove = this.___onPointerMove;
             Browser.window.document.ontouchmove = this.___onPointerMove;
+            Browser.window.document.onfocus = this.___onAppFocusIn;
+            Browser.window.document.onblur = this.___onAppFocusOut;
         }
 
         Browser.window.onresize = this.___onWindowResize;
@@ -154,5 +161,10 @@ class PriApp extends PriGroup {
         if (_g == null) throw "Application not yet created";
         return _g;
     }
+
+    private function ___onAppFocusIn():Void this.___hasFocus = true;
+    private function ___onAppFocusOut():Void this.___hasFocus = false;
+    override public function hasFocus():Bool return this.___hasFocus;
+
 
 }
