@@ -17,6 +17,7 @@ class StyleHelper {
         element.style.fontStyle = values.fontStyle;
         element.style.textAlign = values.textAlign;
         element.style.color = values.color;
+        element.style.textDecoration = values.textDecoration;
     }
 
 }
