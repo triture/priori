@@ -110,6 +110,8 @@ class PriURLLoader extends PriEventDispatcher {
                 success : this.onSuccess
             };
 
+            JQuery.support.cors = true;
+
             this.ajax = JQuery.ajax(ajaxObject);
 
         }
@@ -119,9 +121,15 @@ class PriURLLoader extends PriEventDispatcher {
         this._isLoaded = true;
         this._isLoading = false;
 
-        this._responseHeaders = this.ajax.getAllResponseHeaders();
-        this.status = this.ajax.status;
-        this.statusText = this.ajax.statusText;
+        if (this.ajax == null) {
+            this._responseHeaders = "";
+            this.status = 200;
+            this.statusText = "success";
+        } else {
+            this._responseHeaders = this.ajax.getAllResponseHeaders();
+            this.status = this.ajax.status;
+            this.statusText = this.ajax.statusText;
+        }
 
         this.data = data;
         this.ajax = null;
@@ -133,9 +141,15 @@ class PriURLLoader extends PriEventDispatcher {
         this._isLoaded = false;
         this._isLoading = false;
 
-        this._responseHeaders = this.ajax.getAllResponseHeaders();
-        this.status = this.ajax.status;
-        this.statusText = this.ajax.statusText;
+        if (this.ajax == null) {
+            this._responseHeaders = "";
+            this.status = -1;
+            this.statusText = "undefined";
+        } else {
+            this._responseHeaders = this.ajax.getAllResponseHeaders();
+            this.status = this.ajax.status;
+            this.statusText = this.ajax.statusText;
+        }
 
         this.data = data.responseText;
         this.ajax = null;
