@@ -64,6 +64,11 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.7.3 - 06/08/2017
+- Improvements : 'text decoration'
+- Bugfix : better hasFocus() code
+- Bugfix : Some fixes to improve IE 9 compatibility
+
 ### 0.7.2 - 05/25/2017
 - Some fixes and improvements
 
