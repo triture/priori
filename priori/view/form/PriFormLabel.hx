@@ -7,6 +7,9 @@ class PriFormLabel extends PriFormElementBase {
     @:isVar public var formElement(default, set):PriFormElementBase;
     @:isVar public var text(default, set):String;
 
+    public var multiLine(get, set):Bool;
+    private var __multiLine:Bool = true;
+
     public function new() {
         super();
 
@@ -25,6 +28,17 @@ class PriFormLabel extends PriFormElementBase {
         return value;
     }
 
+    private function get_multiLine():Bool return this.__multiLine;
+    private function set_multiLine(value:Bool):Bool {
+        if (this.__multiLine != value) {
+            this.__multiLine = value;
+
+            if (value) this._baseElement.css("white-space", "");
+            else this._baseElement.css("white-space", "nowrap");
+        }
+
+        return value;
+    }
 
     private function set_formElement(value:PriFormElementBase) {
         this.formElement = value;
