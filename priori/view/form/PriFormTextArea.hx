@@ -28,7 +28,7 @@ class PriFormTextArea extends PriFormElementBase {
     }
 
     override public function getComponentCode():String {
-        return "<textarea style=\"width:100%;height:100%;resize:none;\"></textarea>";
+        return "<textarea style=\"width:100%;height:100%;resize:none;box-sizing:border-box;\"></textarea>";
     }
 
     override private function onAddedToApp():Void {
