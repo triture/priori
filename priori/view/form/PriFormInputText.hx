@@ -1,5 +1,6 @@
 package priori.view.form;
 
+import priori.types.PriFormInputTextFieldType;
 import priori.app.PriApp;
 import js.jquery.Event;
 import priori.event.PriEvent;
@@ -7,19 +8,25 @@ import priori.event.PriEvent;
 class PriFormInputText extends PriFormElementBase {
 
     @:isVar public var value(get, set):String;
-    @:isVar public var placeholder(default, set):String;
-    @:isVar public var password(default, set):Bool;
+    @:isVar public var placeholder(default, set):String = "";
+    @:isVar public var password(default, set):Bool = false;
 
     @:isVar public var marginLeft(default, set):Float;
     @:isVar public var marginRight(default, set):Float;
 
+    @:isVar public var fieldType(default, set):PriFormInputTextFieldType = PriFormInputTextFieldType.TEXT;
+
     public function new() {
         super();
 
-        this.placeholder = "";
-        this.password = false;
         this.clipping = false;
         this.width = 160;
+    }
+
+    private function set_fieldType(value:PriFormInputTextFieldType):PriFormInputTextFieldType {
+        this.fieldType = value;
+        this._baseElement.attr("type", cast value);
+        return value;
     }
 
     private function set_marginLeft(value:Float):Float {
@@ -83,11 +90,9 @@ class PriFormInputText extends PriFormElementBase {
     private function set_password(value:Bool) {
         this.password = value;
 
-        if (value) {
-            this._baseElement.attr("type", "password");
-        } else {
-            this._baseElement.attr("type", "font");
-        }
+        if (value) this.fieldType = PriFormInputTextFieldType.PASSWORD;
+        else this.fieldType = PriFormInputTextFieldType.TEXT;
+
 
         return value;
     }
