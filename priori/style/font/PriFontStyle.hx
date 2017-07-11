@@ -1,8 +1,10 @@
 package priori.style.font;
 
+import priori.geom.PriColor;
+
 class PriFontStyle {
 
-    public static var DEFAULT_COLOR:Int = 0x000000;
+    public static var DEFAULT_COLOR:PriColor = 0x000000;
     public static var DEFAULT_FAMILY:String = "Arial, Helvetica, sans-serif";
     public static var DEFAULT_WEIGHT:PriFontStyleWeight = null;
     public static var DEFAULT_ITALIC:PriFontStyleItalic = null;
@@ -10,7 +12,7 @@ class PriFontStyle {
     public static var DEFAULT_ALIGN:PriFontStyleAlign = null;
     public static var DEFAULT_DECORATION:PriFontStyleDecoration = null;
 
-    public var color:Int;
+    public var color:PriColor;
     public var family:String;
 
     public var weight:PriFontStyleWeight;
@@ -19,7 +21,7 @@ class PriFontStyle {
     public var align:PriFontStyleAlign;
     public var decoration:PriFontStyleDecoration;
 
-    public function new(?color:Int, ?family:String, ?weight:PriFontStyleWeight, ?italic:PriFontStyleItalic, ?variant:PriFontStyleVariant, ?align:PriFontStyleAlign, ?decoration:PriFontStyleDecoration) {
+    public function new(?color:PriColor, ?family:String, ?weight:PriFontStyleWeight, ?italic:PriFontStyleItalic, ?variant:PriFontStyleVariant, ?align:PriFontStyleAlign, ?decoration:PriFontStyleDecoration) {
         if (color != null) this.color = color else this.color = PriFontStyle.DEFAULT_COLOR;
         if (family != null) this.family = family else this.family = PriFontStyle.DEFAULT_FAMILY;
         if (weight != null) this.weight = weight else this.weight = PriFontStyle.DEFAULT_WEIGHT;
@@ -29,7 +31,7 @@ class PriFontStyle {
         if (decoration != null) this.decoration = decoration else this.decoration = PriFontStyle.DEFAULT_DECORATION;
     }
 
-    public function setColor(color:Int):PriFontStyle {
+    public function setColor(color:PriColor):PriFontStyle {
         this.color = color;
         return this;
     }
@@ -83,7 +85,7 @@ class PriFontStyle {
         var variant:String = "";
         var align:String = "";
         var family:String = this.family == null ? "" : this.family;
-        var color:String = this.color == null ? "" : "#" + StringTools.hex(this.color, 6);
+        var color:String = this.color == null ? "" : this.color.toString();
         var decoration:String = "";
 
         if (this.weight != null)

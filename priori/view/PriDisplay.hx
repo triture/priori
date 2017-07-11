@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.geom.PriColor;
 import priori.app.PriApp;
 import priori.system.PriDevice;
 import priori.app.PriApp;
@@ -111,7 +112,7 @@ class PriDisplay extends PriEventDispatcher {
     @:isVar public var corners(default, set):Array<Int>;
     @:isVar public var tooltip(default, set):String;
 
-    public var bgColor(get, set):Int;
+    public var bgColor(get, set):PriColor;
 
 
     // STYLES PROPERTIES
@@ -312,8 +313,8 @@ class PriDisplay extends PriEventDispatcher {
         var body:JQuery = new JQuery("body");
         body.append(clone);
 
-        w = clone.width();
-        h = clone.height();
+        w = clone[0].getBoundingClientRect().width;
+        h = clone[0].getBoundingClientRect().height;
 
         clone.remove();
 
@@ -353,7 +354,8 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.width;
 
         if (result == null) {
-            result = this.dh.element.width();
+            result = this.dh.jselement.getBoundingClientRect().width;
+
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().w;
         }
 
@@ -376,7 +378,7 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.height;
 
         if (result == null) {
-            result = this.dh.element.height();
+            result = this.dh.jselement.getBoundingClientRect().height;
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().h;
         }
         return result;
@@ -566,14 +568,14 @@ class PriDisplay extends PriEventDispatcher {
     private function setCSS(property:String, value:String):Void this.dh.element.css(property, value);
     private function getCSS(property:String):String return this.getElement().css(property);
 
-    private function get_bgColor():Int return this.dh.bgColor;
-    private function set_bgColor(value:Int):Int {
+    private function get_bgColor():PriColor return this.dh.bgColor;
+    private function set_bgColor(value:PriColor):PriColor {
         this.dh.bgColor = value;
 
         if (value == null) {
             this.dh.jselement.style.backgroundColor = "";
         } else {
-            this.dh.jselement.style.backgroundColor = "#" + StringTools.hex(value, 6);
+            this.dh.jselement.style.backgroundColor = value;
         }
 
         return value;

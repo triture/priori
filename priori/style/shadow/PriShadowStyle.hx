@@ -8,7 +8,7 @@ class PriShadowStyle {
     public var verticalOffset:Float = 8;
     public var blur:Float = 30;
     public var spread:Float = -5;
-    public var color:Int = 0x000000;
+    public var color:PriColor = 0x000000;
     public var opacity:Float = 0.7;
     public var type:PriShadowType = PriShadowType.OUTLINE;
 
@@ -36,7 +36,7 @@ class PriShadowStyle {
         return this;
     }
 
-    public function setColor(value:Int):PriShadowStyle {
+    public function setColor(value:PriColor):PriShadowStyle {
         this.color = value;
         return this;
     }
@@ -58,14 +58,12 @@ class PriShadowStyle {
         // mode 1 : text-shadow
         // mode 2 : filter-shadow
 
-        var c:PriColor = new PriColor(this.color);
-
         return
             (this.horizontalOffset + "px ") +
             (this.verticalOffset + "px ") +
             (this.blur + "px ") +
             (mode > 0 ? "" : (this.spread + "px ")) +
-            ("rgba(" + c.red + "," + c.green + "," + c.red + "," + this.opacity + ")") +
+            ("rgba(" + this.color.red + "," + this.color.green + "," + this.color.red + "," + this.opacity + ")") +
             (mode > 0 ? "" : ( this.type == PriShadowType.INSET ? "inset" : ""))
         ;
     }

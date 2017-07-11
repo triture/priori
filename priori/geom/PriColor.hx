@@ -1,66 +1,84 @@
 package priori.geom;
 
-class PriColor {
-
-    public var color:Int;
+abstract PriColor(Int) from Int to Int {
 
     public var red(get, set):Int;
     public var green(get, set):Int;
     public var blue(get, set):Int;
 
-    public function new(color:Int = 0x000000) {
-        this.color = color;
+    inline public function new(color:Int = 0x000000) {
+        this = color;
     }
 
-    private function get_red():Int {
-        return (this.color >> 16) & 0xff;
+    inline public function mixWith(color:PriColor, percent:Float = 0.5):Void {
+        if (percent == null || percent < 0) percent = 0;
+        if (percent > 1) percent = 1;
+
+        var nr:Int = red + Math.round((color.red - red)*percent);
+        var ng:Int = green + Math.round((color.green - green)*percent);
+        var nb:Int = blue + Math.round((color.blue - blue)*percent);
+
+        updateColor(nr, ng, nb);
     }
 
-    private function set_red(value:Int):Int {
-        var g:Int = this.green;
-        var b:Int = this.blue;
+    inline private function get_red():Int {
+        return (this >> 16) & 0xff;
+    }
 
-        this.updateColor(value, g, b);
+    inline private function set_red(value:Int):Int {
+        var g:Int = green;
+        var b:Int = blue;
+
+        updateColor(value, g, b);
 
         return value;
     }
 
-    private function get_green():Int {
-        return (this.color >> 8) & 0xff;
+    inline private function get_green():Int {
+        return (this >> 8) & 0xff;
     }
 
-    private function set_green(value:Int):Int {
-        var r:Int = this.red;
-        var b:Int = this.blue;
+    inline private function set_green(value:Int):Int {
+        var r:Int = red;
+        var b:Int = blue;
 
-        this.updateColor(r, value, b);
+        updateColor(r, value, b);
 
         return value;
     }
 
-    private function get_blue():Int {
-        return this.color & 0xff;
+    inline private function get_blue():Int {
+        return this & 0xff;
     }
 
-    private function set_blue(value:Int):Int {
-        var r:Int = this.red;
-        var g:Int = this.green;
+    inline private function set_blue(value:Int):Int {
+        var r:Int = red;
+        var g:Int = green;
 
-        this.updateColor(r, g, value);
+        updateColor(r, g, value);
 
         return value;
     }
 
-    public function updateColor(r:Int, g:Int, b:Int):Void {
+    inline public function updateColor(r:Int, g:Int, b:Int):PriColor {
         var R:Int = (r << 16);
         var G:Int = (g << 8);
         var B:Int = b;
 
-        this.color = R | G | B;
+        this = R | G | B;
+
+        return this;
     }
 
-    public function toString():String {
-        return "#" + StringTools.hex(this.color, 6);
+    @:to inline public function toString():String {
+        return "#" + StringTools.hex(this, 6);
+    }
+
+    @:from inline static public function fromString(rgb:String):PriColor {
+        if (rgb.charAt(0) == "#") rgb = "0x" + rgb.substring(1);
+        var colorInt:Int = Std.parseInt(rgb);
+        if (colorInt == null) colorInt = 0;
+        return new PriColor(colorInt);
     }
 
 }

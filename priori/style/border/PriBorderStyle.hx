@@ -1,21 +1,21 @@
 package priori.style.border;
 
-import String;
+import priori.geom.PriColor;
 
 class PriBorderStyle {
 
     public var width:Float;
     public var type:PriBorderType;
-    public var color:Int;
+    public var color:PriColor;
 
-    public function new(?width:Float = 1, ?color:Int = 0xCCCCCC, ?type:PriBorderType) {
+    public function new(?width:Float = 1, ?color:PriColor = 0xCCCCCC, ?type:PriBorderType) {
         this.width = width;
         this.color = color;
 
         this.type = type == null ? PriBorderType.SOLID : type;
     }
 
-    public function setColor(color:Int):PriBorderStyle {
+    public function setColor(color:PriColor):PriBorderStyle {
         this.color = color;
         return this;
     }
@@ -42,7 +42,7 @@ class PriBorderStyle {
             styleString = "dashed";
         }
 
-        result = "#" + StringTools.hex(color, 6) + " " + styleString + " " + this.width + "px ";
+        result = this.color.toString() + " " + styleString + " " + this.width + "px ";
 
         return result;
     }

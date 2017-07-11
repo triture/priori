@@ -1,12 +1,13 @@
 package helper.display;
 
+import priori.geom.PriColor;
 import helper.browser.BrowserEventEngine;
 import js.html.Element;
 import js.jquery.JQuery;
 
 class DisplayHelper {
 
-    public var bgColor:Int = null;
+    public var bgColor:PriColor = null;
 
     public var x:Float = 0;
     public var y:Float = 0;

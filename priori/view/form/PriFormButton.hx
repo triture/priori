@@ -13,6 +13,18 @@ class PriFormButton extends PriFormElementBase {
         this.dh.jselement.style.textAlign = "center";
     }
 
+    override public function set_pointer(value:Bool):Bool {
+        var result:Bool = super.set_pointer(value);
+
+        if (value == true) {
+            this._baseElement.css("cursor", "pointer");
+        } else {
+            this._baseElement.css("cursor", "");
+        }
+
+        return value;
+    }
+
     override private function getComponentCode():String {
         return '<button type="button"></button>';
     }
