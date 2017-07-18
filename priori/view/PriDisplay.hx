@@ -790,8 +790,8 @@ class PriDisplay extends PriEventDispatcher {
         for (i in 0 ... list.length) {
             var el:PriDisplay = list[i];
 
-            result.x -= el.x;
-            result.y -= el.y;
+            result.x -= el.x + el.getJSElement().scrollLeft;
+            result.y -= el.y + el.getJSElement().scrollTop;
         }
 
         return result;
@@ -806,8 +806,8 @@ class PriDisplay extends PriEventDispatcher {
         for (i in 0 ... list.length) {
             var el:PriDisplay = list[i];
 
-            result.x += el.x;
-            result.y += el.y;
+            result.x += el.x - el.getJSElement().scrollLeft;
+            result.y += el.y - el.getJSElement().scrollTop;
         }
 
         return result;
