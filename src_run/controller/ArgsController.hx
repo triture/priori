@@ -20,6 +20,7 @@ class ArgsController {
         result.errorMessage = "";
         result.currPath = "";
         result.dList = [];
+        result.noHash = false;
 
 
         if (Validation.isValidCommand(clone[0])) {
@@ -32,28 +33,35 @@ class ArgsController {
 
         result.currPath = clone.pop();
 
-        var n:Int = clone.length;
+        // validate nohash
 
-        if (n % 2 != 0) {
-            result.error = true;
-            result.errorMessage = "Wrong param length";
 
-            return result;
-        }
+//        var n:Int = clone.length;
+//
+//        if (n % 2 != 0) {
+//            result.error = true;
+//            result.errorMessage = "Wrong param length";
+//            return result;
+//        }
+//
+//        n = Math.floor(n/2);
 
-        n = Math.floor(n/2);
+        while (clone.length > 0) {
 
-        for (i in 0 ... n) {
             var header:String = clone.shift();
-            var value:String = clone.shift();
+            var value:String = "";
 
-            if (header == ArgsType.ARG_D) {
+            if (header == ArgsType.ARG_D && clone.length > 0) {
+                value = clone.shift();
                 result.dList.push(value);
-            } else if (header == ArgsType.ARG_FILE) {
+            } else if (header == ArgsType.ARG_FILE  && clone.length > 0) {
+                value = clone.shift();
                 result.prioriFile = value;
-            } else if (header == ArgsType.ARG_PATH) {
+            } else if (header == ArgsType.ARG_PATH  && clone.length > 0) {
+                value = clone.shift();
                 result.currPath = value;
-            } else if (header == ArgsType.ARG_PORT) {
+            } else if (header == ArgsType.ARG_PORT  && clone.length > 0) {
+                value = clone.shift();
                 result.port = Std.parseInt(value);
 
                 if (result.port == null) {
@@ -61,13 +69,19 @@ class ArgsController {
                     result.errorMessage = "Invalid Port value";
                     return result;
                 }
+            } else if (header == ArgsType.ARG_NOHASH) {
+                result.noHash = true;
+
             } else {
                 result.error = true;
-                result.errorMessage = 'Argument ${header.toUpperCase()} not expected';
+                if (header.charAt(0) == "-") {
+                    result.errorMessage = 'Param ${header} not recognized';
+                } else {
+                    result.errorMessage = 'Wrong param length';
+                }
                 return result;
             }
         }
-
 
         return result;
     }

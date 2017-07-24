@@ -105,15 +105,18 @@ class TemplateController {
             }
         }
 
+
+        var prioriJSReplacement:String = '<script type="text/javascript" src="js/priori.js';
+        if (!PrioriRunModel.getInstance().args.noHash) {
+            prioriJSReplacement += (app.priori.gitHash == null ? "" : "?" + app.priori.gitHash);
+        }
+        prioriJSReplacement += '" ></script>';
+
         content = this.replace(content, TokenTypes.TOKEN_NAME, app.priori.name);
         content = this.replace(content, TokenTypes.TOKEN_LANG, app.priori.lang);
         content = this.replace(content, TokenTypes.TOKEN_META, meta.join("\n"));
         content = this.replace(content, TokenTypes.TOKEN_LINK, link.join("\n"));
-
-        content = this.replace(content, TokenTypes.TOKEN_PRIORI, [
-            '<script type="text/javascript" src="js/priori.js" ></script>'
-        ].join("\n"));
-
+        content = this.replace(content, TokenTypes.TOKEN_PRIORI, [prioriJSReplacement].join("\n"));
 
         try {
             File.saveContent(indexPath, content);

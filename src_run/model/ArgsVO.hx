@@ -8,4 +8,5 @@ typedef ArgsVO = {
     @:optional var dList:Array<String>;
     @:optional var error:Bool;
     @:optional var errorMessage:String;
+    @:optional var noHash:Bool;
 }

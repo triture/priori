@@ -1,5 +1,7 @@
 package controller;
 
+import String;
+import helper.HelperProcess;
 import sys.io.File;
 import sys.FileSystem;
 import helper.Helper;
@@ -63,8 +65,6 @@ class BuilderController {
         argsSourcePath.push(Helper.g().path.append(app.priori.output, tempCompilerFolder));
 
 
-
-
         var args:Array<String> = [];
         args = args.concat(argsHaxelib);
         args = args.concat(argsSourcePath);
@@ -95,4 +95,5 @@ class BuilderController {
         if (result != 0) return false;
         return true;
     }
+
 }
