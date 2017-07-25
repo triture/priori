@@ -24,6 +24,7 @@ class DataController {
         result.template = "template";
         result.main = "Main";
         result.gitHash = this.getGitHash();
+        result.dFlags = [];
 
         if (Validation.isString(json.project_name)) result.name = StringTools.trim(json.project_name);
         if (Validation.isString(json.lang)) result.lang = StringTools.trim(json.lang);
@@ -36,6 +37,7 @@ class DataController {
         result.link = result.link.concat(Validation.parseStringArray(json.link));
         result.dependencies = result.dependencies.concat(Validation.parseStringArray(json.dependencies));
         result.src = result.src.concat(Validation.parseStringArray(json.src));
+        result.dFlags = result.dFlags.concat(Validation.parseStringArray(json.dFlags));
 
         return result;
     }

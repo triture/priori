@@ -12,4 +12,5 @@ typedef PrioriDataVO = {
     @:optional var template:String;
     @:optional var main:String;
     @:optional var gitHash:String;
+    @:optional var dFlags:Array<String>;
 }

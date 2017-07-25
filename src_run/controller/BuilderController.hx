@@ -26,6 +26,13 @@ class BuilderController {
                 argsHaxelib.push("-lib");
                 argsHaxelib.push(lib.libName);
             }
+
+            if (lib.priori != null) {
+                for (flag in lib.priori.dFlags) {
+                    argsFlags.push("-D");
+                    argsFlags.push(flag);
+                }
+            }
         }
 
         for (source in app.priori.src) {

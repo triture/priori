@@ -79,6 +79,11 @@ class PriGroup extends PriContainer {
     public function isInvalid():Bool return _invalid;
     public function canPaint():Bool return this._setupCalled;
 
+    public function revalidate():Void {
+        this.invalidate();
+        this.validate();
+    }
+
     public function validate():Void {
         if (this._invalidateTimer != null) {
             this._invalidateTimer.stop();

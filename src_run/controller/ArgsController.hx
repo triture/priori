@@ -33,19 +33,6 @@ class ArgsController {
 
         result.currPath = clone.pop();
 
-        // validate nohash
-
-
-//        var n:Int = clone.length;
-//
-//        if (n % 2 != 0) {
-//            result.error = true;
-//            result.errorMessage = "Wrong param length";
-//            return result;
-//        }
-//
-//        n = Math.floor(n/2);
-
         while (clone.length > 0) {
 
             var header:String = clone.shift();
