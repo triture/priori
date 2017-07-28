@@ -35,7 +35,7 @@ class PriDisplay extends PriEventDispatcher {
     public var width(get, set):Float;
 
     /**
-    * Indicates the real width of the PriDisplay object, in pixels, before the scaleX effect applied.
+    * Indicates the width of the PriDisplay object, in pixels, after the scaleX effect applied.
     *
     * If you set a value for this property, the scaleX will change to render the object with the desired value.
     *
@@ -51,7 +51,7 @@ class PriDisplay extends PriEventDispatcher {
     public var height(get, set):Float;
 
     /**
-    * Indicates the real height of the PriDisplay object, in pixels, before the scaleY effect applied.
+    * Indicates the height of the PriDisplay object, in pixels, after the scaleY effect applied.
     *
     * If you set a value for this property, the scaleY will change to render the object with the desired value.
     *
@@ -326,13 +326,13 @@ class PriDisplay extends PriEventDispatcher {
         };
     }
 
-    private function get_widthScaled():Float return this.width/this.dh.scaleX;
+    private function get_widthScaled():Float return this.width*this.dh.scaleX;
     private function set_widthScaled(value:Float):Float {
         this.scaleX = value / this.width;
         return value;
     }
 
-    private function get_heightScaled():Float return this.height/this.dh.scaleY;
+    private function get_heightScaled():Float return this.height*this.dh.scaleY;
     private function set_heightScaled(value:Float):Float {
         this.scaleY = value / this.height;
         return value;
