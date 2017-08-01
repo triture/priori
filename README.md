@@ -21,15 +21,16 @@ haxelib run priori build
 ```
 Optional Parameters:  
 - -f : priori.json file name  
-- -p : source path  
+- -p : source path
 - -D : Any -D flag will be passed to the haxe compiler  
+- -nohash : do not insert git hash on priori.js reference
 
 ## Documentation
 Check the Priori api documentation ***under construction*** on (http://priori.triture.com/dox).
 
 You can find some micro tutorials at Priori Blog: (http://priori.triture.com/blog)
 
-## Instalation  
+## Installation
 Requires [Haxe](http://haxe.org) 3.2.1+.
 
 * **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`  
@@ -51,7 +52,7 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - ~~Shadow property~~ **Done**
 - Background Images
 - ~~Better Border Support (Current version is buggy)~~ **Done**
-- Full compatibilty for Android and IOs devices
+- Full compatibility for Android and IOs devices
 - Youtube, Vimeo and other video streaming (?) support
 - ~~Better performance for PriDataGrid~~ **Done**
 - ~~Fix scroller on mobile devices~~ **Done**
@@ -64,6 +65,17 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.8.0 - 08/01/2017
+- New Feature : iFrame... i mean... PriFrame!
+- New Feature : Textfield types (email, password, numbers and text)
+- New Feature : Color values is now PriColor, an Abstract Int
+- New Feature : Appending Git Hash to priori.js reference on index.html
+- New Feature : -D flags can be defined on priori.json file! use d_flags[] value.
+- Improvements : Multiline property for Form labels
+- Bugfix : Form Text Area alignment
+- Bugfix : Wrong position calculations for scrolled objects
+- Other fixes
+
 ### 0.7.3 - 06/08/2017
 - Improvements : 'text decoration'
 - Bugfix : better hasFocus() code
