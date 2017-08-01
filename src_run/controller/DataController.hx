@@ -38,6 +38,7 @@ class DataController {
         result.dependencies = result.dependencies.concat(Validation.parseStringArray(json.dependencies));
         result.src = result.src.concat(Validation.parseStringArray(json.src));
         result.dFlags = result.dFlags.concat(Validation.parseStringArray(json.dFlags));
+        result.dFlags = result.dFlags.concat(Validation.parseStringArray(json.d_flags));
 
         return result;
     }
