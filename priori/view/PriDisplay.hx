@@ -357,6 +357,8 @@ class PriDisplay extends PriEventDispatcher {
             result = this.dh.jselement.getBoundingClientRect().width;
 
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().w;
+
+            if (this.dh.scaleX != 0 && this.dh.scaleX != 1) result = result/this.dh.scaleX;
         }
 
         return result;
@@ -379,29 +381,33 @@ class PriDisplay extends PriEventDispatcher {
 
         if (result == null) {
             result = this.dh.jselement.getBoundingClientRect().height;
+
             if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().h;
+
+            if (this.dh.scaleY != 0 && this.dh.scaleY != 1) result = result/this.dh.scaleY;
         }
+
         return result;
     }
 
 
     private function set_maxX(value:Float) {
-        this.x = value - this.width;
+        this.x = value - this.widthScaled;
         return value;
     }
 
     private function set_maxY(value:Float) {
-        this.y = value - this.height;
+        this.y = value - this.heightScaled;
         return value;
     }
 
     private function set_centerX(value:Float) {
-        this.x = value - this.width/2;
+        this.x = value - this.widthScaled/2;
         return value;
     }
 
     private function set_centerY(value:Float) {
-        this.y = value - this.height/2;
+        this.y = value - this.heightScaled/2;
         return value;
     }
 
@@ -420,10 +426,10 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_x():Float return this.dh.x;
     private function get_y():Float return this.dh.y;
-    private function get_maxX():Float return this.x + this.width;
-    private function get_maxY():Float return this.y + this.height;
-    private function get_centerX():Float return this.x + this.width/2;
-    private function get_centerY():Float return this.y + this.height/2;
+    private function get_maxX():Float return this.x + this.widthScaled;
+    private function get_maxY():Float return this.y + this.heightScaled;
+    private function get_centerX():Float return this.x + this.widthScaled/2;
+    private function get_centerY():Float return this.y + this.heightScaled/2;
 
     private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
