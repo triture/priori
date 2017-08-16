@@ -591,6 +591,10 @@ class PriDisplay extends PriEventDispatcher {
         jsElement.className = "priori_stylebase";
         jsElement.style.cssText = 'left:0px;top:0px;width:${this.dh.width}px;height:${this.dh.height}px;overflow:hidden;';
 
+        #if prioridebug
+        jsElement.setAttribute("priori-class-name", Type.getClassName(Type.getClass(this)));
+        #end
+
         this.dh.jselement = jsElement;
         this.dh.element = new JQuery(jsElement);
 

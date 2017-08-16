@@ -25,6 +25,9 @@ Optional Parameters:
 - -D : Any -D flag will be passed to the haxe compiler  
 - -nohash : do not insert git hash on priori.js reference
 
+**Special Flags**
+- -D prioridebug : expose priori objects class Name at DOM tree. Look for "priori-class" attribute.
+
 ## Documentation
 Check the Priori api documentation ***under construction*** on (http://priori.triture.com/dox).
 
