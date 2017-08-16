@@ -12,6 +12,8 @@ class PriEventDispatcher {
 
     private var _isKilled:Bool = false;
 
+    public var bubbleTo:PriEventDispatcher;
+
     public function new() {
 
     }
@@ -117,8 +119,12 @@ class PriEventDispatcher {
     }
 
     private function bubbleEvent(event:PriEvent):Void {
-        if (!this.isKilled() && Std.is(this, PriDisplay)) {
+        if (this.isKilled()) return;
+
+        if (this.bubbleTo != null) this.bubbleTo.dispatchEvent(event);
+        else if (Std.is(this, PriDisplay)) {
             var display:PriDisplay = cast this;
+
             if (display.parent != null) display.parent.dispatchEvent(event);
         }
     }
@@ -138,6 +144,8 @@ class PriEventDispatcher {
     }
 
     public function kill():Void {
+        this.bubbleTo = null;
+
         this.___ed_elist = [];
         this.___ed_llist = [];
 

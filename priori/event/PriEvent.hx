@@ -54,11 +54,10 @@ class PriEvent {
     }
 
     public function clone():PriEvent {
-        var clone:PriEvent = new PriEvent(this.type, this.propagate, this.bubble);
+        var clone:PriEvent = new PriEvent(this.type, this.propagate, this.bubble, this.data);
 
         clone.target = this.target;
         clone.currentTarget = this.currentTarget;
-        clone.data = this.data;
 
         return clone;
     }
