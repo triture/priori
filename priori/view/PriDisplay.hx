@@ -1,28 +1,24 @@
 package priori.view;
 
-import priori.geom.PriColor;
 import priori.app.PriApp;
-import priori.system.PriDevice;
-import priori.app.PriApp;
-import priori.system.PriDeviceBrowser;
-import helper.display.DisplayHelper;
-import priori.geom.PriGeomPoint;
-import helper.browser.DomHelper;
-import js.html.Window;
-import js.Browser;
-import js.html.DOMRect;
-import priori.geom.PriGeomBox;
-import helper.browser.BrowserEventEngine;
-import js.html.Element;
-import js.jquery.JQuery;
 import priori.style.border.PriBorderStyle;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.filter.PriFilterStyle;
+import priori.view.container.PriContainer;
 import priori.event.PriEvent;
 import priori.event.PriTapEvent;
-import priori.view.container.PriContainer;
 import priori.event.PriEventDispatcher;
-import priori.app.PriApp;
+import priori.geom.PriColor;
+import priori.geom.PriGeomPoint;
+import priori.geom.PriGeomBox;
+import helper.display.DisplayHelper;
+import helper.browser.DomHelper;
+import helper.browser.BrowserEventEngine;
+import js.html.Element;
+import js.html.Window;
+import js.html.DOMRect;
+import js.Browser;
+import js.jquery.JQuery;
 
 class PriDisplay extends PriEventDispatcher {
 
@@ -434,100 +430,81 @@ class PriDisplay extends PriEventDispatcher {
     private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
         this.dh.scaleX = value == null ? 1 : value;
-        this.__applyMatrixTransformation();
+
+        DomHelper.apply2dTransformation(
+            this.dh.jselement,
+            this.dh.scaleX,
+            this.dh.scaleY,
+            this.dh.rotation,
+            this.dh.anchorX,
+            this.dh.anchorY
+        );
+
         return value;
     }
 
     private function get_scaleY():Float return this.dh.scaleY;
     private function set_scaleY(value:Float):Float {
         this.dh.scaleY = value == null ? 1 : value;
-        this.__applyMatrixTransformation();
+
+        DomHelper.apply2dTransformation(
+            this.dh.jselement,
+            this.dh.scaleX,
+            this.dh.scaleY,
+            this.dh.rotation,
+            this.dh.anchorX,
+            this.dh.anchorY
+        );
+
         return value;
     }
 
     private function get_anchorX():Float return this.dh.anchorX;
     private function set_anchorX(value:Float):Float {
         this.dh.anchorX = value == null ? 0 : value;
-        this.__applyMatrixTransformation();
+
+        DomHelper.apply2dTransformation(
+            this.dh.jselement,
+            this.dh.scaleX,
+            this.dh.scaleY,
+            this.dh.rotation,
+            this.dh.anchorX,
+            this.dh.anchorY
+        );
+
         return value;
     }
 
     private function get_anchorY():Float return this.dh.anchorY;
     private function set_anchorY(value:Float):Float {
         this.dh.anchorY = value == null ? 0 : value;
-        this.__applyMatrixTransformation();
+
+        DomHelper.apply2dTransformation(
+            this.dh.jselement,
+            this.dh.scaleX,
+            this.dh.scaleY,
+            this.dh.rotation,
+            this.dh.anchorX,
+            this.dh.anchorY
+        );
+
         return value;
     }
 
     private function get_rotation():Float return this.dh.rotation;
     private function set_rotation(value:Float):Float {
         this.dh.rotation = value == null ? 0 : value;
-        this.__applyMatrixTransformation();
+
+        DomHelper.apply2dTransformation(
+            this.dh.jselement,
+            this.dh.scaleX,
+            this.dh.scaleY,
+            this.dh.rotation,
+            this.dh.anchorX,
+            this.dh.anchorY
+        );
+
         return value;
-    }
-
-    private function __applyMatrixTransformation():Void {
-
-        /* matrix reference */
-        // SCALE
-        // x 0 0
-        // 0 y 0
-        // 0 0 1
-
-        // ROTATE
-        // cosX -sinX   0
-        // sinX  cosX   0
-        //  0     0     1
-
-        var rot:Float = this.dh.rotation;
-        var sx:Float = this.dh.scaleX;
-        var sy:Float = this.dh.scaleY;
-
-        var anchorX:Float = this.dh.anchorX*100;
-        var anchorY:Float = this.dh.anchorY*100;
-
-        var valOrigin:String = '';
-        var valMatrix:String = '';
-
-        if ((sx != 1 || sy != 1) && rot == 0) {
-
-            valOrigin = '$anchorX% $anchorY%';
-            valMatrix = 'matrix($sx, 0, 0, $sy, 0, 0)';
-
-        } else if (sx != 1 || sy != 1 || rot != 0) {
-
-            var angle:Float = rot * (Math.PI/180);
-            var aSin:Float = Math.sin(angle);
-            var aCos:Float = Math.cos(angle);
-
-            var m1:Array<Array<Float>> = [[aCos, -aSin, 0], [aSin, aCos, 0], [0, 0, 1]];
-            var m2:Array<Array<Float>> = [[sx, 0, 0], [0, sy, 0], [0, 0, 1]];
-
-            var calc:Int->Int->Float = function(row:Int, col:Int):Float {
-                return (
-                    m1[row][0] * m2[0][col] +
-                    m1[row][1] * m2[1][col] +
-                    m1[row][2] * m2[2][col]
-                );
-            }
-
-//            var m3:Array<Array<Float>> = [
-//                [calc(0, 0), calc(0, 1), calc(0, 2)],
-//                [calc(1, 0), calc(1, 1), calc(1, 2)],
-//                [calc(2, 0), calc(2, 1), calc(2, 2)]
-//            ];
-
-            valOrigin = '$anchorX% $anchorY%';
-            valMatrix = 'matrix(${calc(0, 0)}, ${calc(1, 0)}, ${calc(0, 1)}, ${calc(1, 1)}, ${calc(0, 2)}, ${calc(1, 2)})';
-        }
-
-        this.setCSS("-ms-transform-origin", valOrigin);
-        this.setCSS("-webkit-transform-origin", valOrigin);
-        this.setCSS("transform-origin", valOrigin);
-
-        this.setCSS("-ms-transform", valMatrix);
-        this.setCSS("-webkit-transform", valMatrix);
-        this.setCSS("transform", valMatrix);
     }
 
     private function get_alpha():Float return this.dh.alpha;
