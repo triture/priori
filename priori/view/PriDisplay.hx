@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.geom.PriGeomBox;
 import priori.app.PriApp;
 import priori.style.border.PriBorderStyle;
 import priori.style.shadow.PriShadowStyle;
@@ -300,26 +301,18 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
-    private function getOutDOMDimensions():{w:Float, h:Float} {
-        var w:Float = 0;
-        var h:Float = 0;
-
+    private function getOutDOMDimensions():PriGeomBox {
         var clone:JQuery = this.dh.element.clone(false);
 
         var body:JQuery = new JQuery("body");
         body.append(clone);
 
-        w = clone[0].getBoundingClientRect().width;
-        h = clone[0].getBoundingClientRect().height;
+        var box:PriGeomBox = DomHelper.getBoundingClientRect(clone[0]);
 
         clone.remove();
-
         clone = null;
 
-        return {
-            w : w,
-            h : h
-        };
+        return box;
     }
 
     private function get_widthScaled():Float return this.width*this.dh.scaleX;
@@ -350,9 +343,9 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.width;
 
         if (result == null) {
-            result = this.dh.jselement.getBoundingClientRect().width;
+            result = DomHelper.getBoundingClientRect(this.dh.jselement).width;
 
-            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().w;
+            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().width;
 
             if (this.dh.scaleX != 0 && this.dh.scaleX != 1) result = result/this.dh.scaleX;
         }
@@ -376,9 +369,9 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.height;
 
         if (result == null) {
-            result = this.dh.jselement.getBoundingClientRect().height;
+            result = result = DomHelper.getBoundingClientRect(this.dh.jselement).height;
 
-            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().h;
+            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().height;
 
             if (this.dh.scaleY != 0 && this.dh.scaleY != 1) result = result/this.dh.scaleY;
         }
@@ -695,8 +688,10 @@ class PriDisplay extends PriEventDispatcher {
         var result:PriGeomBox = new PriGeomBox();
 
         if (this.hasApp()) {
-            if (this.dh.jselement.getBoundingClientRect != null) {
-                var box:DOMRect = this.dh.jselement.getBoundingClientRect();
+
+            var box:PriGeomBox = DomHelper.getBoundingClientRect(this.dh.jselement);
+
+            if (box.width != 0 || box.height != 0 || box.x != 0 || box.y != 0) {
 
                 var body:Element = Browser.document.body;
                 var docElem:Element = Browser.document.documentElement;
@@ -718,8 +713,8 @@ class PriDisplay extends PriEventDispatcher {
                     docElem.clientLeft != null ? docElem.clientLeft :
                     body.clientLeft != null ? body.clientLeft : 0;
 
-                var top:Int  = Std.int(box.top +  scrollTop - clientTop);
-                var left:Int = Std.int(box.left + scrollLeft - clientLeft);
+                var top:Int  = Std.int(box.y +  scrollTop - clientTop);
+                var left:Int = Std.int(box.x + scrollLeft - clientLeft);
 
                 result.x = Math.fround(left);
                 result.y = Math.fround(top);

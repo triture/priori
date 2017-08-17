@@ -1,5 +1,7 @@
 package helper.browser;
 
+import js.html.DOMRect;
+import priori.geom.PriGeomBox;
 import priori.system.PriDeviceBrowser;
 import priori.system.PriDevice;
 import priori.system.PriDeviceBrowser;
@@ -38,6 +40,16 @@ class DomHelper {
             }
 
         return false;
+    }
+
+    public static function getBoundingClientRect(el:Element):PriGeomBox {
+        try {
+            var domRect:DOMRect = el.getBoundingClientRect();
+            return new PriGeomBox(domRect.x, domRect.y, domRect.width, domRect.height);
+
+        } catch(e:Dynamic) {
+            return new PriGeomBox();
+        }
     }
 
     public static function apply2dTransformation(el:Element, sx:Float, sy:Float, rot:Float, anchorX:Float, anchorY:Float):Void {
