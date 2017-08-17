@@ -1,5 +1,6 @@
 package helper.browser;
 
+import priori.system.PriDeviceBrowser;
 import priori.system.PriDevice;
 import priori.system.PriDeviceBrowser;
 import js.html.svg.Element;
@@ -111,7 +112,7 @@ class DomHelper {
 
         var browser:PriDeviceBrowser = PriDevice.browser();
 
-        if (browser == PriDeviceBrowser.WEBKIT) {
+        if (browser == PriDeviceBrowser.CHROME || browser == PriDeviceBrowser.WEBKIT) {
             el.style.setProperty("-webkit-transform-origin", valOrigin);
             el.style.setProperty("-webkit-transform", valMatrix);
         } else if (browser == PriDeviceBrowser.MSIE) {

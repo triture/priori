@@ -21,6 +21,8 @@ class PriDevice {
                 _detectedBrowser = PriDeviceBrowser.SAFARI;
             } else if (userAgent.toLowerCase().indexOf("opera") > -1) {
                 _detectedBrowser = PriDeviceBrowser.OPERA;
+            } else if (userAgent.toLowerCase().indexOf("webkit") > -1) {
+                _detectedBrowser = PriDeviceBrowser.WEBKIT;
             } else if (userAgent.toLowerCase().indexOf("firefox") > -1) {
                 _detectedBrowser = PriDeviceBrowser.MOZILLA;
             } else if (userAgent.toLowerCase().indexOf("msie") > -1) {
