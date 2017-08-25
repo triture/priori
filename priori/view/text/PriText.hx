@@ -108,6 +108,7 @@ class PriText extends PriDisplay {
     private function get_html():String return this.dh.jselement.innerHTML;
     private function set_html(value:String):String {
         this.dh.jselement.innerHTML = value;
+        this.__text = this.dh.jselement.innerText;
         return value;
     }
 
