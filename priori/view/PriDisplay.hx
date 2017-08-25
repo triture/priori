@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.geom.PriGeomPoint;
 import priori.geom.PriGeomBox;
 import priori.app.PriApp;
 import priori.style.border.PriBorderStyle;
@@ -689,51 +690,10 @@ class PriDisplay extends PriEventDispatcher {
 
         if (this.hasApp()) {
 
-            var box:PriGeomBox = DomHelper.getBoundingClientRect(this.dh.jselement);
+            var points:PriGeomPoint = this.localToGlobal(new PriGeomPoint(this.x, this.y));
 
-            if (box.width != 0 || box.height != 0 || box.x != 0 || box.y != 0) {
-
-                var body:Element = Browser.document.body;
-                var docElem:Element = Browser.document.documentElement;
-                var window:Window = Browser.window;
-
-                var scrollTop:Int =
-                    window.pageYOffset != null ? window.pageYOffset :
-                    docElem.scrollTop != null ? docElem.scrollTop : body.scrollTop;
-
-                var scrollLeft:Int =
-                    window.pageXOffset != null ? window.pageXOffset :
-                    docElem.scrollLeft != null ? docElem.scrollLeft : body.scrollLeft;
-
-                var clientTop:Int =
-                    docElem.clientTop != null ? docElem.clientTop :
-                    body.clientTop != null ? body.clientTop : 0;
-
-                var clientLeft:Int =
-                    docElem.clientLeft != null ? docElem.clientLeft :
-                    body.clientLeft != null ? body.clientLeft : 0;
-
-                var top:Int  = Std.int(box.y +  scrollTop - clientTop);
-                var left:Int = Std.int(box.x + scrollLeft - clientLeft);
-
-                result.x = Math.fround(left);
-                result.y = Math.fround(top);
-            } else {
-                var el:Element = this.dh.jselement;
-
-                var top:Int = 0;
-                var left:Int = 0;
-
-                while (el != null) {
-                    top += el.offsetTop;
-                    left += el.offsetLeft;
-
-                    el = el.offsetParent;
-                }
-
-                result.x = top;
-                result.y = top;
-            }
+            result.x = points.x;
+            result.y = points.y;
         }
 
         result.width = this.width;
