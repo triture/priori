@@ -233,9 +233,22 @@ class PriFormSelect extends PriFormElementBase {
     }
 
     private function _onSelectChange(e:Event):Void {
-        this._selectedData = this.selected;
+        var oldValue:Dynamic = this._selectedData;
+        var newValue:Dynamic = this.selected;
 
-        this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+        this._selectedData = newValue;
+
+        this.dispatchEvent(
+            new PriEvent(
+                PriEvent.CHANGE,
+                false,
+                false,
+                {
+                    oldValue:oldValue,
+                    newValue:newValue
+                }
+            )
+        );
     }
 
     override public function kill():Void {
