@@ -222,10 +222,9 @@ class PriDisplay extends PriEventDispatcher {
         var shadowString:String = "";
         if (value != null && value.length > 0) shadowString = value.join(",");
 
-        this.setCSS("-webkit-box-shadow", shadowString);
-        this.setCSS("-moz-box-shadow", shadowString);
-        this.setCSS("-o-box-shadow", shadowString);
-        this.setCSS("box-shadow", shadowString);
+        this.dh.jselement.style.boxShadow = shadowString;
+        this.dh.jselement.style.setProperty("-moz-box-shadow", shadowString);
+        this.dh.jselement.style.setProperty("-webkit-box-shadow", shadowString);
 
         return value;
     }
@@ -236,10 +235,11 @@ class PriDisplay extends PriEventDispatcher {
         var filterString:String = "";
         if (value != null) filterString = value.toString();
 
-        this.setCSS("-webkit-filter", filterString);
-        this.setCSS("-ms-filter", filterString);
-        this.setCSS("-o-filter", filterString);
-        this.setCSS("filter", filterString);
+        this.dh.jselement.style.filter = filterString;
+        this.dh.jselement.style.setProperty("-moz-filter", filterString);
+        this.dh.jselement.style.setProperty("-webkit-filter", filterString);
+        this.dh.jselement.style.setProperty("-o-filter", filterString);
+        this.dh.jselement.style.setProperty("-ms-filter", filterString);
 
         return value;
     }
