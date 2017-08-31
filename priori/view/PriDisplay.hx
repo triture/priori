@@ -447,12 +447,16 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function hasApp():Bool {
-        var app:PriApp = PriApp.g();
-        var tree:Array<PriDisplay> = this.getTreeList();
+        try {
+            var app:PriApp = PriApp.g();
+            var tree:Array<PriDisplay> = this.getTreeList();
 
-        if (tree[tree.length - 1] == app) return true;
+            if (tree[tree.length - 1] == app) return true;
 
-        return false;
+            return false;
+        } catch (e:Dynamic) {
+            return false;
+        }
     }
 
     private function get_parent():PriContainer return this._parent;
@@ -776,7 +780,16 @@ class PriDisplay extends PriEventDispatcher {
     public function hasFocus():Bool {
         try {
             var curEl:Element = Browser.document.activeElement;
-            if (curEl != null && PriApp.g().hasFocus() && DomHelper.hasChild(this.dh.jselement, curEl)) return true;
+
+            var hasAppFocus:Bool = false;
+
+            try {
+                hasAppFocus = PriApp.g().hasFocus();
+            } catch (e:Dynamic) {
+
+            }
+
+            if (curEl != null && hasAppFocus && DomHelper.hasChild(this.dh.jselement, curEl)) return true;
         } catch (e:Dynamic) {}
 
         return false;
