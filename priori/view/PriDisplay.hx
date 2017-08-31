@@ -175,22 +175,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_corners(value:Array<Int>):Array<Int> {
-        this.corners = value;
+        this.corners = value.copy();
 
-        if (value == null) {
+        if (value == null || value.length == 0) {
             this.dh.jselement.style.borderRadius = "";
         } else {
-
-            var tempArray:Array<Int> = value.copy();
-
-            var n:Int = tempArray.length;
-
-            if (n == 0) {
-                this.dh.jselement.style.borderRadius = "";
-            } else {
-                if (n > 4) tempArray = tempArray.splice(0, 4);
-                this.dh.jselement.style.borderRadius = tempArray.join("px ") + "px";
-            }
+                if (value.length > 4) this.dh.jselement.style.borderRadius = value.copy().splice(0, 4).join("px ") + "px";
+            this.dh.jselement.style.borderRadius = value.join("px ") + "px";
         }
 
         this.updateBorderDisplay();
