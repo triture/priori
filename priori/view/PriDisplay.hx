@@ -424,80 +424,35 @@ class PriDisplay extends PriEventDispatcher {
     private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
         this.dh.scaleX = value == null ? 1 : value;
-
-        DomHelper.apply2dTransformation(
-            this.dh.jselement,
-            this.dh.scaleX,
-            this.dh.scaleY,
-            this.dh.rotation,
-            this.dh.anchorX,
-            this.dh.anchorY
-        );
-
+        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
     private function get_scaleY():Float return this.dh.scaleY;
     private function set_scaleY(value:Float):Float {
         this.dh.scaleY = value == null ? 1 : value;
-
-        DomHelper.apply2dTransformation(
-            this.dh.jselement,
-            this.dh.scaleX,
-            this.dh.scaleY,
-            this.dh.rotation,
-            this.dh.anchorX,
-            this.dh.anchorY
-        );
-
+        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
     private function get_anchorX():Float return this.dh.anchorX;
     private function set_anchorX(value:Float):Float {
         this.dh.anchorX = value == null ? 0 : value;
-
-        DomHelper.apply2dTransformation(
-            this.dh.jselement,
-            this.dh.scaleX,
-            this.dh.scaleY,
-            this.dh.rotation,
-            this.dh.anchorX,
-            this.dh.anchorY
-        );
-
+        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
     private function get_anchorY():Float return this.dh.anchorY;
     private function set_anchorY(value:Float):Float {
         this.dh.anchorY = value == null ? 0 : value;
-
-        DomHelper.apply2dTransformation(
-            this.dh.jselement,
-            this.dh.scaleX,
-            this.dh.scaleY,
-            this.dh.rotation,
-            this.dh.anchorX,
-            this.dh.anchorY
-        );
-
+        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
     private function get_rotation():Float return this.dh.rotation;
     private function set_rotation(value:Float):Float {
         this.dh.rotation = value == null ? 0 : value;
-
-        DomHelper.apply2dTransformation(
-            this.dh.jselement,
-            this.dh.scaleX,
-            this.dh.scaleY,
-            this.dh.rotation,
-            this.dh.anchorX,
-            this.dh.anchorY
-        );
-
+        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
