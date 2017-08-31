@@ -171,7 +171,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function __onAdded(e:PriEvent):Void {
         this.updateDepth();
-        this.updateBorderDisplay();
+        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
     }
 
     private function set_corners(value:Array<Int>):Array<Int> {
@@ -184,7 +184,7 @@ class PriDisplay extends PriEventDispatcher {
             this.dh.jselement.style.borderRadius = value.join("px ") + "px";
         }
 
-        this.updateBorderDisplay();
+        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
 
         return value;
     }
@@ -198,11 +198,8 @@ class PriDisplay extends PriEventDispatcher {
     private function set_border(value:PriBorderStyle):PriBorderStyle {
         this.border = value;
 
-        if (value == null) {
-            removeBorder();
-        } else {
-            applyBorder();
-        }
+        if (value == null) removeBorder();
+        else applyBorder();
 
         return value;
     }
@@ -247,14 +244,7 @@ class PriDisplay extends PriEventDispatcher {
 
         this.dh.elementBorder.style.border = this.border.toString();
 
-        this.updateBorderDisplay();
-    }
-
-    private function updateBorderDisplay():Void {
-        if (this.dh.elementBorder != null) {
-            this.dh.elementBorder.style.borderRadius = this.dh.jselement.style.borderRadius;
-            this.dh.elementBorder.style.zIndex = this.dh.jselement.style.zIndex;
-        }
+        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
     }
 
     private function removeBorder():Void {
@@ -464,13 +454,10 @@ class PriDisplay extends PriEventDispatcher {
         return false;
     }
 
-    private function get_parent():PriContainer {
-        return this._parent;
-    }
+    private function get_parent():PriContainer return this._parent;
 
-    public function getPrid():String {
-        return this.dh.priId;
-    }
+    public function getPrid():String return this.dh.priId;
+
 
     private function updateDepth():Void {
         this.dh.depth = this._parent.dh.depth - 1;

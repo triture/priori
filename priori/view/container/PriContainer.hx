@@ -127,7 +127,7 @@ class PriContainer extends PriDisplay {
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
 
-        this.updateBorderDisplay();
+        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
 
         return value;
     }
@@ -138,7 +138,7 @@ class PriContainer extends PriDisplay {
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
 
-        this.updateBorderDisplay();
+        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
 
         return value;
     }

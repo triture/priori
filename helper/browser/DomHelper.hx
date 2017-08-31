@@ -1,5 +1,6 @@
 package helper.browser;
 
+import helper.display.DisplayHelper;
 import js.html.DOMRect;
 import priori.geom.PriGeomBox;
 import priori.system.PriDeviceBrowser;
@@ -49,6 +50,13 @@ class DomHelper {
 
         } catch(e:Dynamic) {
             return new PriGeomBox();
+        }
+    }
+
+    public static function borderUpdate(borderElement:Element, displayHelper:DisplayHelper):Void {
+        if (borderElement != null && displayHelper.jselement != null) {
+            borderElement.style.borderRadius = displayHelper.jselement.style.borderRadius;
+            borderElement.style.zIndex = displayHelper.jselement.style.zIndex;
         }
     }
 
