@@ -11,14 +11,9 @@ import priori.event.PriEvent;
 import priori.event.PriTapEvent;
 import priori.event.PriEventDispatcher;
 import priori.geom.PriColor;
-import priori.geom.PriGeomPoint;
-import priori.geom.PriGeomBox;
 import helper.display.DisplayHelper;
 import helper.browser.DomHelper;
-import helper.browser.BrowserEventEngine;
 import js.html.Element;
-import js.html.Window;
-import js.html.DOMRect;
 import js.Browser;
 import js.jquery.JQuery;
 
@@ -157,10 +152,8 @@ class PriDisplay extends PriEventDispatcher {
         super();
 
         // initialize display
-        this.dh.priId = this.getRandomId();
         this.createElement();
 
-        this.dh.eventHelper = new BrowserEventEngine();
         this.dh.eventHelper.jqel = this.dh.element;
         this.dh.eventHelper.jsel = this.dh.jselement;
         this.dh.eventHelper.display = this;
@@ -191,8 +184,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_tooltip(value:String):String {
+        if (this.tooltip == value) return value;
+
         this.tooltip = value;
-        this.getElement().attr("title", value == "" ? null : value);
+
+        if (value == "" || value == null) this.dh.jselement.removeAttribute("title");
+        else this.dh.jselement.setAttribute("title", value);
+
         return value;
     }
 
@@ -237,7 +235,6 @@ class PriDisplay extends PriEventDispatcher {
         if (this.dh.elementBorder == null) {
 
             this.dh.elementBorder = js.Browser.document.createElement("div");
-            this.dh.elementBorder.id = this.dh.priId;
             this.dh.elementBorder.className = "priori_stylebase";
             this.dh.elementBorder.style.cssText = 'box-sizing:border-box !important;position:absolute;left:0px;right:0px;bottom:0px;top:0px;pointer-events:none;';
             this.dh.jselement.appendChild(this.dh.elementBorder);
@@ -441,8 +438,8 @@ class PriDisplay extends PriEventDispatcher {
     private function get_alpha():Float return this.dh.alpha;
     private function set_alpha(value:Float) {
         this.dh.alpha = value;
-        if (this.dh.alpha == 1) this.setCSS("opacity", "");
-        else this.setCSS("opacity", Std.string(value));
+        if (this.dh.alpha == 1) this.dh.jselement.style.opacity = "";
+        else this.dh.jselement.style.opacity = Std.string(value);
         return value;
     }
 
@@ -460,9 +457,6 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_parent():PriContainer return this._parent;
-
-    public function getPrid():String return this.dh.priId;
-
 
     private function updateDepth():Void {
         this.dh.depth = this._parent.dh.depth - 1;
@@ -519,7 +513,6 @@ class PriDisplay extends PriEventDispatcher {
     private function createElement():Void {
         
         var jsElement:Element = js.Browser.document.createElement("div");
-        jsElement.id = this.dh.priId;
         jsElement.className = "priori_stylebase";
         jsElement.style.cssText = 'left:0px;top:0px;width:${this.dh.width}px;height:${this.dh.height}px;overflow:hidden;';
 
@@ -549,17 +542,13 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function get_visible():Bool {
-        if (this.getCSS("visibility") == "hidden") return false;
+        if (this.dh.jselement.style.visibility == "hidden") return false;
         return true;
     }
 
     private function set_visible(value:Bool) {
-        if (value == true) {
-            this.setCSS("visibility", "");
-        } else {
-            this.setCSS("visibility", "hidden");
-        }
-
+        if (value == true) this.dh.jselement.style.visibility = "";
+        else this.dh.jselement.style.visibility = "hidden";
         return value;
     }
 
@@ -577,16 +566,10 @@ class PriDisplay extends PriEventDispatcher {
     }
 
 
-    private function get_mouseEnabled():Bool {
-        return (this.getElement().css("pointer-events") != "none");
-    }
-
+    private function get_mouseEnabled():Bool return this.dh.jselement.style.getPropertyValue("pointer-events") != "none";
     private function set_mouseEnabled(value:Bool):Bool {
-        if (!value) {
-            this.getElement().css("pointer-events", "none");
-        } else {
-            this.getElement().css("pointer-events", "");
-        }
+        if (!value) this.dh.jselement.style.setProperty("pointer-events", "none");
+        else this.dh.jselement.style.removeProperty("pointer-events");
 
         return value;
     }
@@ -667,11 +650,9 @@ class PriDisplay extends PriEventDispatcher {
 
         list.reverse();
 
-        for (i in 0 ... list.length) {
-            var el:PriDisplay = list[i];
-
-            result.x -= el.x + el.getJSElement().scrollLeft;
-            result.y -= el.y + el.getJSElement().scrollTop;
+        for (display in list) {
+            result.x -= display.x + display.getJSElement().scrollLeft;
+            result.y -= display.y + display.getJSElement().scrollTop;
         }
 
         return result;
@@ -683,11 +664,9 @@ class PriDisplay extends PriEventDispatcher {
 
         list.shift();
 
-        for (i in 0 ... list.length) {
-            var el:PriDisplay = list[i];
-
-            result.x += el.x - el.getJSElement().scrollLeft;
-            result.y += el.y - el.getJSElement().scrollTop;
+        for (display in list) {
+            result.x += display.x - display.getJSElement().scrollLeft;
+            result.y += display.y - display.getJSElement().scrollTop;
         }
 
         return result;
@@ -711,10 +690,11 @@ class PriDisplay extends PriEventDispatcher {
             }
         }
 
-        this.dh.dragdata = {};
-        this.dh.dragdata.originalPointMouse = PriApp.g().mousePoint;
-        this.dh.dragdata.originalPosition = new PriGeomPoint(this.x, this.y);
-        this.dh.dragdata.lastPosition = new PriGeomPoint(this.x, this.y);
+        this.dh.dragdata = {
+            originalPointMouse : PriApp.g().mousePoint,
+            originalPosition : new PriGeomPoint(this.x, this.y),
+            lastPosition : new PriGeomPoint(this.x, this.y)
+        };
 
         var runFunction = function():Void {
             var curPoint:PriGeomPoint = PriApp.g().mousePoint;
