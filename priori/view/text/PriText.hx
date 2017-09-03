@@ -1,19 +1,16 @@
 package priori.view.text;
 
+import helper.display.DisplayTextHelper;
 import helper.browser.StyleHelper;
 import priori.system.PriDeviceBrowser;
 import priori.system.PriDevice;
-import priori.event.PriFocusEvent;
-import priori.event.PriKeyboardEvent;
-import priori.system.PriKey;
 import priori.event.PriEvent;
 import priori.style.shadow.PriShadowStyle;
 import priori.style.font.PriFontStyle;
-import js.jquery.JQuery;
 
 class PriText extends PriDisplay {
 
-    inline private static var INITIAL_FONT_SIZE:Int = 14;
+//    inline private static var INITIAL_FONT_SIZE:Int = 14;
 
     /**
     * Set or retrieve the HTML representation of the text field contents.
@@ -30,7 +27,6 @@ class PriText extends PriDisplay {
     * `default value : an empty string`
     **/
     public var text(get, set):String;
-    private var __text:String = "";
 
     /**
     * Changes the font size of the text.
@@ -38,7 +34,6 @@ class PriText extends PriDisplay {
     * `default value : 14`
     **/
     public var fontSize(get, set):Float;
-    private var __fontSize:Float = INITIAL_FONT_SIZE;
 
     /**
     * Controls automatic sizing of text fields.
@@ -48,7 +43,6 @@ class PriText extends PriDisplay {
     * `default value : true`
     **/
     public var autoSize(get, set):Bool;
-    private var __autoSize:Bool = true;
 
     /**
     * Indicates whether field is a multiline text field.
@@ -57,7 +51,6 @@ class PriText extends PriDisplay {
     * `default value : false`
     **/
     public var multiLine(get, set):Bool;
-    private var __multiLine:Bool = false;
 
     /**
     * A Boolean value that indicates whether the text field is selectable.
@@ -66,7 +59,6 @@ class PriText extends PriDisplay {
     * `default value : false`
     **/
     public var selectable(get, set):Bool;
-    private var __selectable:Bool = false;
 
     /**
     * Render an ellipsis ("...") to represent clipped text.
@@ -74,7 +66,6 @@ class PriText extends PriDisplay {
     * `default value : true`
     **/
     public var ellipsis(get, set):Bool;
-    private var __ellipsis:Bool = true;
 
     /**
     * A Boolean value that indicates whether the text field is editable.
@@ -84,23 +75,22 @@ class PriText extends PriDisplay {
     * `default value : false`
     **/
     public var editable(get, set):Bool;
-    private var __editable:Bool = false;
+
+    private var dth:DisplayTextHelper = new DisplayTextHelper();
 
     public function new() {
         super();
-
-        this.__text = "";
 
         this.dh.height = null;
         this.dh.width = null;
     }
 
     public function get_text():String {
-        if (this.__editable) this.__text = this.dh.jselement.innerText;
-        return this.__text;
+        if (this.dth.editable) this.dth.text = this.dh.jselement.innerText;
+        return this.dth.text;
     }
     private function set_text(value:String):String {
-        this.__text = value;
+        this.dth.text = value;
         this.dh.jselement.innerText = value;
         return value;
     }
@@ -108,7 +98,7 @@ class PriText extends PriDisplay {
     private function get_html():String return this.dh.jselement.innerHTML;
     private function set_html(value:String):String {
         this.dh.jselement.innerHTML = value;
-        this.__text = this.dh.jselement.innerText;
+        this.dth.text = this.dh.jselement.innerText;
         return value;
     }
 
@@ -122,14 +112,14 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    private function get_fontSize():Float return this.__fontSize;
+    private function get_fontSize():Float return this.dth.fontSize;
     private function set_fontSize(value:Float):Float {
-        if (this.__fontSize != value) {
+        if (this.dth.fontSize != value) {
             if (value == null) {
-                this.__fontSize = INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+                this.dth.fontSize = DisplayTextHelper.INITIAL_FONT_SIZE;
+                this.dh.jselement.style.fontSize = "${DisplayTextHelper.INITIAL_FONT_SIZE}px";
             } else {
-                this.__fontSize = value;
+                this.dth.fontSize = value;
                 this.dh.jselement.style.fontSize = Std.int(value) + "px";
             }
         }
@@ -137,34 +127,34 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    private function get_autoSize():Bool return this.__autoSize;
+    private function get_autoSize():Bool return this.dth.autoSize;
     private function set_autoSize(value:Bool):Bool {
-        if (this.__autoSize != value) {
-            this.__autoSize = value;
+        if (this.dth.autoSize != value) {
+            this.dth.autoSize = value;
 
-            if (!this.__multiLine) super.set_width(null);
-            if (this.__autoSize) super.set_height(null);
+            if (!this.dth.multiLine) super.set_width(null);
+            if (this.dth.autoSize) super.set_height(null);
         }
 
         return value;
     }
 
-    private function get_ellipsis():Bool return this.__ellipsis;
+    private function get_ellipsis():Bool return this.dth.ellipsis;
     private function set_ellipsis(value:Bool):Bool {
-        if (this.__ellipsis != value) {
-            this.__ellipsis = value;
+        if (this.dth.ellipsis != value) {
+            this.dth.ellipsis = value;
 
-            if (this.__ellipsis) this.dh.jselement.style.textOverflow = "ellipsis";
+            if (this.dth.ellipsis) this.dh.jselement.style.textOverflow = "ellipsis";
             else this.dh.jselement.style.textOverflow = "";
         }
 
         return value;
     }
 
-    private function get_multiLine():Bool return this.__multiLine;
+    private function get_multiLine():Bool return this.dth.multiLine;
     private function set_multiLine(value:Bool):Bool {
-        if (this.__multiLine != value) {
-            this.__multiLine = value;
+        if (this.dth.multiLine != value) {
+            this.dth.multiLine = value;
 
             if (value) this.dh.jselement.style.whiteSpace = "";
             else this.dh.jselement.style.whiteSpace = "nowrap";
@@ -174,10 +164,10 @@ class PriText extends PriDisplay {
     }
 
 
-    private function get_editable():Bool return this.__editable;
+    private function get_editable():Bool return this.dth.editable;
     private function set_editable(value:Bool):Bool {
-        if (this.__editable != value) {
-            this.__editable = value;
+        if (this.dth.editable != value) {
+            this.dth.editable = value;
 
             if (value) {
                 this.dh.jselement.setAttribute("contentEditable", "true");
@@ -197,7 +187,7 @@ class PriText extends PriDisplay {
                 this.dh.jselement.onpaste = null;
             }
 
-            if (this.__selectable || this.__editable) this.__setSelectableField();
+            if (this.dth.selectable || this.dth.editable) this.__setSelectableField();
             else this.__setNotSelectableField();
         }
 
@@ -208,12 +198,12 @@ class PriText extends PriDisplay {
         this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
     }
 
-    private function get_selectable():Bool return this.__selectable;
+    private function get_selectable():Bool return this.dth.selectable;
     private function set_selectable(value:Bool):Bool {
-        if (this.__selectable != value) {
-            this.__selectable = value;
+        if (this.dth.selectable != value) {
+            this.dth.selectable = value;
 
-            if (this.__selectable || this.__editable) this.__setSelectableField();
+            if (this.dth.selectable || this.dth.editable) this.__setSelectableField();
             else this.__setNotSelectableField();
         }
 
@@ -239,12 +229,12 @@ class PriText extends PriDisplay {
     }
 
     override private function set_width(value:Float):Float {
-        if (this.__autoSize == false || this.__multiLine == true) super.set_width(value);
+        if (this.dth.autoSize == false || this.dth.multiLine == true) super.set_width(value);
         return value;
     }
 
     override private function set_height(value:Float):Float {
-        if (this.__autoSize == false) super.set_height(value);
+        if (this.dth.autoSize == false) super.set_height(value);
         return value;
     }
 
@@ -259,7 +249,7 @@ class PriText extends PriDisplay {
             }
         }
 
-        this.setCSS("text-shadow", shadowString);
+        this.dh.jselement.style.textShadow = shadowString;
 
         return value;
     }
@@ -268,11 +258,10 @@ class PriText extends PriDisplay {
         super.createElement();
 
         this.dh.jselement.style.whiteSpace = "nowrap";
-        this.dh.jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+        this.dh.jselement.style.fontSize = "${DisplayTextHelper.INITIAL_FONT_SIZE}px";
         this.dh.jselement.style.width = "";
         this.dh.jselement.style.height = "";
         this.dh.jselement.style.textOverflow = "ellipsis";
-
     }
 
     override public function kill():Void {
