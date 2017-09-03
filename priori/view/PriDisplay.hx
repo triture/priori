@@ -500,7 +500,10 @@ class PriDisplay extends PriEventDispatcher {
         return this.dh.element;
     }
 
+    @:deprecated
     private function setCSS(property:String, value:String):Void this.dh.element.css(property, value);
+
+    @:deprecated
     private function getCSS(property:String):String return this.getElement().css(property);
 
     private function get_bgColor():PriColor return this.dh.bgColor;
