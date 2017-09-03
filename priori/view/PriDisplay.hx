@@ -105,7 +105,7 @@ class PriDisplay extends PriEventDispatcher {
     public var maxY(get, set):Float;
 
     public var parent(get, null):PriContainer;
-    private var _parent:PriContainer;
+
 
 
     public var visible(get, set):Bool;
@@ -170,7 +170,6 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : 1`
     **/
     public var scaleY(get, set):Float;
-
 
 
     private var dh:DisplayHelper = new DisplayHelper();
@@ -483,10 +482,10 @@ class PriDisplay extends PriEventDispatcher {
         }
     }
 
-    private function get_parent():PriContainer return this._parent;
+    private function get_parent():PriContainer return this.dh.parent;
 
     private function updateDepth():Void {
-        this.dh.depth = this._parent.dh.depth - 1;
+        this.dh.depth = this.dh.parent.dh.depth - 1;
         this.dh.jselement.style.zIndex = Std.string(this.dh.depth);
 
         if (this.dh.elementBorder != null) this.dh.elementBorder.style.zIndex = Std.string(this.dh.depth);
@@ -553,8 +552,8 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function removeFromParent():Void {
-        if (this._parent != null) {
-            this._parent.removeChild(this);
+        if (this.dh.parent != null) {
+            this.dh.parent.removeChild(this);
         }
     }
 

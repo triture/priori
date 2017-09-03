@@ -1,5 +1,6 @@
 package helper.display;
 
+import priori.view.container.PriContainer;
 import haxe.Timer;
 import priori.geom.PriGeomPoint;
 import priori.geom.PriColor;
@@ -40,6 +41,8 @@ class DisplayHelper {
     public var element:JQuery;
     public var elementBorder:Element;
     public var jselement:Element;
+
+    public var parent:PriContainer;
 
     public var eventHelper:BrowserEventEngine = new BrowserEventEngine();
 

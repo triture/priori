@@ -51,7 +51,7 @@ class PriContainer extends PriDisplay {
             child.removeFromParent();
 
             this._childList.push(child);
-            child._parent = this;
+            child.dh.parent = this;
 
 
             if (thisHasApp) {
@@ -89,7 +89,7 @@ class PriContainer extends PriDisplay {
                 this._childList.remove(child);
                 this.dh.jselement.removeChild(child.getJSElement());
 
-                child._parent = null;
+                child.dh.parent = null;
 
                 if (hasAppBefore) child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));
                 child.dispatchEvent(new PriEvent(PriEvent.REMOVED, true));
