@@ -53,7 +53,7 @@ class PriDisplay extends PriEventDispatcher {
 
     /**
     * Indicates the `x` coordinate of the PriDisplay instance relative to the local coordinates of the parent PriContainer.
-    * The object's coordinates refer to the left most point.
+    * The object's coordinates refer to the element´s left most point.
     *
     * `default value : 0`
     **/
@@ -72,9 +72,36 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var mousePoint(get, null):PriGeomPoint;
 
+    /**
+    * Indicates the center `x` coordinate of the object relative the local coordinates of the parent PriContainer.
+    * The object's coordinates refer to the horizontal center point.
+    *
+    * `default value : 50`
+    **/
     public var centerX(get, set):Float;
+
+    /**
+    * Indicates the center `y` coordinate of the object relative the local coordinates of the parent PriContainer.
+    * The object's coordinates refer to the vertical center point.
+    *
+    * `default value : 50`
+    **/
     public var centerY(get, set):Float;
+
+    /**
+    * Indicates the max `x` coordinate of the object relative the local coordinates of the parent PriContainer.
+    * The object's coordinates refer the element´s right most point.
+    *
+    * `default value : 100`
+    **/
     public var maxX(get, set):Float;
+
+    /**
+    * Indicates the max `y` coordinate of the object relative the local coordinates of the parent PriContainer.
+    * The object's coordinates refer the element´s bottom most point.
+    *
+    * `default value : 100`
+    **/
     public var maxY(get, set):Float;
 
     public var parent(get, null):PriContainer;

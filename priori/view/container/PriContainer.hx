@@ -30,6 +30,11 @@ class PriContainer extends PriDisplay {
         return result;
     }
 
+    /**
+    * Adds all objects of the Array to this PriContainer instance.
+    *
+    * Itens that not inherit from PriDisplay class are ignored.
+    **/
     public function addChildList(childList:Array<Dynamic>):Void {
         var realItens:Array<Dynamic> = [];
         for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
@@ -66,6 +71,11 @@ class PriContainer extends PriDisplay {
         }
     }
 
+    /**
+    * Removes all children PriDisplay instance from the child list of the PriContainer instance.
+    *
+    * Itens that not inherit from PriDisplay class are ignored.
+    **/
     public function removeChildList(childList:Array<Dynamic>):Void {
         var realItens:Array<Dynamic> = [];
         for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
@@ -87,7 +97,25 @@ class PriContainer extends PriDisplay {
         }
     }
 
+    /**
+    * Adds a child PriDisplay instance to this PriContainer instance.
+    * The child is added to the front (top) of all other children in this PriContainer instance.
+    *
+    * If you add a child object that already has a different container as a parent, the object is removed
+    * from the child list of the other display object container.
+    *
+    * If you add the child object to the same parent container, the object is removed and added
+    * to the front of all other children.
+    **/
     public function addChild(child:PriDisplay):Void this.addChildList([child]);
+
+    /**
+    * Removes the specified child PriDisplay instance from the child list of the PriContainer instance.
+    *
+    * The parent property of the removed child is set to null.
+    *
+    * The index positions of any display objects above the child in the PriDisplay are decreased by 1.
+    **/
     public function removeChild(child:PriDisplay):Void this.removeChildList([child]);
 
     override public function kill():Void {
