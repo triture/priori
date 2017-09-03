@@ -36,8 +36,9 @@ class PriContainer extends PriDisplay {
     * Itens that not inherit from PriDisplay class are ignored.
     **/
     public function addChildList(childList:Array<Dynamic>):Void {
-        var realItens:Array<Dynamic> = [];
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
+        var realItens:Array<PriDisplay> = [];
+
+        for (item in childList) if (Std.instance(item, PriDisplay) != null) realItens.push(item);
 
         var thisHasApp:Bool = this.hasApp();
         var thisDisabled:Bool = this.disabled;
@@ -45,9 +46,7 @@ class PriContainer extends PriDisplay {
 
         var docFrag:DocumentFragment = Browser.document.createDocumentFragment();
 
-        for (i in 0 ... realItens.length) {
-            var child:PriDisplay = realItens[i];
-
+        for (child in realItens) {
             child.removeFromParent();
 
             this._childList.push(child);
@@ -77,14 +76,12 @@ class PriContainer extends PriDisplay {
     * Itens that not inherit from PriDisplay class are ignored.
     **/
     public function removeChildList(childList:Array<Dynamic>):Void {
-        var realItens:Array<Dynamic> = [];
-        for (i in 0 ... childList.length) if (Std.instance(childList[i], PriDisplay) != null) realItens.push(childList[i]);
+        var realItens:Array<PriDisplay> = [];
+        for (item in childList) if (Std.instance(item, PriDisplay) != null) realItens.push(item);
 
         var hasAppBefore:Bool = this.hasApp();
 
-        for (i in 0 ... realItens.length) {
-            var child:PriDisplay = realItens[i];
-
+        for (child in realItens) {
             if (child.parent == this) {
                 this._childList.remove(child);
                 this.dh.jselement.removeChild(child.getJSElement());
@@ -155,8 +152,6 @@ class PriContainer extends PriDisplay {
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
 
-        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
-
         return value;
     }
 
@@ -165,8 +160,6 @@ class PriContainer extends PriDisplay {
             super.set_height(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
-
-        DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
 
         return value;
     }
