@@ -15,38 +15,33 @@ private typedef DragData = {
     @:optional var t:Timer;
 }
 
-class DisplayHelper {
+typedef DisplayHelper = {
+    var bgColor:PriColor;
 
-    public var bgColor:PriColor = null;
+    var x:Float;
+    var y:Float;
+    var width:Float;
+    var height:Float;
+    var clipping:Bool;
+    var depth:Int;
+    var pointer:Bool;
+    var focusable:Bool;
 
-    public var x:Float = 0;
-    public var y:Float = 0;
-    public var width:Float = 100;
-    public var height:Float = 100;
-    public var clipping:Bool = true;
-    public var depth:Int = 1000;
-    public var pointer:Bool = false;
-    public var focusable:Bool = false;
+    var dragdata:DragData;
 
-    public var dragdata:DragData;
+    var anchorX:Float;
+    var anchorY:Float;
+    var rotation:Float;
+    var scaleX:Float;
+    var scaleY:Float;
+    var alpha:Float;
+    var disabled:Bool;
 
-    public var anchorX:Float = 0.5;
-    public var anchorY:Float = 0.5;
-    public var rotation:Float = 0;
-    public var scaleX:Float = 1;
-    public var scaleY:Float = 1;
-    public var alpha:Float = 1;
-    public var disabled:Bool = false;
+    var element:JQuery;
+    var elementBorder:Element;
+    var jselement:Element;
 
-    public var element:JQuery;
-    public var elementBorder:Element;
-    public var jselement:Element;
+    var parent:PriContainer;
 
-    public var parent:PriContainer;
-
-    public var eventHelper:BrowserEventEngine = new BrowserEventEngine();
-
-    public function new() {
-
-    }
+    var eventHelper:BrowserEventEngine;
 }

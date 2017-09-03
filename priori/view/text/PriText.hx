@@ -1,5 +1,6 @@
 package priori.view.text;
 
+import helper.display.DisplayHelperIgnition;
 import helper.display.DisplayTextHelper;
 import helper.browser.StyleHelper;
 import priori.system.PriDeviceBrowser;
@@ -9,8 +10,6 @@ import priori.style.shadow.PriShadowStyle;
 import priori.style.font.PriFontStyle;
 
 class PriText extends PriDisplay {
-
-//    inline private static var INITIAL_FONT_SIZE:Int = 14;
 
     /**
     * Set or retrieve the HTML representation of the text field contents.
@@ -76,7 +75,7 @@ class PriText extends PriDisplay {
     **/
     public var editable(get, set):Bool;
 
-    private var dth:DisplayTextHelper = new DisplayTextHelper();
+    private var dth:DisplayTextHelper = DisplayHelperIgnition.getDisplayTextHelper();
 
     public function new() {
         super();
@@ -116,8 +115,8 @@ class PriText extends PriDisplay {
     private function set_fontSize(value:Float):Float {
         if (this.dth.fontSize != value) {
             if (value == null) {
-                this.dth.fontSize = DisplayTextHelper.INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = "${DisplayTextHelper.INITIAL_FONT_SIZE}px";
+                this.dth.fontSize = DisplayHelperIgnition.INITIAL_FONT_SIZE;
+                this.dh.jselement.style.fontSize = "${DisplayHelperIgnition.INITIAL_FONT_SIZE}px";
             } else {
                 this.dth.fontSize = value;
                 this.dh.jselement.style.fontSize = Std.int(value) + "px";
@@ -258,7 +257,7 @@ class PriText extends PriDisplay {
         super.createElement();
 
         this.dh.jselement.style.whiteSpace = "nowrap";
-        this.dh.jselement.style.fontSize = "${DisplayTextHelper.INITIAL_FONT_SIZE}px";
+        this.dh.jselement.style.fontSize = "${DisplayHelperIgnition.INITIAL_FONT_SIZE}px";
         this.dh.jselement.style.width = "";
         this.dh.jselement.style.height = "";
         this.dh.jselement.style.textOverflow = "ellipsis";

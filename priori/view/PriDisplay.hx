@@ -1,5 +1,6 @@
 package priori.view;
 
+import helper.display.DisplayHelperIgnition;
 import priori.geom.PriGeomPoint;
 import priori.geom.PriGeomBox;
 import priori.app.PriApp;
@@ -172,7 +173,7 @@ class PriDisplay extends PriEventDispatcher {
     public var scaleY(get, set):Float;
 
 
-    private var dh:DisplayHelper = new DisplayHelper();
+    private var dh:DisplayHelper = DisplayHelperIgnition.getDisplayHerlper();
 
     public function new() {
         super();
