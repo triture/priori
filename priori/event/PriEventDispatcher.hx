@@ -7,8 +7,8 @@ import priori.event.PriEvent;
 
 class PriEventDispatcher {
 
-    private var ___ed_elist:Array<String> = [];
-    private var ___ed_llist:Array<Dynamic> = [];
+    private var ___event_dispatcher_events:Array<String> = [];
+    private var ___event_dispatcher_listeners:Array<Dynamic> = [];
 
     private var _isKilled:Bool = false;
 
@@ -19,24 +19,23 @@ class PriEventDispatcher {
     }
 
     public function hasEvent(event:String):Bool {
-        if (this.___ed_elist.indexOf(event) > -1) return true;
+        if (this.___event_dispatcher_events.indexOf(event) > -1) return true;
         return false;
     }
 
     public function addEventListener(event:String, listener:Dynamic->Void):Void {
-        this.___ed_elist.push(event);
-        this.___ed_llist.push(listener);
+        this.___event_dispatcher_events.push(event);
+        this.___event_dispatcher_listeners.push(listener);
     }
 
     public function removeEventListener(event:String, listener:Dynamic->Void):Void {
-
         var i:Int = 0;
-        var n:Int = this.___ed_elist.length;
+        var n:Int = this.___event_dispatcher_events.length;
 
         while (i < n) {
-            if (this.___ed_elist[i] == event && this.___ed_llist[i] == listener) {
-                this.___ed_elist.splice(i, 1);
-                this.___ed_llist.splice(i, 1);
+            if (this.___event_dispatcher_events[i] == event && this.___event_dispatcher_listeners[i] == listener) {
+                this.___event_dispatcher_events.splice(i, 1);
+                this.___event_dispatcher_listeners.splice(i, 1);
                 n--;
             }
 
@@ -46,12 +45,12 @@ class PriEventDispatcher {
 
     public function removeAllEventListenersFromType(event:String):Void {
         var i:Int = 0;
-        var n:Int = this.___ed_elist.length;
+        var n:Int = this.___event_dispatcher_events.length;
 
         while (i < n) {
-            if (this.___ed_elist[i] == event) {
-                this.___ed_elist.splice(i, 1);
-                this.___ed_llist.splice(i, 1);
+            if (this.___event_dispatcher_events[i] == event) {
+                this.___event_dispatcher_events.splice(i, 1);
+                this.___event_dispatcher_listeners.splice(i, 1);
                 n--;
             }
 
@@ -65,8 +64,8 @@ class PriEventDispatcher {
         // uma copia eh necessaria para evitar quebrar o loop
         // em situacoes que um evento é removido no momento do seu despacho
 
-        var tempEvent:Array<String> = this.___ed_elist.copy();
-        var tempListener:Array<Dynamic> = this.___ed_llist.copy();
+        var tempEvent:Array<String> = this.___event_dispatcher_events.copy();
+        var tempListener:Array<Dynamic> = this.___event_dispatcher_listeners.copy();
 
         var clone:PriEvent = null;
 
@@ -146,8 +145,8 @@ class PriEventDispatcher {
     public function kill():Void {
         this.bubbleTo = null;
 
-        this.___ed_elist = [];
-        this.___ed_llist = [];
+        this.___event_dispatcher_events = [];
+        this.___event_dispatcher_listeners = [];
 
         this._isKilled = true;
     }
