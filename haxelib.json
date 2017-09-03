@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp", "frontend", "interface", "display"],
   "description": "Priori helps you to build consistents front-ends for Web Apps with Haxe. Write html and css codes are not required. Create complex components and interactions just using haxe code.",
-  "version": "0.8.0",
-  "releasenote": "PriFrame and other things. Please, check example link and changelog section on readme file",
+  "version": "0.8.1",
+  "releasenote": "Some fixes and improvements. Please, check example link and changelog section on readme file",
   "contributors": [ "triture" ],
   "dependencies": {
     "jQueryExtern" : ""

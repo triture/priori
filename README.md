@@ -68,6 +68,9 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Several bug fixes
 
 ## Changelog
+### 0.8.1 - 09/03/2017
+- Some fixes and improvements
+
 ### 0.8.0 - 08/01/2017
 - New Feature : iFrame... i mean... PriFrame!
 - New Feature : Textfield types (email, password, numbers and text)
