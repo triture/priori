@@ -116,7 +116,7 @@ class PriText extends PriDisplay {
         if (this.dth.fontSize != value) {
             if (value == null) {
                 this.dth.fontSize = DisplayHelperIgnition.INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = "${DisplayHelperIgnition.INITIAL_FONT_SIZE}px";
+                this.dh.jselement.style.fontSize = '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px';
             } else {
                 this.dth.fontSize = value;
                 this.dh.jselement.style.fontSize = Std.int(value) + "px";
@@ -257,7 +257,7 @@ class PriText extends PriDisplay {
         super.createElement();
 
         this.dh.jselement.style.whiteSpace = "nowrap";
-        this.dh.jselement.style.fontSize = "${DisplayHelperIgnition.INITIAL_FONT_SIZE}px";
+        this.dh.jselement.style.fontSize = '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px';
         this.dh.jselement.style.width = "";
         this.dh.jselement.style.height = "";
         this.dh.jselement.style.textOverflow = "ellipsis";
