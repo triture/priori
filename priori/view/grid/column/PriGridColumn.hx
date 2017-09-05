@@ -1,5 +1,6 @@
 package priori.view.grid.column;
 
+import priori.view.grid.row.PriGridRow;
 import priori.view.grid.header.PriGridHeaderSortCaretDefault;
 import priori.view.grid.header.PriGridHeaderSortCaret;
 import priori.view.grid.column.PriGridColumnSize.PriGridColumnSizeType;
@@ -35,25 +36,83 @@ class PriGridColumn {
         ?headerRendererParams:Array<Dynamic> = null,
         ?sortable:Bool = null
     ) {
-        if (cellRenderer == null) this.cellRenderer = PriGridCellRendererDefault;
-        else this.cellRenderer = cellRenderer;
+        this.setCellRenderer(cellRenderer);
+        this.setHeadRenderer(headerRenderer);
+        this.setSizeType(sizeType);
+        this.setSortable(sortable);
 
-        if (headerRenderer == null) this.headerRenderer = PriGridHeaderRendererDefault;
-        else this.headerRenderer = headerRenderer;
+        this.setCellRendererParams(cellRendererParams);
+        this.setHeadRendererParams(headerRendererParams);
 
-        if (sizeType == null) this.sizeType = PriGridColumnSizeType.FIT;
-        else this.sizeType = sizeType;
+        this.setHeaderSortCaret(null);
 
-        if (sortable == null) this.sortable = true;
-        else this.sortable = sortable;
-
-        this.cellRendererParams = cellRendererParams;
-        this.headerRendererParams = headerRendererParams;
-        this.headerSortCaret = PriGridHeaderSortCaretDefault;
-
-        this.width = width;
-        this.title = title;
-        this.dataField = dataField;
-
+        this.setWidth(width);
+        this.setTitle(title);
+        this.setDatafield(dataField);
     }
+
+    public function setTitle(value:String):PriGridColumn {
+        this.title = value;
+        return this;
+    }
+
+    public function setDatafield(value:String):PriGridColumn {
+        this.dataField = value;
+        return this;
+    }
+
+    public function setCellRenderer(value:Class<PriGridCellRenderer>):PriGridColumn {
+        if (value == null) this.cellRenderer = PriGridCellRendererDefault;
+        else this.cellRenderer = value;
+
+        return this;
+    }
+
+    public function setCellRendererParams(value:Array<Dynamic>):PriGridColumn {
+        this.cellRendererParams = value;
+        return this;
+    }
+
+    public function setHeadRenderer(value:Class<PriGridHeaderRenderer>):PriGridColumn {
+        if (value == null) this.headerRenderer = PriGridHeaderRendererDefault;
+        else this.headerRenderer = value;
+
+        return this;
+    }
+
+    public function setHeadRendererParams(value:Array<Dynamic>):PriGridColumn {
+        this.headerRendererParams = value;
+        return this;
+    }
+
+    public function setWidth(value:Float):PriGridColumn {
+        this.width = value;
+        return this;
+    }
+
+    inline public function setFixedWidth(value:Float):PriGridColumn {
+        return this.setSizeType(PriGridColumnSizeType.FIXED).setWidth(value);
+    }
+
+    public function setSizeType(value:PriGridColumnSizeType):PriGridColumn {
+        if (value == null) this.sizeType = PriGridColumnSizeType.FIT;
+        else this.sizeType = value;
+
+        return this;
+    }
+
+    public function setSortable(value:Bool):PriGridColumn {
+        if (value == null) this.sortable = true;
+        else this.sortable = value;
+
+        return this;
+    }
+
+    public function setHeaderSortCaret(value:Class<PriGridHeaderSortCaret>):PriGridColumn {
+        if (value == null) this.headerSortCaret = PriGridHeaderSortCaretDefault;
+        else this.headerSortCaret = value;
+
+        return this;
+    }
+
 }
