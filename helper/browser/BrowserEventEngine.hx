@@ -13,23 +13,6 @@ import js.jquery.JQuery;
 
 class BrowserEventEngine {
 
-    private static var SPECIAL_EVENT_LIST:Array<String> = [
-        PriMouseEvent.MOUSE_OUT,
-        PriMouseEvent.MOUSE_OVER,
-        PriTapEvent.TAP_DOWN,
-        PriTapEvent.TAP_UP,
-        PriMouseEvent.MOUSE_MOVE,
-        PriTapEvent.TAP,
-
-        PriEvent.SCROLL,
-
-        "keyup",
-        "keydown",
-
-        "focusin",
-        "focusout"
-    ];
-
     public var registeredEvent:Array<String> = [];
 
     public var jqel:JQuery;
@@ -87,7 +70,23 @@ class BrowserEventEngine {
     }
 
     inline public function isSpecial(event:String):Bool {
-        return SPECIAL_EVENT_LIST.indexOf(event) > -1;
+        return [
+            PriMouseEvent.MOUSE_OUT,
+            PriMouseEvent.MOUSE_OVER,
+            PriMouseEvent.MOUSE_MOVE,
+
+            PriTapEvent.TAP_DOWN,
+            PriTapEvent.TAP_UP,
+            PriTapEvent.TAP,
+
+            PriEvent.SCROLL,
+
+            "keyup",
+            "keydown",
+
+            "focusin",
+            "focusout"
+        ].indexOf(event) > -1;
     }
 
     public function attachToElement(event:String):Void {
