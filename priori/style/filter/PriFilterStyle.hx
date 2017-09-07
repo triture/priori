@@ -115,12 +115,11 @@ class PriFilterStyle {
         if (this.hue != 0) result += 'hue-rotate(${360 * this.hue}deg) ';
         if (this.saturate > 0) result += 'saturate(${this.saturate * 100}%) ';
         if (this.shadow != null && this.shadow.length > 0) {
-            result += "drop-shadow(";
             for (i in 0 ... this.shadow.length) {
-                if (i > 0) result += ",";
+                result += "drop-shadow(";
                 result += this.shadow[i].toString(2);
+                result += ") ";
             }
-            result += ") ";
         }
 
         return result;
