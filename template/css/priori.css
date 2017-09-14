@@ -15,6 +15,8 @@
     margin:0px;
     padding:0px;
     position:absolute;
+
+    color:inherit;
 }
 
 input, button, label, select, textarea {
@@ -27,6 +29,10 @@ input, button, label, select, textarea {
     font-weight:inherit;
     text-align:inherit;
     font-size:inherit;
+}
+
+option {
+    color:#000000;
 }
 
 * {
