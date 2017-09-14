@@ -34,7 +34,7 @@ Check the Priori api documentation ***under construction*** on (http://priori.tr
 You can find some micro tutorials at Priori Blog: (http://priori.triture.com/blog)
 
 ## Installation
-Requires [Haxe](http://haxe.org) 3.2.1+.
+Requires [Haxe](http://haxe.org) 3.4.2+.
 
 * **Step one:** install jQueryExtern lib via [haxelib](http://haxe.org/doc/haxelib/using_haxelib): `haxelib install jQueryExtern`  
 * **Step two:** install Priori lib: `haxelib install priori`  
