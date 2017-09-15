@@ -1,5 +1,6 @@
 package priori.view;
 
+import helper.browser.BrowserHandler;
 import helper.display.DisplayHelperIgnition;
 import priori.geom.PriGeomPoint;
 import priori.geom.PriGeomBox;
@@ -172,8 +173,9 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var scaleY(get, set):Float;
 
-
     private var dh:DisplayHelper = DisplayHelperIgnition.getDisplayHerlper();
+
+
 
     public function new() {
         super();
@@ -325,7 +327,7 @@ class PriDisplay extends PriEventDispatcher {
     private function get_widthScaled():Float return this.width*this.dh.scaleX;
     private function set_widthScaled(value:Float):Float {
         var thisWidth:Float = this.width;
-        if (thisWidth != 0) this.scaleX = value / thisWidth;
+        if (thisWidth != 0) this.scaleX = (value<0?0:value) / thisWidth;
 
         return value;
     }
@@ -333,7 +335,7 @@ class PriDisplay extends PriEventDispatcher {
     private function get_heightScaled():Float return this.height*this.dh.scaleY;
     private function set_heightScaled(value:Float):Float {
         var thisHeight:Float = this.height;
-        if (thisHeight != 0) this.scaleY = value / thisHeight;
+        if (thisHeight != 0) this.scaleY = (value<0?0:value) / thisHeight;
 
         return value;
     }
@@ -433,14 +435,14 @@ class PriDisplay extends PriEventDispatcher {
 
     private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
-        this.dh.scaleX = value == null ? 1 : value == 0 ? 0.0001 : value;
+        this.dh.scaleX = value == null ? 1 : value == 0 ? BrowserHandler.MIN_FLOAT_POINT : value;
         DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
 
     private function get_scaleY():Float return this.dh.scaleY;
     private function set_scaleY(value:Float):Float {
-        this.dh.scaleY = value == null ? 1 : value == 0 ? 0.0001 : value;
+        this.dh.scaleY = value == null ? 1 : value == 0 ? BrowserHandler.MIN_FLOAT_POINT : value;
         DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
         return value;
     }
