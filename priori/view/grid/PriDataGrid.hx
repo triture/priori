@@ -441,6 +441,7 @@ class PriDataGrid extends PriGroup {
 
     private function onScroll(e:PriEvent):Void {
         this.generateRows();
+        this.dispatchEvent(new PriEvent(PriEvent.SCROLL));
     }
 
     private var lastRenderTime:Float = 0;
