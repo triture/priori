@@ -30,7 +30,6 @@ class AssetComponent extends Asset {
 
                 async : true,
                 cache : true,
-                dataType : "font",
 
                 error : function(e):Void {
                     this._isLoading = false;
@@ -54,6 +53,11 @@ class AssetComponent extends Asset {
         } else if (_isLoaded) {
             this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
         }
+    }
+
+    public function getContent():String {
+        if (_isLoaded == false) throw "Asset not loaded";
+        return this._content;
     }
 
     override public function getElement():JQuery {
