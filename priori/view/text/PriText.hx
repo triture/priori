@@ -157,6 +157,8 @@ class PriText extends PriDisplay {
 
             if (value) this.dh.jselement.style.whiteSpace = "";
             else this.dh.jselement.style.whiteSpace = "nowrap";
+
+            if (value == false && this.dth.autoSize == true) super.set_width(null);
         }
 
         return value;
