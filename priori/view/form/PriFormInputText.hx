@@ -1,13 +1,14 @@
 package priori.view.form;
 
-import priori.types.PriFormInputTextFieldType;
 import priori.app.PriApp;
-import js.jquery.Event;
 import priori.event.PriEvent;
+import priori.types.PriFormInputTextFieldType;
+import js.jquery.Event;
 
 class PriFormInputText extends PriFormElementBase {
 
-    @:isVar public var value(get, set):String;
+    public var value(get, set):String;
+
     @:isVar public var placeholder(default, set):String = "";
     @:isVar public var password(default, set):Bool = false;
 
@@ -55,24 +56,19 @@ class PriFormInputText extends PriFormElementBase {
         PriApp.g().getBody().off("input", "[id=" + this.fieldId + "]", this._onChange);
     }
 
-    private function _onChange(event:Event):Void {
-        this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
-    }
+    private function _onChange(event:Event):Void this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+
 
     private function set_value(value:String):String {
-        this.value = value;
         this._baseElement.val(value);
-
         return value;
     }
 
     private function get_value():String {
-        var result:String = this.value;
-
         var isDisabled:Bool = this.disabled;
         if (isDisabled) this.suspendDisabled();
 
-        result = this._baseElement.val();
+        var result:String = this._baseElement.val();
 
         if (isDisabled) this.reactivateDisable();
 
@@ -81,9 +77,7 @@ class PriFormInputText extends PriFormElementBase {
 
     private function set_placeholder(value:String):String {
         this.placeholder = value;
-
         this._baseElement.attr("placeholder", value);
-
         return value;
     }
 
