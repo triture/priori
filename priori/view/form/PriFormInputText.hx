@@ -1,8 +1,10 @@
 package priori.view.form;
 
+import priori.geom.PriColor;
 import priori.app.PriApp;
 import priori.event.PriEvent;
 import priori.types.PriFormInputTextFieldType;
+import js.html.Element;
 import js.jquery.Event;
 
 class PriFormInputText extends PriFormElementBase {
@@ -10,6 +12,10 @@ class PriFormInputText extends PriFormElementBase {
     public var value(get, set):String;
 
     @:isVar public var placeholder(default, set):String = "";
+    public var placeholderColor(get, set):PriColor;
+    private var __placeholderElement:Element;
+    private var __placeHolderColorValue:PriColor = null;
+
     @:isVar public var password(default, set):Bool = false;
 
     @:isVar public var marginLeft(default, set):Float;
@@ -22,6 +28,52 @@ class PriFormInputText extends PriFormElementBase {
 
         this.clipping = false;
         this.width = 160;
+
+        this.addEventListener(PriEvent.CHANGE, function(e:PriEvent):Void this.__placeholderValidate());
+    }
+
+    private function __placeholderValidate():Void {
+        if (this.__placeholderElement != null) {
+            var val:String = this._baseElement.val();
+            if (val.length > 0) this.__placeholderElement.style.display = "none";
+            else this.__placeholderElement.style.display = "";
+        }
+    }
+
+    private function __createPlaceholderElement():Void {
+        if (this.__placeholderElement == null) {
+            this.__placeholderElement = js.Browser.document.createElement("div");
+            this.__placeholderElement.className = "priori_stylebase";
+            this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:hidden;pointer-events:none;';
+
+            if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
+        }
+    }
+
+    private function get_placeholderColor():PriColor return this.__placeHolderColorValue;
+    private function set_placeholderColor(value:PriColor):PriColor {
+        this.__placeHolderColorValue = value;
+        if (this.__placeholderElement != null) {
+            if (value == null) this.__placeholderElement.style.color = "";
+            else this.__placeholderElement.style.color = value;
+        }
+        return value;
+    }
+
+    private function set_placeholder(value:String):String {
+        if (value != null && value != "") {
+            this.__createPlaceholderElement();
+            this.dh.jselement.appendChild(this.__placeholderElement);
+            this.__placeholderElement.innerText = value;
+        }
+        else if (this.__placeholderElement != null) {
+            try {
+                this.dh.jselement.removeChild(this.__placeholderElement);
+            } catch (e:Dynamic) {}
+        }
+
+        this.placeholder = value;
+        return value;
     }
 
     private function set_fieldType(value:PriFormInputTextFieldType):PriFormInputTextFieldType {
@@ -33,6 +85,7 @@ class PriFormInputText extends PriFormElementBase {
     private function set_marginLeft(value:Float):Float {
         this.marginLeft = value;
         this._baseElement.css("padding-left", value == null ? "" : value + "px");
+        if (this.__placeholderElement != null) this.__placeholderElement.style.left = value == null ? "" : value + "px";
         return value;
     }
 
@@ -61,6 +114,7 @@ class PriFormInputText extends PriFormElementBase {
 
     private function set_value(value:String):String {
         this._baseElement.val(value);
+        this.__placeholderValidate();
         return value;
     }
 
@@ -73,12 +127,6 @@ class PriFormInputText extends PriFormElementBase {
         if (isDisabled) this.reactivateDisable();
 
         return result;
-    }
-
-    private function set_placeholder(value:String):String {
-        this.placeholder = value;
-        this._baseElement.attr("placeholder", value);
-        return value;
     }
 
     private function set_password(value:Bool) {
