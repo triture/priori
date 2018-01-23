@@ -47,6 +47,7 @@ class PriFormInputText extends PriFormElementBase {
             this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:hidden;pointer-events:none;';
 
             if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
+            this.__placeholderValidate();
         }
     }
 

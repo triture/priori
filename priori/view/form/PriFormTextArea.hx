@@ -40,6 +40,7 @@ class PriFormTextArea extends PriFormElementBase {
             this.__placeholderElement.style.cssText = 'top:${this.margin}px;left:${this.margin}px;width:auto;height:auto;overflow:hidden;pointer-events:none;';
 
             if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
+            this.__placeholderValidate();
         }
     }
 
