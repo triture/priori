@@ -3,7 +3,6 @@ package priori.view.form;
 import priori.style.font.PriFontStyle;
 import helper.browser.StyleHelper;
 import priori.event.PriEvent;
-import priori.app.PriApp;
 import js.html.Element;
 import js.Browser;
 import js.jquery.Event;
@@ -35,7 +34,7 @@ class PriFormElementBase extends PriExtendable {
         if (this.__fontSize != value) {
             if (value == null) {
                 this.__fontSize = INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = "${INITIAL_FONT_SIZE}px";
+                this.dh.jselement.style.fontSize = '${INITIAL_FONT_SIZE}px';
             } else {
                 this.__fontSize = value;
                 this.dh.jselement.style.fontSize = Std.int(value) + "px";
