@@ -1,10 +1,12 @@
 package priori.net;
 
-import haxe.Json;
+import js.html.ProgressEvent;
 import priori.event.PriEvent;
+import priori.event.PriEventDispatcher;
+import haxe.Json;
 import js.jquery.JqXHR;
 import js.jquery.JQuery;
-import priori.event.PriEventDispatcher;
+import js.html.XMLHttpRequest;
 
 class PriURLLoader extends PriEventDispatcher {
 
@@ -110,10 +112,25 @@ class PriURLLoader extends PriEventDispatcher {
                 success : this.onSuccess
             };
 
+            ajaxObject.xhr = function() {
+                var xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", this.onProgress, false);
+                xhr.addEventListener("progress", this.onProgress, false);
+
+                return xhr;
+            }
+
             JQuery.support.cors = true;
 
             this.ajax = JQuery.ajax(ajaxObject);
+        }
+    }
 
+    private function onProgress(e:ProgressEvent):Void {
+        if (e.lengthComputable) {
+            var percentComplete = e.loaded / e.total;
+            this.dispatchEvent(new PriEvent(PriEvent.PROGRESS, false, false, percentComplete));
         }
     }
 

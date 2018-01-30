@@ -26,6 +26,7 @@ class PriEvent {
     inline public static var STOP:String = "prievent_base_stop";
     inline public static var TICK:String = "prievent_base_tick";
     inline public static var UPDATE:String = "prievent_base_update";
+    inline public static var PROGRESS:String = "prievent_base_progress";
 
     public var type:String;
     public var propagate:Bool;
