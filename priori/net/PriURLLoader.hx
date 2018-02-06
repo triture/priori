@@ -1,5 +1,7 @@
 package priori.net;
 
+import priori.system.PriDeviceBrowser;
+import priori.system.PriDevice;
 import js.html.ProgressEvent;
 import priori.event.PriEvent;
 import priori.event.PriEventDispatcher;
@@ -109,22 +111,46 @@ class PriURLLoader extends PriEventDispatcher {
                 headers : getRequestHeaders(request),
 
                 error : this.onError,
-                success : this.onSuccess
+                success : this.onSuccess,
+
+                beforeSend : this.onBeforeSend
             };
 
-            ajaxObject.xhr = function() {
-                var xhr = new XMLHttpRequest();
+            if (PriDevice.browser() != PriDeviceBrowser.EDGE && PriDevice.browser() != PriDeviceBrowser.MOZILLA) {
+                ajaxObject.xhr = function() {
+                    try {
 
-                xhr.upload.addEventListener("progress", this.onProgress, false);
-                xhr.addEventListener("progress", this.onProgress, false);
+                        var originalXHR = untyped __js__("jQuery.ajaxSettings.xhr");
 
-                return xhr;
+                        if (originalXHR != null) {
+                            var xhr = originalXHR();
+
+                            if (xhr.upload != null && xhr.upload.addEventListener != null) {
+                                xhr.upload.addEventListener("progress", this.onProgress, false);
+                            }
+
+                            return xhr;
+                        }
+
+                        return null;
+                    } catch ( e:Dynamic ) {
+                        return null;
+                    }
+                }
             }
 
             JQuery.support.cors = true;
 
             this.ajax = JQuery.ajax(ajaxObject);
         }
+    }
+
+    private function onBeforeSend(e:JqXHR, settings:Dynamic):Void {
+//        e.progress(
+//            function(a, b, c, d):Void {
+//                //js.Browser.console.log("progress");
+//            }
+//        );
     }
 
     private function onProgress(e:ProgressEvent):Void {
