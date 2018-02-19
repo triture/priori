@@ -146,6 +146,9 @@ class BrowserEventEngine {
     private function on_keyboard_up(e:Dynamic):Void {
         if (this.display.disabled) return;
         var pe:PriKeyboardEvent = new PriKeyboardEvent(PriKeyboardEvent.KEY_UP);
+        pe.__real = e.originalEvent;
+
+        pe.key = e.key;
         pe.keycode = e.which;
         pe.altKey = e.altKey;
         pe.ctrlKey = e.ctrlKey || e.metaKey;
@@ -155,6 +158,9 @@ class BrowserEventEngine {
     private function on_keyboard_down(e:Dynamic):Void {
         if (this.display.disabled) return;
         var pe:PriKeyboardEvent = new PriKeyboardEvent(PriKeyboardEvent.KEY_DOWN);
+        pe.__real = e.originalEvent;
+
+        pe.key = e.key;
         pe.keycode = e.which;
         pe.altKey = e.altKey;
         pe.ctrlKey = e.ctrlKey || e.metaKey;
