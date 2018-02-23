@@ -1,5 +1,7 @@
 package priori.view.form;
 
+import helper.browser.StyleHelper;
+import priori.style.font.PriFontStyle;
 import priori.geom.PriColor;
 import priori.app.PriApp;
 import priori.event.PriEvent;
@@ -12,7 +14,10 @@ class PriFormInputText extends PriFormElementBase {
     public var value(get, set):String;
 
     @:isVar public var placeholder(default, set):String = "";
+    @:isVar public var placeholderStyle(get, set):PriFontStyle;
+
     public var placeholderColor(get, set):PriColor;
+
     private var __placeholderElement:Element;
     private var __placeHolderColorValue:PriColor = null;
 
@@ -44,12 +49,27 @@ class PriFormInputText extends PriFormElementBase {
         if (this.__placeholderElement == null) {
             this.__placeholderElement = js.Browser.document.createElement("div");
             this.__placeholderElement.className = "priori_stylebase";
-            this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:hidden;pointer-events:none;';
+            this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:hidden;pointer-events:none;font-size:inherit;';
 
             if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
+            if (this.placeholderStyle != null) StyleHelper.applyFontStyle(this.__placeholderElement, this.placeholderStyle);
+
             this.__placeholderValidate();
         }
     }
+
+    private function get_placeholderStyle():PriFontStyle return this.placeholderStyle;
+    private function set_placeholderStyle(value:PriFontStyle):PriFontStyle {
+        this.placeholderStyle = value;
+
+        if (this.__placeholderElement != null) {
+            if (value == null) StyleHelper.applyCleanFontStyle(this.__placeholderElement);
+            else StyleHelper.applyFontStyle(this.__placeholderElement, value);
+        }
+
+        return value;
+    }
+
 
     private function get_placeholderColor():PriColor return this.__placeHolderColorValue;
     private function set_placeholderColor(value:PriColor):PriColor {

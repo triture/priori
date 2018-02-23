@@ -31,6 +31,8 @@ class PriFontStyle {
         if (decoration != null) this.decoration = decoration else this.decoration = PriFontStyle.DEFAULT_DECORATION;
     }
 
+    public function clone():PriFontStyle return new PriFontStyle(this.color, this.family, this.weight, this.italic, this.variant, this.align, this.decoration);
+
     public function setColor(color:PriColor):PriFontStyle {
         this.color = color;
         return this;
