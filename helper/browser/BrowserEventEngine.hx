@@ -1,5 +1,6 @@
 package helper.browser;
 
+import js.html.MouseEvent;
 import priori.geom.PriGeomPoint;
 import priori.event.PriFocusEvent;
 import priori.event.PriKeyboardEvent;
@@ -151,8 +152,9 @@ class BrowserEventEngine {
         pe.key = e.key;
         pe.keycode = e.which;
         pe.altKey = e.altKey;
-        pe.ctrlKey = e.ctrlKey || e.metaKey;
+        pe.ctrlKey = e.ctrlKey;
         pe.shiftKey = e.shiftKey;
+        pe.metaKey = e.metaKey;
         this.display.dispatchEvent(pe);
     }
     private function on_keyboard_down(e:Dynamic):Void {
@@ -163,43 +165,87 @@ class BrowserEventEngine {
         pe.key = e.key;
         pe.keycode = e.which;
         pe.altKey = e.altKey;
-        pe.ctrlKey = e.ctrlKey || e.metaKey;
+        pe.ctrlKey = e.ctrlKey;
         pe.shiftKey = e.shiftKey;
+        pe.metaKey = e.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 
-    private function on_mouse_down(e:Dynamic):Void {
+    private function on_mouse_down(e:MouseEvent):Void {
         if (this.display.disabled) return;
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 
-    private function on_mouse_up(e:Dynamic):Void {
+    private function on_mouse_up(e:MouseEvent):Void {
         if (this.display.disabled) return;
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 
-    private function on_mouse_click(e:Dynamic):Void {
+    private function on_mouse_click(e:MouseEvent):Void {
         if (this.display.disabled) return;
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
-    private function on_mouse_enter(e:Dynamic):Void {
+    private function on_mouse_enter(e:MouseEvent):Void {
         if (this.display.disabled) return;
         var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 
-    private function on_mouse_leave(e:Dynamic):Void {
+    private function on_mouse_leave(e:MouseEvent):Void {
         if (this.display.disabled) return;
         var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OUT);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 
     private function on_mouse_move(e:Dynamic):Void {
         if (this.display.disabled) return;
         var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_MOVE);
+        pe.__real = e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
         this.display.dispatchEvent(pe);
     }
 

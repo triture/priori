@@ -15,6 +15,7 @@ class PriKeyboardEvent extends PriEvent {
     public var altKey:Bool;
     public var shiftKey:Bool;
     public var ctrlKey:Bool;
+    public var metaKey:Bool;
 
     public function new(type:String, propagate:Bool = false, bubble:Bool = false, data:Dynamic = null) {
         super(type, propagate, bubble, data);

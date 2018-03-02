@@ -13,9 +13,16 @@ class PriTapEvent extends PriMouseEvent {
     override public function clone():PriEvent {
         var clone:PriTapEvent = new PriTapEvent(this.type, this.propagate, this.bubble);
 
+        clone.__real = this.__real;
+
         clone.target = this.target;
         clone.currentTarget = this.currentTarget;
         clone.data = this.data;
+
+        clone.altKey = this.altKey;
+        clone.shiftKey = this.shiftKey;
+        clone.ctrlKey = this.ctrlKey;
+        clone.metaKey = this.metaKey;
 
         return clone;
     }

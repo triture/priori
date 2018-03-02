@@ -2,6 +2,8 @@ package priori.system;
 
 class PriKey {
 
+    inline public static var UNIDENTIFIED:Int = 229;
+
     inline public static var ENTER:Int = 13;
     inline public static var BACKSPACE:Int = 8;
     inline public static var SPACE:Int = 32;
