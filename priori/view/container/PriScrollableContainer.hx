@@ -1,5 +1,6 @@
 package priori.view.container;
 
+import js.html.TouchEvent;
 import priori.system.PriDeviceBrowser;
 import priori.event.PriMouseEvent;
 import priori.system.PriDevice;
@@ -18,6 +19,8 @@ class PriScrollableContainer extends PriGroup {
     public var maxScrollX(get, null):Float;
 
     private var __mouseIsOver:Bool = false;
+    private var __lastXScroll:Int = 0;
+    private var __lastYScroll:Int = 0;
 
     public function new() {
         super();
@@ -33,8 +36,30 @@ class PriScrollableContainer extends PriGroup {
             this.addEventListener(PriMouseEvent.MOUSE_OUT, onOut);
         }
 
+        this.addEventListener(PriEvent.ADDED_TO_APP, this.__onAddedToApp);
 
+        if (this.dh.jselement.addEventListener != null) {
+            this.dh.jselement.addEventListener("scroll", this.__onScrollUpdater, true);
+        } else {
+            this.dh.jselement.onscroll = this.__onScrollUpdater;
+        }
+
+//        this.dh.jselement.ontouchstart = this.__onTouchStart;
+//        this.dh.jselement.ontouchend = this.__onTouchEnd;
     }
+
+    private function __onScrollUpdater():Void {
+        this.__lastXScroll = this.dh.jselement.scrollLeft;
+        this.__lastYScroll = this.dh.jselement.scrollTop;
+    }
+
+    private function __onAddedToApp(e:PriEvent):Void {
+        this.dh.jselement.scrollLeft = this.__lastXScroll;
+        this.dh.jselement.scrollTop = this.__lastYScroll;
+    }
+
+    private function __onTouchStart(e:TouchEvent):Void this.onOver(null);
+    private function __onTouchEnd(e:TouchEvent):Void this.onOut(null);
 
     private function onOver(e:PriMouseEvent):Void {
         this.__mouseIsOver = true;
@@ -126,4 +151,8 @@ class PriScrollableContainer extends PriGroup {
         return result;
     }
 
+    override public function kill():Void {
+        this.removeEventListener(PriEvent.ADDED_TO_APP, this.__onAddedToApp);
+        super.kill();
+    }
 }
