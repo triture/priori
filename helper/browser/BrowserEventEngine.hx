@@ -1,5 +1,6 @@
 package helper.browser;
 
+import js.jquery.Event;
 import js.html.MouseEvent;
 import priori.geom.PriGeomPoint;
 import priori.event.PriFocusEvent;
@@ -126,7 +127,7 @@ class BrowserEventEngine {
         }
     }
 
-    private function on_scroll(e:Dynamic):Void {
+    private function on_scroll(e:Event):Void {
         e.stopPropagation(); // TODO validate if is needed
         this.display.dispatchEvent(new PriEvent(PriEvent.SCROLL));
     }
