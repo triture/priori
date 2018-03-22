@@ -80,7 +80,7 @@ class PriText extends PriDisplay {
     public function new() {
         super();
 
-        this.clipping = false;
+        this.clipping = true;
         this.dh.height = null;
         this.dh.width = null;
     }
