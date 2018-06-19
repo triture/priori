@@ -6,7 +6,10 @@ import js.html.CanvasElement;
 
 class PriCanvas extends PriDisplay {
 
-    private var _canvas:CanvasElement;
+    @:isVar public var pixelStyle(default, set):Bool = false;
+    @:isVar public var density(default, set):Float = 1.0;
+
+    public var _canvas:CanvasElement;
     private var _graphic:PriGraphic;
 
     public var graphic(get, null):PriGraphic;
@@ -15,7 +18,55 @@ class PriCanvas extends PriDisplay {
         super();
 
         this._canvas = js.Browser.document.createCanvasElement();
+
         this.getElement().append(this._canvas);
+    }
+
+    private function set_density(value:Float):Float {
+        if (value == null || value <= 0) return value;
+
+        this.density = value;
+
+        this.updateDensity();
+
+        return value;
+    }
+
+    private function set_pixelStyle(value:Bool):Bool {
+        if (this.pixelStyle == value) return value;
+
+        this.pixelStyle = value;
+
+        if (value) {
+
+            var currentStyle:String = this._canvas.getAttribute("style");
+            if (currentStyle == null) currentStyle = "";
+
+            currentStyle += ";image-rendering: pixelated;";
+
+            this._canvas.setAttribute("style", currentStyle);
+
+        } else {
+            var currentStyle:String = this._canvas.getAttribute("style");
+            currentStyle = currentStyle.split("image-rendering: pixelated;").join("");
+        }
+
+        return value;
+    }
+
+    private function updateDensity():Void {
+
+        var curWidth:Float = this.width;
+        var curHeight:Float = this.height;
+
+        this._canvas.style.width = curWidth + "px";
+        this._canvas.style.height = curHeight + "px";
+
+        var realSizeWidth:Int = Math.round(curWidth*this.density);
+        var realSizeHeight:Int = Math.round(curHeight*this.density);
+
+        this._canvas.width = realSizeWidth;
+        this._canvas.height = realSizeHeight;
     }
 
     private function getContext():CanvasRenderingContext2D {
@@ -29,15 +80,15 @@ class PriCanvas extends PriDisplay {
     }
 
     override private function set_width(value:Float):Float {
-        var result:Float = super.set_width(value);
-        new JQuery(this._canvas).width(value);
-        return result;
+        super.set_width(value);
+        this.updateDensity();
+        return value;
     }
 
     override private function set_height(value:Float):Float {
-        var result:Float = super.set_height(value);
-        new JQuery(this._canvas).height(value);
-        return result;
+        super.set_height(value);
+        this.updateDensity();
+        return value;
     }
 
 }
