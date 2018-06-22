@@ -15,7 +15,8 @@ class DisplayHelperIgnition {
             multiLine : false,
             selectable : false,
             ellipsis : true,
-            editable : false
+            editable : false,
+            lineHeight : null
         }
     }
 

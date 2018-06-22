@@ -75,6 +75,13 @@ class PriText extends PriDisplay {
     **/
     public var editable(get, set):Bool;
 
+    /**
+    * Specify the space between line, in percentage values.
+    * 
+    * `defaur value: null`
+    **/
+    public var lineHeight(get, set):Float;
+
     private var dth:DisplayTextHelper = DisplayHelperIgnition.getDisplayTextHelper();
 
     public function new() {
@@ -85,10 +92,24 @@ class PriText extends PriDisplay {
         this.dh.width = null;
     }
 
-    public function get_text():String {
+    private function get_lineHeight():Float return this.dth.lineHeight;
+    private function set_lineHeight(value:Float):Float {
+        this.dth.lineHeight = value;
+
+        if (value == null) {
+            this.dh.jselement.style.removeProperty("line-height");
+        } else {
+            this.dh.jselement.style.lineHeight = (value * 100) + "%";
+        }
+
+        return value;
+    }
+
+    private function get_text():String {
         if (this.dth.editable) this.dth.text = this.dh.jselement.innerText;
         return this.dth.text;
     }
+
     private function set_text(value:String):String {
         this.dth.text = value;
         this.dh.jselement.innerText = value;

@@ -8,4 +8,5 @@ typedef DisplayTextHelper = {
     var selectable:Bool;
     var ellipsis:Bool;
     var editable:Bool;
+    var lineHeight:Float;
 }
