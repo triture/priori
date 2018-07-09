@@ -7,7 +7,6 @@ import haxe.crypto.Base64;
 import js.html.FileReader;
 import priori.system.PriDevice;
 import priori.system.PriDeviceBrowser;
-import helper.device.DeviceHelper;
 import priori.event.PriDragEvent;
 import js.html.DragEvent;
 import js.html.FileList;
