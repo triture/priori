@@ -43,10 +43,34 @@ class PriFormFileDrop extends PriFormElementBase {
 
     }
 
+    override private function set_pointer(value:Bool) {
+        this.dh.pointer = value;
+
+        if (value) {
+            this.dh.jselement.style.cursor = "pointer";
+            this._baseElement[0].style.cursor = "pointer";
+        } else {
+            this.dh.jselement.style.cursor = "";
+            this._baseElement[0].style.cursor = "";
+        }
+
+        return value;
+    }
+
     private function get_length():Int return this.__fileNames.length;
 
     // return file data in base64
     public function getDataAsBase64(fileIndex:Int, callback:String->Void):Void {
+        this.getDataAsBytes(
+            fileIndex,
+            function(data:BytesData):Void {
+                if (data == null) callback(null);
+                else callback(Base64.encode(Bytes.ofData(data)));
+            }
+        );
+    }
+
+    public function getDataAsBytes(fileIndex:Int, callback:BytesData->Void):Void {
 
         if (this.length > fileIndex) {
 
@@ -54,9 +78,8 @@ class PriFormFileDrop extends PriFormElementBase {
             reader.onload = function(e):Void {
                 // bytes data is an ArrayBuffer
                 var bytesData:BytesData = reader.result;
-                var bytes:Bytes = Bytes.ofData(bytesData);
 
-                callback(Base64.encode(bytes));
+                callback(bytesData);
             }
 
             reader.onerror = function(e):Void {
@@ -70,7 +93,6 @@ class PriFormFileDrop extends PriFormElementBase {
         }
 
     }
-
 
     public function getFiles():Array<String> return this.__fileNames.copy();
 
