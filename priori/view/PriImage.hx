@@ -1,5 +1,7 @@
 package priori.view;
 
+import haxe.io.BytesData;
+import haxe.io.Bytes;
 import js.html.Image;
 import priori.app.PriApp;
 import priori.event.PriEvent;
@@ -79,7 +81,6 @@ class PriImage extends PriDisplay {
             this._originalImageWidth = this._imageObject.naturalWidth;
             this._originalImageHeight = this._imageObject.naturalHeight;
             this._imageElement = new JQuery(this._imageObject);
-            this._imageObject = null;
 
             this.startImageElement();
             this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
@@ -87,7 +88,7 @@ class PriImage extends PriDisplay {
         this._imageObject.onerror = function():Void {
             this._imageObject.onload = null;
             this._imageObject.onerror = null;
-            this._imageObject = null;
+
             this.dispatchEvent(new PriEvent(PriEvent.ERROR));
         }
 
