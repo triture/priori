@@ -175,6 +175,9 @@ class BrowserEventEngine {
 
     private function on_mouse_down(e:MouseEvent):Void {
         if (this.display.disabled) return;
+
+        e.stopPropagation();
+
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_DOWN);
         pe.__real = e;
 
@@ -188,6 +191,9 @@ class BrowserEventEngine {
 
     private function on_mouse_up(e:MouseEvent):Void {
         if (this.display.disabled) return;
+
+        e.stopPropagation();
+
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP_UP);
         pe.__real = e;
 
@@ -201,9 +207,11 @@ class BrowserEventEngine {
 
     private function on_mouse_click(e:MouseEvent):Void {
         if (this.display.disabled) return;
+
+        e.stopPropagation();
+
         var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TAP);
         pe.__real = e;
-
         pe.altKey = pe.__real.altKey;
         pe.ctrlKey = pe.__real.ctrlKey;
         pe.shiftKey = pe.__real.shiftKey;
@@ -213,6 +221,7 @@ class BrowserEventEngine {
     }
     private function on_mouse_enter(e:MouseEvent):Void {
         if (this.display.disabled) return;
+
         var pe:PriMouseEvent = new PriMouseEvent(PriMouseEvent.MOUSE_OVER);
         pe.__real = e;
 
