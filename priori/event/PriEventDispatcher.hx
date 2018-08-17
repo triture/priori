@@ -77,8 +77,7 @@ class PriEventDispatcher {
             if (tempEvent[i] == event.type) {
 
                 clone = event.clone();
-
-                event.target = this;
+                clone.target = this;
 
                 tempListener[i](clone);
 
@@ -101,6 +100,7 @@ class PriEventDispatcher {
 
         if (clone == null && event.propagate) {
             clone = event.clone();
+            clone.target = this;
             clone.bubble = false;
 
             this.propagateEvent(clone);
@@ -110,9 +110,12 @@ class PriEventDispatcher {
 
         if (clone == null && event.bubble) {
             clone = event.clone();
+            clone.target = this;
             clone.propagate = false;
 
             this.bubbleEvent(clone);
+
+            clone = null;
         }
 
     }
