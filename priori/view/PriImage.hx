@@ -104,6 +104,31 @@ class PriImage extends PriDisplay {
         this._loader.load();
     }
 
+    public function loadURL(url:String):Void {
+        this.clearCurrentImage();
+
+        this._imageObject = new Image();
+        this._imageObject.onload = function():Void {
+            this._imageObject.onload = null;
+            this._imageObject.onerror = null;
+
+            this._originalImageWidth = this._imageObject.naturalWidth;
+            this._originalImageHeight = this._imageObject.naturalHeight;
+            this._imageElement = new JQuery(this._imageObject);
+
+            this.startImageElement();
+            this.dispatchEvent(new PriEvent(PriEvent.COMPLETE));
+        }
+        this._imageObject.onerror = function():Void {
+            this._imageObject.onload = null;
+            this._imageObject.onerror = null;
+
+            this.dispatchEvent(new PriEvent(PriEvent.ERROR));
+        }
+
+        this._imageObject.src = url;
+    }
+
     private function onAssetComplete(e:PriEvent):Void {
         this.loadByAsset(this._loader);
         this.killImageLoader();
@@ -123,6 +148,8 @@ class PriImage extends PriDisplay {
             this._originalImageHeight = asset.imageHeight;
 
             this._imageElement = asset.getElement();
+            this._imageObject = cast this._imageElement.get(0);
+
             this.startImageElement();
         }
     }
