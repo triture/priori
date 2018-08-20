@@ -49,7 +49,7 @@ class PriFormInputText extends PriFormElementBase {
         if (this.__placeholderElement == null) {
             this.__placeholderElement = js.Browser.document.createElement("div");
             this.__placeholderElement.className = "priori_stylebase";
-            this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:hidden;pointer-events:none;font-size:inherit;';
+            this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:visible;pointer-events:none;font-size:inherit;';
 
             if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
             if (this.placeholderStyle != null) StyleHelper.applyFontStyle(this.__placeholderElement, this.placeholderStyle);
