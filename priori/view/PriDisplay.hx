@@ -356,11 +356,26 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.width;
 
         if (result == null) {
+
             result = DomHelper.getBoundingClientRect(this.dh.jselement).width;
 
-            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().width;
+            if (result == 0 && !this.hasApp()) {
+                result = this.getOutDOMDimensions().width;
+                if (this.scaleX != 0 && this.scaleX != 1) result = result/this.scaleX;
+            } else {
 
-            if (this.dh.scaleX != 0 && this.dh.scaleX != 1) result = result/this.dh.scaleX;
+                var ref = this;
+                var refScale:Float = this.scaleX;
+
+                while (ref.parent != null) {
+                    ref = ref.parent;
+                    refScale = ref.scaleX * refScale;
+                }
+
+                if (refScale != 0 && refScale != 1) result = result/refScale;
+            }
+
+
         }
 
         return result;
@@ -382,11 +397,23 @@ class PriDisplay extends PriEventDispatcher {
         var result:Float = this.dh.height;
 
         if (result == null) {
+
             result = result = DomHelper.getBoundingClientRect(this.dh.jselement).height;
 
-            if (result == 0 && !this.hasApp()) result = this.getOutDOMDimensions().height;
+            if (result == 0 && !this.hasApp()) {
+                result = this.getOutDOMDimensions().height;
+                if (this.scaleY != 0 && this.scaleY != 1) result = result/this.scaleY;
+            } else {
+                var ref = this;
+                var refScale:Float = this.scaleY;
 
-            if (this.dh.scaleY != 0 && this.dh.scaleY != 1) result = result/this.dh.scaleY;
+                while (ref.parent != null) {
+                    ref = ref.parent;
+                    refScale = ref.scaleY * refScale;
+                }
+
+                if (refScale != 0 && refScale != 1) result = result/refScale;
+            }
         }
 
         return result;
