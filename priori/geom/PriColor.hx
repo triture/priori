@@ -21,6 +21,17 @@ abstract PriColor(Int) from Int to Int {
         updateColor(nr, ng, nb);
     }
 
+    public function mix(withColor:PriColor, percent:Float = 0.5):PriColor {
+        if (percent == null || percent < 0) percent = 0;
+        if (percent > 1) percent = 1;
+
+        var nr:Int = red + Math.round((withColor.red - red)*percent);
+        var ng:Int = green + Math.round((withColor.green - green)*percent);
+        var nb:Int = blue + Math.round((withColor.blue - blue)*percent);
+        
+        return new PriColor((nr << 16) | (ng << 8) | nb);
+    }
+
     inline private function get_red():Int {
         return (this >> 16) & 0xff;
     }
