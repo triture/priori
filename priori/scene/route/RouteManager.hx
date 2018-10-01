@@ -44,7 +44,7 @@ class RouteManager {
         this.initialized = true;
     }
 
-    private function openScene(path:String):Void {
+    public function openScene(path:String):Void {
         var item:RouteItem = this.locatePath(path);
 
         if (item != null) {
@@ -85,19 +85,20 @@ class RouteManager {
         return null;
     }
 
-    private function onHashChange():Void {
+    public function getPathByHash():String {
         var hash:String = js.Browser.location.hash;
 
         if (StringTools.startsWith(hash, "/#/")) hash = hash.substr(3);
         else if (StringTools.startsWith(hash, "#/")) hash = hash.substr(2);
         else if (StringTools.startsWith(hash, "#")) hash = hash.substr(1);
 
-        this.openScene(hash);
+        return hash;
     }
 
-    public function navigateToCurrent():Void {
-        this.onHashChange();
-    }
+    private function onHashChange():Void this.openScene(this.getPathByHash());
+
+    public function navigateToCurrent():Void this.onHashChange();
+
 }
 
 private typedef RouteItem = {

@@ -1,5 +1,6 @@
 package priori.scene;
 
+import priori.types.PriRoutePathType;
 import priori.scene.route.RouteManager;
 import priori.scene.view.PriPreloaderViewDefault;
 import priori.scene.view.PriPreloaderView;
@@ -27,7 +28,8 @@ class PriSceneManager {
 
     @:isVar public var holder(get, set):PriContainer;
     @:isVar public var container(get, null):PriContainer;
-    @:isVar public var router(get, null):RouteManager;
+
+    private var router:RouteManager;
 
     private function new() {
 
@@ -57,9 +59,9 @@ class PriSceneManager {
         return value;
     }
 
-    public function navigateToCurrent():Void {
-        this.router.navigateToCurrent();
-    }
+    public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>):Void this.router.addRoute(path, scene);
+    public function navigateToCurrent():Void this.router.navigateToCurrent();
+    public function reload():Void this.navigateToCurrent();
 
     public function preload(?preloadScene:Class<PriPreloaderView>, ?onError:Void->Void, ?onComplete:Void->Void):Void {
         if (preloadScene == null) preloadScene = PriPreloaderViewDefault;
