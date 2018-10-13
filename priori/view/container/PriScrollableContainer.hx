@@ -1,5 +1,6 @@
 package priori.view.container;
 
+import priori.system.PriDeviceSystem;
 import js.html.TouchEvent;
 import priori.system.PriDeviceBrowser;
 import priori.event.PriMouseEvent;
@@ -86,18 +87,53 @@ class PriScrollableContainer extends PriGroup {
 
         if (canUpdate) {
             if (this.__mouseIsOver) {
-                if (this.scrollerX && this.scrollerY) {
-                    this.getElement().css("overflow", "auto");
-                } else if (this.scrollerX) {
-                    this.getElement().css("overflow-x", "auto");
-                } else if (this.scrollerY) {
-                    this.getElement().css("overflow-y", "auto");
+                if (PriDevice.deviceSystem() == PriDeviceSystem.IOS) {
+                    if (this.scrollerX && this.scrollerY) {
+                        this.dh.styles.set("overflow-x", "scroll");
+                        this.dh.styles.set("overflow-y", "scroll");
+                        this.dh.styles.set("-webkit-overflow-scrolling", "touch");
+
+                    } else if (this.scrollerX) {
+                        this.dh.styles.set("overflow-x", "scroll");
+                        this.dh.styles.remove("overflow-y");
+                        this.dh.styles.set("-webkit-overflow-scrolling", "touch");
+
+                    } else if (this.scrollerY) {
+                        this.dh.styles.remove("overflow-x");
+                        this.dh.styles.set("overflow-y", "scroll");
+                        this.dh.styles.set("-webkit-overflow-scrolling", "touch");
+
+                    } else {
+                        this.dh.styles.set("overflow-x", "hidden");
+                        this.dh.styles.set("overflow-y", "hidden");
+                        this.dh.styles.remove("-webkit-overflow-scrolling");
+
+                    }
                 } else {
-                    this.getElement().css("overflow", "hidden");
+                    if (this.scrollerX && this.scrollerY) {
+
+                        this.dh.styles.set("overflow-x", "auto");
+                        this.dh.styles.set("overflow-y", "auto");
+
+                    } else if (this.scrollerX) {
+                        this.dh.styles.set("overflow-x", "auto");
+                        this.dh.styles.remove("overflow-y");
+
+                    } else if (this.scrollerY) {
+                        this.dh.styles.remove("overflow-x");
+                        this.dh.styles.set("overflow-y", "auto");
+
+                    } else {
+                        this.dh.styles.set("overflow-x", "hidden");
+                        this.dh.styles.set("overflow-y", "hidden");
+                    }
                 }
             } else {
-                this.getElement().css("overflow", "hidden");
+                this.dh.styles.set("overflow-x", "hidden");
+                this.dh.styles.set("overflow-y", "hidden");
             }
+
+            this.__updateStyle();
         }
     }
 

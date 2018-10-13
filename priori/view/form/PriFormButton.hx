@@ -9,8 +9,8 @@ class PriFormButton extends PriFormElementBase {
 
         this.text = "Button";
 
-        // default button align
-        this.dh.jselement.style.textAlign = "center";
+        this.dh.styles.set("text-align", "center");
+        this.__updateStyle();
     }
 
     override public function set_pointer(value:Bool):Bool {

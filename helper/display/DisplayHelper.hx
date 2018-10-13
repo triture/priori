@@ -1,5 +1,6 @@
 package helper.display;
 
+import haxe.ds.StringMap;
 import priori.view.container.PriContainer;
 import haxe.Timer;
 import priori.geom.PriGeomPoint;
@@ -26,6 +27,8 @@ typedef DisplayHelper = {
     var depth:Int;
     var pointer:Bool;
     var focusable:Bool;
+    var visible:Bool;
+    var mouseEnabled:Bool;
 
     var dragdata:DragData;
 
@@ -44,4 +47,8 @@ typedef DisplayHelper = {
     var parent:PriContainer;
 
     var eventHelper:BrowserEventEngine;
+
+    var styles:StringMap<String>;
+    var styleString:String;
+    var holdStyleUpdate:Bool;
 }

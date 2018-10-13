@@ -191,6 +191,19 @@ class PriDisplay extends PriEventDispatcher {
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
 
+    private function __updateStyle():Void {
+        if (this.dh.jselement == null || this.dh.holdStyleUpdate) return;
+
+        var result:String = "";
+
+        for (key in this.dh.styles.keys()) result += key + ":" + this.dh.styles.get(key) + ";";
+
+        if (result != this.dh.styleString) {
+            this.dh.styleString = result;
+            this.dh.jselement.setAttribute("style", result);
+        }
+    }
+
     private function __onAdded(e:PriEvent):Void {
         this.updateDepth();
         DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
@@ -199,13 +212,13 @@ class PriDisplay extends PriEventDispatcher {
     private function set_corners(value:Array<Int>):Array<Int> {
         if (value == null || value.length == 0) {
             this.corners = value == null ? null : [];
-            this.dh.jselement.style.borderRadius = "";
+            this.dh.styles.remove("border-radius");
         } else {
             this.corners = value.copy();
-
-            if (value.length > 4) this.dh.jselement.style.borderRadius = value.copy().splice(0, 4).join("px ") + "px";
-            this.dh.jselement.style.borderRadius = value.join("px ") + "px";
+            this.dh.styles.set("border-radius", value.slice(0, 4).join("px ") + "px");
         }
+
+        this.__updateStyle();
 
         DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
 
@@ -236,11 +249,20 @@ class PriDisplay extends PriEventDispatcher {
         this.shadow = value;
 
         var shadowString:String = "";
+
         if (value != null && value.length > 0) shadowString = value.join(",");
 
-        this.dh.jselement.style.boxShadow = shadowString;
-        this.dh.jselement.style.setProperty("-moz-box-shadow", shadowString);
-        this.dh.jselement.style.setProperty("-webkit-box-shadow", shadowString);
+        if (shadowString.length == 0) {
+            this.dh.styles.remove("box-shadow");
+            this.dh.styles.remove("-moz-box-shadow");
+            this.dh.styles.remove("-webkit-box-shadow");
+        } else {
+            this.dh.styles.set("box-shadow", shadowString);
+            this.dh.styles.set("-moz-box-shadow", shadowString);
+            this.dh.styles.set("-webkit-box-shadow", shadowString);
+        }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -251,11 +273,21 @@ class PriDisplay extends PriEventDispatcher {
         var filterString:String = "";
         if (value != null) filterString = value.toString();
 
-        this.dh.jselement.style.filter = filterString;
-        this.dh.jselement.style.setProperty("-moz-filter", filterString);
-        this.dh.jselement.style.setProperty("-webkit-filter", filterString);
-        this.dh.jselement.style.setProperty("-o-filter", filterString);
-        this.dh.jselement.style.setProperty("-ms-filter", filterString);
+        if (filterString.length == 0) {
+            this.dh.styles.remove("filter");
+            this.dh.styles.remove("-moz-filter");
+            this.dh.styles.remove("-webkit-filter");
+            this.dh.styles.remove("-o-filter");
+            this.dh.styles.remove("-ms-filter");
+        } else {
+            this.dh.styles.set("filter", filterString);
+            this.dh.styles.set("-moz-filter", filterString);
+            this.dh.styles.set("-webkit-filter", filterString);
+            this.dh.styles.set("-o-filter", filterString);
+            this.dh.styles.set("-ms-filter", filterString);
+        }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -285,11 +317,13 @@ class PriDisplay extends PriEventDispatcher {
     private function set_clipping(value:Bool) {
         if (value) {
             this.dh.clipping = true;
-            this.dh.jselement.style.overflow = "hidden";
+            this.dh.styles.set("overflow", "hidden");
         } else {
             this.dh.clipping = false;
-            this.dh.jselement.style.overflow = "";
+            this.dh.styles.remove("overflow");
         }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -343,11 +377,13 @@ class PriDisplay extends PriEventDispatcher {
     private function set_width(value:Float) {
         if (value == null) {
             this.dh.width = null;
-            this.dh.jselement.style.width = "";
+            this.dh.styles.remove("width");
         } else {
             this.dh.width = Math.max(0, value);
-            this.dh.jselement.style.width = this.dh.width + "px";
+            this.dh.styles.set("width", this.dh.width + "px");
         }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -384,11 +420,13 @@ class PriDisplay extends PriEventDispatcher {
     private function set_height(value:Float):Float {
         if (value == null) {
             this.dh.height = null;
-            this.dh.jselement.style.height = "";
+            this.dh.styles.remove("height");
         } else {
             this.dh.height = Math.max(0, value);
-            this.dh.jselement.style.height = this.dh.height + "px";
+            this.dh.styles.set("height", this.dh.height + "px");
         }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -442,14 +480,26 @@ class PriDisplay extends PriEventDispatcher {
 
     private function set_x(value:Float) {
         this.dh.x = value;
-        this.dh.jselement.style.left = value + "px";
+        this.dh.styles.set("left", value + "px");
+
+        this.__updateStyle();
+
         return value;
+    }
+
+    public function startBatchUpdate():Void this.dh.holdStyleUpdate = true;
+    public function endBathUpdate():Void {
+        this.dh.holdStyleUpdate = false;
+        this.__updateStyle();
     }
 
 
     private function set_y(value:Float) {
         this.dh.y = value;
-        this.dh.jselement.style.top = value + "px";
+        this.dh.styles.set("top", value + "px");
+
+        this.__updateStyle();
+
         return value;
     }
 
@@ -463,43 +513,51 @@ class PriDisplay extends PriEventDispatcher {
     private function get_scaleX():Float return this.dh.scaleX;
     private function set_scaleX(value:Float):Float {
         this.dh.scaleX = value == null ? 1 : value == 0 ? BrowserHandler.MIN_FLOAT_POINT : value;
-        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        DomHelper.apply2dTransformation(this.dh.styles, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        this.__updateStyle();
         return value;
     }
 
     private function get_scaleY():Float return this.dh.scaleY;
     private function set_scaleY(value:Float):Float {
         this.dh.scaleY = value == null ? 1 : value == 0 ? BrowserHandler.MIN_FLOAT_POINT : value;
-        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        DomHelper.apply2dTransformation(this.dh.styles, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        this.__updateStyle();
         return value;
     }
 
     private function get_anchorX():Float return this.dh.anchorX;
     private function set_anchorX(value:Float):Float {
         this.dh.anchorX = value == null ? 0 : value;
-        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        DomHelper.apply2dTransformation(this.dh.styles, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        this.__updateStyle();
         return value;
     }
 
     private function get_anchorY():Float return this.dh.anchorY;
     private function set_anchorY(value:Float):Float {
         this.dh.anchorY = value == null ? 0 : value;
-        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        DomHelper.apply2dTransformation(this.dh.styles, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        this.__updateStyle();
         return value;
     }
 
     private function get_rotation():Float return this.dh.rotation;
     private function set_rotation(value:Float):Float {
         this.dh.rotation = value == null ? 0 : value;
-        DomHelper.apply2dTransformation(this.dh.jselement, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        DomHelper.apply2dTransformation(this.dh.styles, this.dh.scaleX, this.dh.scaleY, this.dh.rotation, this.dh.anchorX, this.dh.anchorY);
+        this.__updateStyle();
         return value;
     }
 
     private function get_alpha():Float return this.dh.alpha;
     private function set_alpha(value:Float) {
-        this.dh.alpha = value;
-        if (this.dh.alpha == 1) this.dh.jselement.style.opacity = "";
-        else this.dh.jselement.style.opacity = Std.string(value);
+        this.dh.alpha = value == null ? 1 : value;
+
+        if (value == null || value >= 1) this.dh.styles.remove("opacity");
+        else this.dh.styles.set("opacity", Std.string(value));
+        this.__updateStyle();
+
         return value;
     }
 
@@ -520,22 +578,22 @@ class PriDisplay extends PriEventDispatcher {
 
     private function updateDepth():Void {
         this.dh.depth = this.dh.parent.dh.depth - 1;
-        this.dh.jselement.style.zIndex = Std.string(this.dh.depth);
+        this.dh.styles.set("z-index", Std.string(this.dh.depth));
 
         if (this.dh.elementBorder != null) this.dh.elementBorder.style.zIndex = Std.string(this.dh.depth);
 
+        this.__updateStyle();
     }
 
-    public function getJSElement():Element {
-        return this.dh.jselement;
-    }
+    public function getJSElement():Element return this.dh.jselement;
+    public function getElement():JQuery return this.dh.element;
 
-    public function getElement():JQuery {
-        return this.dh.element;
-    }
 
     @:deprecated
-    private function setCSS(property:String, value:String):Void this.dh.element.css(property, value);
+    private function setCSS(property:String, value:String):Void {
+        this.dh.styles.set(property, value);
+        this.__updateStyle();
+    }
 
     @:deprecated
     private function getCSS(property:String):String return this.getElement().css(property);
@@ -544,11 +602,10 @@ class PriDisplay extends PriEventDispatcher {
     private function set_bgColor(value:PriColor):PriColor {
         this.dh.bgColor = value;
 
-        if (value == null) {
-            this.dh.jselement.style.backgroundColor = "";
-        } else {
-            this.dh.jselement.style.backgroundColor = value;
-        }
+        if (value == null) this.dh.styles.remove("background-color");
+        else this.dh.styles.set("background-color", value.toString());
+
+        this.__updateStyle();
 
         return value;
     }
@@ -556,9 +613,7 @@ class PriDisplay extends PriEventDispatcher {
     override public function addEventListener(event:String, listener:Dynamic->Void):Void {
         this.dh.eventHelper.registerEvent(event);
 
-        if (event == PriTapEvent.TAP) {
-            this.pointer = true;
-        }
+        if (event == PriTapEvent.TAP) this.pointer = true;
 
         super.addEventListener(event, listener);
     }
@@ -568,22 +623,22 @@ class PriDisplay extends PriEventDispatcher {
 
         if (!this.hasEvent(event)) this.dh.eventHelper.removeEvent(event);
 
-        if (event == PriTapEvent.TAP && this.hasEvent(PriTapEvent.TAP) == false) {
-            this.pointer = false;
-        }
+        if (event == PriTapEvent.TAP && this.hasEvent(PriTapEvent.TAP) == false) this.pointer = false;
     }
 
     private function createElement():Void {
         
         var jsElement:Element = js.Browser.document.createElement("div");
         jsElement.className = "priori_stylebase";
-        jsElement.style.cssText = 'left:0px;top:0px;width:${this.dh.width}px;height:${this.dh.height}px;overflow:hidden;';
 
         #if prioridebug
         jsElement.setAttribute("priori-class-name", Type.getClassName(Type.getClass(this)));
         #end
 
         this.dh.jselement = jsElement;
+
+        this.__updateStyle();
+
         this.dh.element = new JQuery(jsElement);
 
     }
@@ -604,14 +659,18 @@ class PriDisplay extends PriEventDispatcher {
         super.kill();
     }
 
-    private function get_visible():Bool {
-        if (this.dh.jselement.style.visibility == "hidden") return false;
-        return true;
-    }
-
+    private function get_visible():Bool return this.dh.visible;
     private function set_visible(value:Bool) {
-        if (value == true) this.dh.jselement.style.visibility = "";
-        else this.dh.jselement.style.visibility = "hidden";
+        if (value == true) {
+            this.dh.visible = true;
+            this.dh.styles.remove("visibility");
+        } else {
+            this.dh.visible = false;
+            this.dh.styles.set("visibility", "hidden");
+        }
+
+        this.__updateStyle();
+
         return value;
     }
 
@@ -619,20 +678,29 @@ class PriDisplay extends PriEventDispatcher {
     private function set_pointer(value:Bool) {
         if (value == true) {
             this.dh.pointer = true;
-            this.dh.jselement.style.cursor = "pointer";
+            this.dh.styles.set("cursor", "pointer");
         } else {
             this.dh.pointer = false;
-            this.dh.jselement.style.cursor = "";
+            this.dh.styles.remove("cursor");
         }
+
+        this.__updateStyle();
 
         return value;
     }
 
 
-    private function get_mouseEnabled():Bool return this.dh.jselement.style.getPropertyValue("pointer-events") != "none";
+    private function get_mouseEnabled():Bool return this.dh.mouseEnabled;
     private function set_mouseEnabled(value:Bool):Bool {
-        if (!value) this.dh.jselement.style.setProperty("pointer-events", "none");
-        else this.dh.jselement.style.removeProperty("pointer-events");
+        if (value == true) {
+            this.dh.mouseEnabled = true;
+            this.dh.styles.remove("pointer-events");
+        } else {
+            this.dh.mouseEnabled = false;
+            this.dh.styles.set("pointer-events", "none");
+        }
+
+        this.__updateStyle();
 
         return value;
     }
@@ -659,10 +727,7 @@ class PriDisplay extends PriEventDispatcher {
             DomHelper.disableAll(this.dh.jselement);
         } else {
             this.dh.jselement.removeAttribute("priori-disabled");
-
-            if (!this.hasDisabledParent()) {
-                DomHelper.enableAllUpPrioriDisabled(this.dh.jselement);
-            }
+            if (!this.hasDisabledParent()) DomHelper.enableAllUpPrioriDisabled(this.dh.jselement);
         }
 
         return value;

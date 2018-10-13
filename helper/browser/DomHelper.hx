@@ -1,5 +1,6 @@
 package helper.browser;
 
+import haxe.ds.StringMap;
 import helper.display.DisplayHelper;
 import js.html.DOMRect;
 import priori.geom.PriGeomBox;
@@ -60,7 +61,7 @@ class DomHelper {
         }
     }
 
-    public static function apply2dTransformation(el:Element, sx:Float, sy:Float, rot:Float, anchorX:Float, anchorY:Float):Void {
+    public static function apply2dTransformation(styleMap:StringMap<String>, sx:Float, sy:Float, rot:Float, anchorX:Float, anchorY:Float):Void {
         /* matrix reference */
         // SCALE
         // x 0 0
@@ -72,12 +73,18 @@ class DomHelper {
         // sinX  cosX   0
         //  0     0     1
 
-//        var rot:Float = this.dh.rotation;
-//        var sx:Float = this.dh.scaleX;
-//        var sy:Float = this.dh.scaleY;
-//
-//        var anchorX:Float = this.dh.anchorX*100;
-//        var anchorY:Float = this.dh.anchorY*100;
+        var browser:PriDeviceBrowser = PriDevice.browser();
+        var keyOrigin:String = "";
+        var keyTranform:String = "";
+
+        if (browser == PriDeviceBrowser.CHROME || browser == PriDeviceBrowser.WEBKIT) {
+            keyOrigin = "-webkit-transform-origin";
+            keyTranform = "-webkit-transform";
+        } else if (browser == PriDeviceBrowser.MSIE) {
+            keyOrigin = "-ms-transform-origin";
+            keyTranform = "-ms-transform";
+        }
+
 
         anchorX = anchorX*100;
         anchorY = anchorY*100;
@@ -125,19 +132,22 @@ class DomHelper {
             valOrigin = '$anchorX% $anchorY%';
             valMatrix = 'matrix(${calc(0, 0)}, ${calc(1, 0)}, ${calc(0, 1)}, ${calc(1, 1)}, ${calc(0, 2)}, ${calc(1, 2)})';
         }
+        
 
+        if (valOrigin.length == 0) {
+            styleMap.remove("transform-origin");
+            if (keyOrigin.length > 0) styleMap.remove(keyOrigin);
+        } else {
+            styleMap.set("transform-origin", valOrigin);
+            styleMap.set(keyOrigin, valOrigin);
+        }
 
-        el.style.transformOrigin = valOrigin;
-        el.style.transform = valMatrix;
-
-        var browser:PriDeviceBrowser = PriDevice.browser();
-
-        if (browser == PriDeviceBrowser.CHROME || browser == PriDeviceBrowser.WEBKIT) {
-            el.style.setProperty("-webkit-transform-origin", valOrigin);
-            el.style.setProperty("-webkit-transform", valMatrix);
-        } else if (browser == PriDeviceBrowser.MSIE) {
-            el.style.setProperty("-ms-transform-origin", valOrigin);
-            el.style.setProperty("-ms-transform", valMatrix);
+        if (valMatrix.length == 0) {
+            styleMap.remove("transform");
+            styleMap.remove(keyTranform);
+        } else {
+            styleMap.set("transform", valMatrix);
+            styleMap.set(keyTranform, valMatrix);
         }
 
     }

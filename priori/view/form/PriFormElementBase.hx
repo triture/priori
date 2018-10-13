@@ -34,11 +34,14 @@ class PriFormElementBase extends PriExtendable {
         if (this.__fontSize != value) {
             if (value == null) {
                 this.__fontSize = INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = '${INITIAL_FONT_SIZE}px';
+                this.dh.styles.set("font-size", '${INITIAL_FONT_SIZE}px');
+
             } else {
                 this.__fontSize = value;
-                this.dh.jselement.style.fontSize = Std.int(value) + "px";
+                this.dh.styles.set("font-size", Std.int(value) + "px");
             }
+
+            this.__updateStyle();
         }
 
         return value;
@@ -47,8 +50,10 @@ class PriFormElementBase extends PriExtendable {
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.jselement);
-        else StyleHelper.applyFontStyle(this.dh.jselement, value);
+        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.styles);
+        else StyleHelper.applyFontStyle(this.dh.styles, value);
+
+        this.__updateStyle();
 
         return value;
     }

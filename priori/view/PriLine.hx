@@ -51,23 +51,24 @@ class PriLine extends PriDisplay {
     private function __updateLine():Void {
         switch (this.direction) {
             case LineDirection.HORIZONTAL : {
-                this.dh.jselement.style.borderTopColor = this.lineColor;
-                this.dh.jselement.style.borderTopWidth = this.lineWidth + "px";
-                this.dh.jselement.style.borderTopStyle = switch(this.lineStyle) {
+
+                this.dh.styles.set("border-top-color", this.lineColor.toString());
+                this.dh.styles.set("border-top-width", this.lineWidth + "px");
+                this.dh.styles.set("border-top-style", switch(this.lineStyle) {
                     case PriBorderType.SOLID : "solid";
                     case PriBorderType.DASHED : "dashed";
                     case PriBorderType.DOTTED : "dotted";
-                };
+                });
             }
 
             case LineDirection.VERTICAL : {
-                this.dh.jselement.style.borderLeftColor = this.lineColor;
-                this.dh.jselement.style.borderLeftWidth = this.lineWidth + "px";
-                this.dh.jselement.style.borderLeftStyle = switch(this.lineStyle) {
+                this.dh.styles.set("border-left-color", this.lineColor.toString());
+                this.dh.styles.set("border-left-width", this.lineWidth + "px");
+                this.dh.styles.set("border-left-style", switch(this.lineStyle) {
                     case PriBorderType.SOLID : "solid";
                     case PriBorderType.DASHED : "dashed";
                     case PriBorderType.DOTTED : "dotted";
-                };
+                });
             }
         }
     }

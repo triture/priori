@@ -53,11 +53,12 @@ class PriApp extends PriGroup {
 
         this.focusable = true;
 
-        this.dh.jselement.style.width = "100%";
-        this.dh.jselement.style.height = "100%";
-        this.dh.jselement.style.position = "fixed";
+        this.dh.styles.set("width", "100%");
+        this.dh.styles.set("height", "100%");
+        this.dh.styles.set("position", "fixed");
+        StyleHelper.applyFontStyle(this.dh.styles, new PriFontStyle());
+        this.__updateStyle();
 
-        StyleHelper.applyFontStyle(this.dh.jselement, new PriFontStyle());
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";

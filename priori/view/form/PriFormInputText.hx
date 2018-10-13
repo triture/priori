@@ -52,7 +52,7 @@ class PriFormInputText extends PriFormElementBase {
             this.__placeholderElement.style.cssText = 'transform:translate(0px,-50%);-webkit-transform:translate(0px,-50%);-ms-transform:translate(0px,-50%);top:50%;left:${this.marginLeft}px;width:auto;height:auto;overflow:visible;pointer-events:none;font-size:inherit;';
 
             if (this.__placeHolderColorValue != null) this.__placeholderElement.style.color = this.__placeHolderColorValue;
-            if (this.placeholderStyle != null) StyleHelper.applyFontStyle(this.__placeholderElement, this.placeholderStyle);
+            if (this.placeholderStyle != null) StyleHelper.applyFontStyleDirect(this.__placeholderElement, this.placeholderStyle);
 
             this.__placeholderValidate();
         }
@@ -63,8 +63,8 @@ class PriFormInputText extends PriFormElementBase {
         this.placeholderStyle = value;
 
         if (this.__placeholderElement != null) {
-            if (value == null) StyleHelper.applyCleanFontStyle(this.__placeholderElement);
-            else StyleHelper.applyFontStyle(this.__placeholderElement, value);
+            if (value == null) StyleHelper.applyCleanFontStyleDirect(this.__placeholderElement);
+            else StyleHelper.applyFontStyleDirect(this.__placeholderElement, value);
         }
 
         return value;

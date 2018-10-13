@@ -1,5 +1,6 @@
 package helper.display;
 
+import haxe.ds.StringMap;
 import helper.browser.BrowserEventEngine;
 import helper.display.DisplayHelper;
 
@@ -21,6 +22,16 @@ class DisplayHelperIgnition {
     }
 
     static inline public function getDisplayHerlper():DisplayHelper {
+
+        var map:StringMap<String> = new StringMap<String>();
+
+        map.set("left", "0px");             // x
+        map.set("top", "0px");              // y
+        map.set("width", "100px");          // width
+        map.set("height", "100px");         // height
+        map.set("overflow", "hidden");      // clipping
+        map.set("z-index", "1000");         // depth
+
         return {
             bgColor : null,
 
@@ -32,6 +43,8 @@ class DisplayHelperIgnition {
             depth : 1000,
             pointer : false,
             focusable : false,
+            visible : true,
+            mouseEnabled : true,
 
             dragdata : null,
 
@@ -49,7 +62,10 @@ class DisplayHelperIgnition {
 
             parent : null,
 
-            eventHelper : new BrowserEventEngine()
+            eventHelper : new BrowserEventEngine(),
+            styles : map,
+            styleString : "",
+            holdStyleUpdate : false
         }
     }
 

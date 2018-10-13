@@ -44,15 +44,10 @@ class PriFormFileDrop extends PriFormElementBase {
     }
 
     override private function set_pointer(value:Bool) {
-        this.dh.pointer = value;
+        super.set_pointer(value);
 
-        if (value) {
-            this.dh.jselement.style.cursor = "pointer";
-            this._baseElement[0].style.cursor = "pointer";
-        } else {
-            this.dh.jselement.style.cursor = "";
-            this._baseElement[0].style.cursor = "";
-        }
+        if (value) this._baseElement[0].style.cursor = "pointer";
+        else this._baseElement[0].style.cursor = "";
 
         return value;
     }

@@ -88,19 +88,24 @@ class PriText extends PriDisplay {
         super();
 
         this.clipping = true;
+
         this.dh.height = null;
+        this.dh.styles.remove("height");
+
         this.dh.width = null;
+        this.dh.styles.remove("width");
+
+        this.__updateStyle();
     }
 
     private function get_lineHeight():Float return this.dth.lineHeight;
     private function set_lineHeight(value:Float):Float {
         this.dth.lineHeight = value;
 
-        if (value == null) {
-            this.dh.jselement.style.removeProperty("line-height");
-        } else {
-            this.dh.jselement.style.lineHeight = (value * 100) + "%";
-        }
+        if (value == null) this.dh.styles.remove("line-height");
+        else this.dh.styles.set("line-height", (value * 100) + "%");
+
+        this.__updateStyle();
 
         return value;
     }
@@ -127,8 +132,10 @@ class PriText extends PriDisplay {
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.jselement);
-        else StyleHelper.applyFontStyle(this.dh.jselement, value);
+        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.styles);
+        else StyleHelper.applyFontStyle(this.dh.styles, value);
+
+        this.__updateStyle();
 
         return value;
     }
@@ -138,11 +145,13 @@ class PriText extends PriDisplay {
         if (this.dth.fontSize != value) {
             if (value == null) {
                 this.dth.fontSize = DisplayHelperIgnition.INITIAL_FONT_SIZE;
-                this.dh.jselement.style.fontSize = '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px';
+                this.dh.styles.set("font-size", '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px');
             } else {
                 this.dth.fontSize = value;
-                this.dh.jselement.style.fontSize = Std.int(value) + "px";
+                this.dh.styles.set("font-size", Std.int(value) + "px");
             }
+
+            this.__updateStyle();
         }
 
         return value;
@@ -165,8 +174,10 @@ class PriText extends PriDisplay {
         if (this.dth.ellipsis != value) {
             this.dth.ellipsis = value;
 
-            if (this.dth.ellipsis) this.dh.jselement.style.textOverflow = "ellipsis";
-            else this.dh.jselement.style.textOverflow = "";
+            if (this.dth.ellipsis) this.dh.styles.set("text-overflow", "ellipsis");
+            else this.dh.styles.remove("text-overflow");
+
+            this.__updateStyle();
         }
 
         return value;
@@ -177,10 +188,12 @@ class PriText extends PriDisplay {
         if (this.dth.multiLine != value) {
             this.dth.multiLine = value;
 
-            if (value) this.dh.jselement.style.whiteSpace = "";
-            else this.dh.jselement.style.whiteSpace = "nowrap";
+            if (value) this.dh.styles.remove("white-space");
+            else this.dh.styles.set("white-space", "nowrap");
 
             if (value == false && this.dth.autoSize == true) super.set_width(null);
+
+            this.__updateStyle();
         }
 
         return value;
@@ -217,9 +230,7 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    private function ___onchange():Void {
-        this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
-    }
+    private function ___onchange():Void this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
 
     private function get_selectable():Bool return this.dth.selectable;
     private function set_selectable(value:Bool):Bool {
@@ -234,21 +245,25 @@ class PriText extends PriDisplay {
     }
 
     private function __setSelectableField():Void {
-        this.dh.jselement.style.setProperty("-webkit-touch-callout", "default");
-        this.dh.jselement.style.setProperty("-webkit-user-select", "text");
-        this.dh.jselement.style.setProperty("-khtml-user-select", "text");
-        this.dh.jselement.style.setProperty("-moz-user-select", "text");
-        this.dh.jselement.style.setProperty("-ms-user-select", "text");
-        this.dh.jselement.style.setProperty("user-select", "text");
+        this.dh.styles.set("-webkit-touch-callout", "default");
+        this.dh.styles.set("-webkit-user-select", "text");
+        this.dh.styles.set("-khtml-user-select", "text");
+        this.dh.styles.set("-moz-user-select", "text");
+        this.dh.styles.set("-ms-user-select", "text");
+        this.dh.styles.set("user-select", "text");
+
+        this.__updateStyle();
     }
 
     private function __setNotSelectableField():Void {
-        this.dh.jselement.style.removeProperty("-webkit-touch-callout");
-        this.dh.jselement.style.removeProperty("-webkit-user-select");
-        this.dh.jselement.style.removeProperty("-khtml-user-select");
-        this.dh.jselement.style.removeProperty("-moz-user-select");
-        this.dh.jselement.style.removeProperty("-ms-user-select");
-        this.dh.jselement.style.removeProperty("user-select");
+        this.dh.styles.remove("-webkit-touch-callout");
+        this.dh.styles.remove("-webkit-user-select");
+        this.dh.styles.remove("-khtml-user-select");
+        this.dh.styles.remove("-moz-user-select");
+        this.dh.styles.remove("-ms-user-select");
+        this.dh.styles.remove("user-select");
+
+        this.__updateStyle();
     }
 
     override private function set_width(value:Float):Float {
@@ -272,7 +287,10 @@ class PriText extends PriDisplay {
             }
         }
 
-        this.dh.jselement.style.textShadow = shadowString;
+        if (shadowString.length == 0) this.dh.styles.remove("text-shadow");
+        else this.dh.styles.set("text-shadow", shadowString);
+
+        this.__updateStyle();
 
         return value;
     }
@@ -280,11 +298,14 @@ class PriText extends PriDisplay {
     override private function createElement():Void {
         super.createElement();
 
-        this.dh.jselement.style.whiteSpace = "nowrap";
-        this.dh.jselement.style.fontSize = '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px';
-        this.dh.jselement.style.width = "";
-        this.dh.jselement.style.height = "";
-        this.dh.jselement.style.textOverflow = "ellipsis";
+        this.dh.styles.set("white-space", "nowrap");
+        this.dh.styles.set("font-size", '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px');
+        this.dh.styles.set("text-overflow", "ellipsis");
+
+        this.dh.styles.remove("width");
+        this.dh.styles.remove("height");
+
+        this.__updateStyle();
     }
 
     override public function kill():Void {
