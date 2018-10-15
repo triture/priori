@@ -1,5 +1,6 @@
 package helper.browser;
 
+import helper.display.DisplayHelper.PriMap;
 import haxe.ds.StringMap;
 import js.html.Element;
 import priori.style.font.PriFontStyle;
@@ -21,10 +22,10 @@ class StyleHelper {
     }
     public static function applyCleanFontStyleDirect(element:Element):Void applyFontStyleDirect(element, PriFontStyle.getFontStyleObjectBase());
 
-    public static function applyFontStyle(styleMap:StringMap<String>, fontStyle:PriFontStyle):Void runApplyFontStyle(styleMap, fontStyle.getFontStyleObject());
-    public static function applyCleanFontStyle(styleMap:StringMap<String>):Void runApplyFontStyle(styleMap, PriFontStyle.getFontStyleObjectBase());
+    public static function applyFontStyle(styleMap:PriMap, fontStyle:PriFontStyle):Void runApplyFontStyle(styleMap, fontStyle.getFontStyleObject());
+    public static function applyCleanFontStyle(styleMap:PriMap):Void runApplyFontStyle(styleMap, PriFontStyle.getFontStyleObjectBase());
 
-    private static function runApplyFontStyle(styleMap:StringMap<String>, values:Dynamic):Void {
+    private static function runApplyFontStyle(styleMap:PriMap, values:Dynamic):Void {
 
         values.fontFamily == null ? styleMap.remove("font-family") : styleMap.set("font-family", values.fontFamily);
         values.fontWeight == null ? styleMap.remove("font-weight") : styleMap.set("font-weight", values.fontWeight);

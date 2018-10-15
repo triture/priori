@@ -61,7 +61,7 @@ class DomHelper {
         }
     }
 
-    public static function apply2dTransformation(styleMap:StringMap<String>, sx:Float, sy:Float, rot:Float, anchorX:Float, anchorY:Float):Void {
+    public static function apply2dTransformation(styleMap:PriMap, sx:Float, sy:Float, rot:Float, anchorX:Float, anchorY:Float):Void {
         /* matrix reference */
         // SCALE
         // x 0 0
@@ -132,7 +132,7 @@ class DomHelper {
             valOrigin = '$anchorX% $anchorY%';
             valMatrix = 'matrix(${calc(0, 0)}, ${calc(1, 0)}, ${calc(0, 1)}, ${calc(1, 1)}, ${calc(0, 2)}, ${calc(1, 2)})';
         }
-        
+
 
         if (valOrigin.length == 0) {
             styleMap.remove("transform-origin");

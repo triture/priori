@@ -192,16 +192,15 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function __updateStyle():Void {
-        if (this.dh.jselement == null || this.dh.holdStyleUpdate) return;
+        if (this.dh.holdStyleUpdate || this.dh.jselement == null) return;
 
-        var result:String = "";
-
-        for (key in this.dh.styles.keys()) result += key + ":" + this.dh.styles.get(key) + ";";
+        var result:String = this.dh.styles.getValue();
 
         if (result != this.dh.styleString) {
             this.dh.styleString = result;
             this.dh.jselement.setAttribute("style", result);
         }
+
     }
 
     private function __onAdded(e:PriEvent):Void {

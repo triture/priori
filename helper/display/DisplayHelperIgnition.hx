@@ -23,7 +23,7 @@ class DisplayHelperIgnition {
 
     static inline public function getDisplayHerlper():DisplayHelper {
 
-        var map:StringMap<String> = new StringMap<String>();
+        var map:PriMap = new PriMap();
 
         map.set("left", "0px");             // x
         map.set("top", "0px");              // y
