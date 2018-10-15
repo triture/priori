@@ -87,15 +87,11 @@ class PriText extends PriDisplay {
     public function new() {
         super();
 
+        this.startBatchUpdate();
         this.clipping = true;
-
         this.dh.height = null;
-        this.dh.styles.remove("height");
-
         this.dh.width = null;
-        this.dh.styles.remove("width");
-
-        this.__updateStyle();
+        this.endBathUpdate();
     }
 
     private function get_lineHeight():Float return this.dth.lineHeight;
@@ -301,7 +297,6 @@ class PriText extends PriDisplay {
         this.dh.styles.set("white-space", "nowrap");
         this.dh.styles.set("font-size", '${DisplayHelperIgnition.INITIAL_FONT_SIZE}px');
         this.dh.styles.set("text-overflow", "ellipsis");
-
         this.dh.styles.remove("width");
         this.dh.styles.remove("height");
 

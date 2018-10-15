@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.app.PriApp;
 import helper.browser.BrowserHandler;
 import helper.display.DisplayHelperIgnition;
 import priori.geom.PriGeomPoint;
@@ -198,7 +199,7 @@ class PriDisplay extends PriEventDispatcher {
 
         if (result != this.dh.styleString) {
             this.dh.styleString = result;
-            this.dh.jselement.setAttribute("style", result);
+            this.dh.jselement.style.cssText = result;
         }
 
     }
@@ -344,15 +345,9 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function getOutDOMDimensions():PriGeomBox {
-        var clone:JQuery = this.dh.element.clone(false);
+        PriApp.g().frame.innerHTML = this.dh.jselement.outerHTML;
 
-        var body:JQuery = new JQuery("body");
-        body.append(clone);
-
-        var box:PriGeomBox = DomHelper.getBoundingClientRect(clone[0]);
-
-        clone.remove();
-        clone = null;
+        var box:PriGeomBox = DomHelper.getBoundingClientRect(PriApp.g().frame.getElementsByTagName("div")[0]);
 
         return box;
     }
@@ -409,8 +404,6 @@ class PriDisplay extends PriEventDispatcher {
 
                 if (refScale != 0 && refScale != 1) result = result/refScale;
             }
-
-
         }
 
         return result;

@@ -1,5 +1,7 @@
 package priori.app;
 
+import js.html.DivElement;
+import priori.view.PriFrame;
 import priori.event.PriFocusEvent;
 import priori.style.font.PriFontStyle;
 import helper.browser.StyleHelper;
@@ -35,6 +37,9 @@ class PriApp extends PriGroup {
     private var _timer:Timer;
 
     private var _fullSetupCalled:Bool;
+
+    @:allow(priori.view.PriDisplay)
+    private var frame:DivElement;
 
     public function new() {
 
@@ -80,6 +85,12 @@ class PriApp extends PriGroup {
         this.___applyPreventBackspace();
 
         Browser.window.document.body.appendChild(this.dh.jselement);
+
+
+        this.frame = Browser.document.createDivElement();
+        this.frame.className = "priori_stylebase";
+        this.frame.style.cssText = "overflow:visible;width:1000px;height:1000px;left:-1000px;top:1000px;";
+        Browser.window.document.body.appendChild(this.frame);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));

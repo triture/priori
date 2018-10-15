@@ -1,5 +1,6 @@
 package priori.view;
 
+import js.html.HTMLDocument;
 import js.html.IFrameElement;
 import priori.view.PriDisplay;
 import priori.event.PriEvent;
@@ -23,6 +24,14 @@ class PriFrame extends PriDisplay {
         this._iframe.style.border = "0px";
 
         this.dh.jselement.appendChild(this._iframe);
+    }
+
+    public function setHtml(value:String):Void {
+        this._iframe.srcdoc = value;
+    }
+
+    public function frameDoc():HTMLDocument {
+        return this._iframe.contentDocument;
     }
 
     private function get_url():String {

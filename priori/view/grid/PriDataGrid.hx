@@ -485,6 +485,8 @@ class PriDataGrid extends PriGroup {
         if (scrollPos < 0) scrollPos = 0; 
         else if (scrollPos + viewHeight > this.__rowContainer.height) scrollPos = this.__rowContainer.height - viewHeight;
 
+        if (scrollPos < 0) scrollPos = 0;
+
         var itemHeight:Float = this.calculateRowHeight().all + (this.horizontalGridLines ? 1 : 0);
         var totalItens:Int = this.data == null ? 0 : this.data.length;
 
