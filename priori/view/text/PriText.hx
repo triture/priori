@@ -107,20 +107,28 @@ class PriText extends PriDisplay {
     }
 
     private function get_text():String {
-        if (this.dth.editable) this.dth.text = this.dh.jselement.innerText;
+        if (this.dth.editable || this.dth.text == null) this.dth.text = this.dh.jselement.innerText;
         return this.dth.text;
     }
-
     private function set_text(value:String):String {
-        this.dth.text = value;
-        this.dh.jselement.innerText = value;
+        if (this.dth.text != value) {
+            this.dth.text = value;
+            this.dth.html = null;
+            this.dh.jselement.innerText = value;
+        }
         return value;
     }
 
-    private function get_html():String return this.dh.jselement.innerHTML;
+    private function get_html():String {
+        if (this.dth.editable || this.dth.html == null) this.dth.html = this.dh.jselement.innerHTML;
+        return this.dth.html;
+    }
     private function set_html(value:String):String {
-        this.dh.jselement.innerHTML = value;
-        this.dth.text = this.dh.jselement.innerText;
+        if (this.dth.html != value) {
+            this.dth.html = value;
+            this.dth.text = null;
+            this.dh.jselement.innerHTML = value;
+        }
         return value;
     }
 

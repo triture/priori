@@ -2,6 +2,7 @@ package helper.display;
 
 typedef DisplayTextHelper = {
     var text:String;
+    var html:String;
     var fontSize:Float;
     var autoSize:Bool;
     var multiLine:Bool;

@@ -11,6 +11,7 @@ class DisplayHelperIgnition {
     static inline public function getDisplayTextHelper():DisplayTextHelper {
         return {
             text : "",
+            html : "",
             fontSize : INITIAL_FONT_SIZE,
             autoSize : true,
             multiLine : false,
