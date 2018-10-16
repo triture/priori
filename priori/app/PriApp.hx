@@ -89,7 +89,7 @@ class PriApp extends PriGroup {
 
         this.frame = Browser.document.createDivElement();
         this.frame.className = "priori_stylebase";
-        this.frame.style.cssText = "overflow:visible;width:1000px;height:1000px;left:-1000px;top:1000px;";
+        this.frame.style.cssText = "overflow:visible;width:1000px;height:1000px;visibility:hidden;";
         Browser.window.document.body.appendChild(this.frame);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));

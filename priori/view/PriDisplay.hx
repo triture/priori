@@ -1,5 +1,6 @@
 package priori.view;
 
+import haxe.ds.StringMap;
 import priori.app.PriApp;
 import helper.browser.BrowserHandler;
 import helper.display.DisplayHelperIgnition;
@@ -344,10 +345,19 @@ class PriDisplay extends PriEventDispatcher {
         return result;
     }
 
+    static private var OUTER_DOM_SIZE_CACHE:StringMap<PriGeomBox> = new StringMap<PriGeomBox>();
+
     private function getOutDOMDimensions():PriGeomBox {
+
+        var code:String = this.dh.jselement.outerHTML;
+
+        if (OUTER_DOM_SIZE_CACHE.exists(code)) return OUTER_DOM_SIZE_CACHE.get(code);
+
         PriApp.g().frame.innerHTML = this.dh.jselement.outerHTML;
 
         var box:PriGeomBox = DomHelper.getBoundingClientRect(PriApp.g().frame.getElementsByTagName("div")[0]);
+
+        OUTER_DOM_SIZE_CACHE.set(code, box);
 
         return box;
     }
