@@ -16,8 +16,10 @@ class DomHelper {
 
         el.setAttribute("disabled", "disabled");
 
-        for (i in 0 ... el.children.length) {
-            disableAll(el.children.item(i));
+        if (el.children != null) {
+            for (i in 0 ... el.children.length) {
+                disableAll(el.children.item(i));
+            }
         }
     }
 
@@ -25,8 +27,10 @@ class DomHelper {
         if (!el.hasAttribute("priori-disabled")) {
             el.removeAttribute("disabled");
 
-            for (i in 0 ... el.children.length) {
-                enableAllUpPrioriDisabled(el.children.item(i));
+            if (el.children != null) {
+                for (i in 0 ... el.children.length) {
+                    enableAllUpPrioriDisabled(el.children.item(i));
+                }
             }
         }
     }
@@ -35,9 +39,11 @@ class DomHelper {
 
         if (el == seekChild) return true;
         else
-            for (i in 0 ... el.children.length) {
-                if (hasChild(el.children.item(i), seekChild)) {
-                    return true;
+            if (el.children != null) {
+                for (i in 0 ... el.children.length) {
+                    if (hasChild(el.children.item(i), seekChild)) {
+                        return true;
+                    }
                 }
             }
 
