@@ -61,12 +61,18 @@ class PriApp extends PriGroup {
         this.dh.styles.set("width", "100%");
         this.dh.styles.set("height", "100%");
         this.dh.styles.set("position", "fixed");
-        StyleHelper.applyFontStyle(this.dh.styles, new PriFontStyle());
-        this.__updateStyle();
 
+        this.clipping = true;
+
+        StyleHelper.applyFontStyle(this.dh.styles, new PriFontStyle());
+
+        this.__updateStyle();
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
+        Browser.window.document.body.style.overflow = "hidden";
+        Browser.window.document.body.style.position = "fixed";
+
         if (Browser.window.document.addEventListener != null) {
             Browser.window.document.addEventListener("mousemove", this.___onPointerMove, true);
             Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
@@ -89,7 +95,7 @@ class PriApp extends PriGroup {
 
         this.frame = Browser.document.createDivElement();
         this.frame.className = "priori_stylebase";
-        this.frame.style.cssText = "overflow:visible;width:1000px;height:1000px;visibility:hidden;";
+        this.frame.style.cssText = "overflow:visible;width:1px;height:1px;visibility:hidden;";
         Browser.window.document.body.appendChild(this.frame);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
