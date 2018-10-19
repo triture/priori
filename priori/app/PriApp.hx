@@ -62,6 +62,8 @@ class PriApp extends PriGroup {
         this.dh.styles.set("height", "100%");
         this.dh.styles.set("position", "fixed");
 
+        this.bgColor = 0xFFFFFF;
+
         this.clipping = true;
 
         StyleHelper.applyFontStyle(this.dh.styles, new PriFontStyle());
@@ -70,8 +72,6 @@ class PriApp extends PriGroup {
 
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
-        Browser.window.document.body.style.overflow = "hidden";
-        Browser.window.document.body.style.position = "fixed";
 
         if (Browser.window.document.addEventListener != null) {
             Browser.window.document.addEventListener("mousemove", this.___onPointerMove, true);
@@ -149,11 +149,13 @@ class PriApp extends PriGroup {
     }
 
     public function getAppSize():PriGeomBox {
-        var b:PriGeomBox = new PriGeomBox();
-        var e:JQuery = this.getWindow();
 
-        b.width = e.width();
-        b.height = e.height();
+        if (this.dh.jselement == null) return new PriGeomBox();
+
+        var b:PriGeomBox = new PriGeomBox();
+
+        b.width = this.dh.jselement.clientWidth;
+        b.height = this.dh.jselement.clientHeight;
         b.x = 0;
         b.y = 0;
 
