@@ -161,30 +161,30 @@ class PriScrollableContainer extends PriGroup {
     }
 
 
-    private function get_scrollY():Float return this.getElement().scrollTop();
+    private function get_scrollY():Float return this.dh.jselement.scrollTop;
     private function set_scrollY(value:Float) {
-        this.getElement().scrollTop(value);
+        this.dh.jselement.scrollTop = cast value;
         return value;
     }
 
-    private function get_scrollX():Float return this.getElement().scrollLeft();
+    private function get_scrollX():Float return this.dh.jselement.scrollLeft;
     private function set_scrollX(value:Float) {
-        this.getElement().scrollLeft(value);
+        this.dh.jselement.scrollLeft = cast value;
         return value;
     }
 
     private function get_maxScrollY():Float {
-        var result:Float = Std.parseFloat(this.getElement().prop("scrollHeight"));
-        if (result == null || Math.isNaN(result)) result = 0;
+        var result:Float = this.dh.jselement.scrollHeight;
+        if (result == null || Math.isNaN(result)) return 0;
 
-        return result;
+        return Math.max(0, result - this.height);
     }
 
     private function get_maxScrollX():Float {
-        var result:Float = Std.parseFloat(this.getElement().prop("scrollWidth"));
-        if (result == null || Math.isNaN(result)) result = 0;
+        var result:Float = this.dh.jselement.scrollWidth;
+        if (result == null || Math.isNaN(result)) return 0;
 
-        return result;
+        return Math.max(0, result - this.width);
     }
 
     override public function kill():Void {
