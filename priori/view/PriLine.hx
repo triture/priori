@@ -71,6 +71,8 @@ class PriLine extends PriDisplay {
                 });
             }
         }
+
+        this.__updateStyle();
     }
 
     override private function set_width(value:Float):Float {
