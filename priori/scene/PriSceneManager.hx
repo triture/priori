@@ -21,9 +21,7 @@ class PriSceneManager {
     }
 
     private var currentScene:PriSceneView;
-
     private var sceneHistory:Array<{scene:Class<PriSceneView>, args:Array<Dynamic>}>;
-
     private var isPreloading:Bool;
 
     @:isVar public var holder(get, set):PriContainer;
@@ -46,6 +44,10 @@ class PriSceneManager {
         this.router = new RouteManager();
     }
 
+    public function hasScope(scope:String) return this.router.hasScope(scope);
+    public function addScope(scope:String):Void this.router.addScope(scope);
+    public function removeScope(scope:String):Void this.router.removeScope(scope);
+
     private function get_router():RouteManager return this.router;
     private function get_container():PriContainer return this.container;
     private function get_holder():PriContainer return this.holder;
@@ -59,7 +61,7 @@ class PriSceneManager {
         return value;
     }
 
-    public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>):Void this.router.addRoute(path, scene);
+    public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>, ?scope:String):Void this.router.addRoute(path, scene, scope);
     public function navigateToCurrent():Void this.router.navigateToCurrent();
     public function reload():Void this.navigateToCurrent();
 
@@ -102,7 +104,11 @@ class PriSceneManager {
         if (StringTools.startsWith(path,"/")) path = "#" + path;
         else path = "#/" + path;
 
-        js.Browser.location.hash = path;
+        if (js.Browser.location.hash == path) {
+            this.navigateToCurrent();
+        } else {
+            js.Browser.location.hash = path;
+        }
     }
 
     @:allow(priori.scene.route.RouteManager)

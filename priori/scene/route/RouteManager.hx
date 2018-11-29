@@ -9,13 +9,18 @@ class RouteManager {
 
     private var routes:StringMap<RouteItem>;
     private var initialized:Bool = false;
+    private var scope:Array<String> = [];
 
     @:allow(priori.scene.PriSceneManager)
     private function new() {
         this.routes = new StringMap<RouteItem>();
     }
 
-    public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>):Void {
+    public function hasScope(scope:String) return this.scope.indexOf(scope) >= 0;
+    public function addScope(scope:String):Void if (!this.hasScope(scope)) this.scope.push(scope);
+    public function removeScope(scope:String):Void this.scope.remove(scope);
+
+    public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>, ?scope:String):Void {
         if (path == null) throw "Route values cannot be NULL";
 
         var signature:String = path.getSignature();
@@ -27,7 +32,8 @@ class RouteManager {
             {
                 signature : signature,
                 path : path,
-                scene : scene
+                scene : scene,
+                scope : scope
             }
         );
 
@@ -47,17 +53,17 @@ class RouteManager {
     public function openScene(path:String):Void {
         var item:RouteItem = this.locatePath(path);
 
-        if (item != null) {
-            var data:Dynamic = item.path.extractData(path);
+        if (item != null && (item.scope == null || StringTools.trim(item.scope).length == 0 || this.hasScope(item.scope))) {
 
+            var data:Dynamic = item.path.extractData(path);
             var scene:PriSceneView = Type.createInstance(item.scene, [data]);
 
             PriSceneManager.use().changeScene(scene);
+
         } else if (this.routes.exists("**")) {
             js.Browser.location.hash = "#/";
         }
 
-        return null;
     }
 
     private function locatePath(path:String):RouteItem {
@@ -105,4 +111,5 @@ private typedef RouteItem = {
     var signature:String;
     var path:PriRoutePathType;
     var scene:Class<PriSceneView>;
+    var scope:String;
 }
