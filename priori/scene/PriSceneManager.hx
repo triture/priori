@@ -61,6 +61,18 @@ class PriSceneManager {
         return value;
     }
 
+    public function getHistoryCount():Int return js.Browser.window.history.length - 1;
+    public function historyBack():Void {
+        try {
+            js.Browser.window.history.back();
+        } catch(e:Dynamic) {}
+    }
+    public function hitoryForward():Void {
+        try {
+            js.Browser.window.history.forward();
+        } catch(e:Dynamic) {}
+    }
+
     public function addRoute(path:PriRoutePathType, scene:Class<PriSceneView>, ?scope:String):Void this.router.addRoute(path, scene, scope);
     public function navigateToCurrent():Void this.router.navigateToCurrent();
     public function reload():Void this.navigateToCurrent();
