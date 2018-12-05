@@ -100,6 +100,15 @@ class PriSceneManager {
         AssetManager.g().load();
     }
 
+    public function updatePath(path:String):Void {
+
+        if (StringTools.startsWith(path,"/")) path = "#" + path;
+        else path = "#/" + path;
+
+        js.Browser.window.history.replaceState({}, "", path);
+
+    }
+
     public function navigate(path:String):Void {
         if (StringTools.startsWith(path,"/")) path = "#" + path;
         else path = "#/" + path;
@@ -109,6 +118,11 @@ class PriSceneManager {
         } else {
             js.Browser.location.hash = path;
         }
+    }
+
+    public function replaceAndNavigate(path:String):Void {
+        this.updatePath(path);
+        this.navigateToCurrent();
     }
 
     @:allow(priori.scene.route.RouteManager)
