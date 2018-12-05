@@ -28,6 +28,7 @@ class PriSceneManager {
     @:isVar public var container(get, null):PriContainer;
 
     private var router:RouteManager;
+    private var historyIndexPosition:Int;
 
     private function new() {
 
@@ -61,11 +62,17 @@ class PriSceneManager {
         return value;
     }
 
-    public function getHistoryCount():Int return js.Browser.window.history.length - 1;
-    public function historyBack():Void {
+    public function historyBack():Bool {
         try {
+            var currLoc:String = js.Browser.location.hash;
+
             js.Browser.window.history.back();
-        } catch(e:Dynamic) {}
+
+            if (currLoc == js.Browser.location.hash) return false;
+            else return true;
+        } catch(e:Dynamic) {
+            return false;
+        }
     }
     public function hitoryForward():Void {
         try {
