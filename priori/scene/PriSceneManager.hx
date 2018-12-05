@@ -62,17 +62,10 @@ class PriSceneManager {
         return value;
     }
 
-    public function historyBack():Bool {
+    public function historyBack():Void {
         try {
-            var currLoc:String = js.Browser.location.hash;
-
             js.Browser.window.history.back();
-
-            if (currLoc == js.Browser.location.hash) return false;
-            else return true;
-        } catch(e:Dynamic) {
-            return false;
-        }
+        } catch(e:Dynamic) {}
     }
     public function hitoryForward():Void {
         try {
