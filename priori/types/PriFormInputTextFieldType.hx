@@ -6,4 +6,5 @@ abstract PriFormInputTextFieldType(String) {
     var EMAIL = "email";
     var PASSWORD = "password";
     var NUMBER = "number";
+    var DATE = "date";
 }
