@@ -149,6 +149,16 @@ class PriSceneManager {
         if (newScene != null) {
 
             this.currentScene = newScene;
+
+            var w:Float = this.holder.width;
+            var h:Float = this.holder.height;
+
+            this.container.width = w;
+            this.container.height = h;
+
+            newScene.width = w;
+            newScene.height = h;
+
             this.container.addChild(newScene);
 
             if (this.container.parent != this.holder) this.holder.addChild(this.container);
