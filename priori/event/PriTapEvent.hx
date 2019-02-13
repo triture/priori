@@ -6,6 +6,10 @@ class PriTapEvent extends PriMouseEvent {
     inline public static var TAP_DOWN:String = "mousedown";
     inline public static var TAP_UP:String = "mouseup";
 
+    inline public static var TOUCH_DOWN:String = "touchdown";
+    inline public static var TOUCH_UP:String = "touchup";
+    inline public static var TOUCH_MOVE:String = "touchmove";
+
     public function new(type:String, propagate:Bool = false, bubble:Bool = false, data:Dynamic = null) {
         super(type, propagate, bubble, data);
     }

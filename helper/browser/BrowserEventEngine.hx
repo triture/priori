@@ -1,5 +1,6 @@
 package helper.browser;
 
+import js.html.TouchEvent;
 import js.jquery.Event;
 import js.html.MouseEvent;
 import priori.geom.PriGeomPoint;
@@ -81,6 +82,10 @@ class BrowserEventEngine {
             PriTapEvent.TAP_UP,
             PriTapEvent.TAP,
 
+            PriTapEvent.TOUCH_DOWN,
+            PriTapEvent.TOUCH_UP,
+            PriTapEvent.TOUCH_MOVE,
+
             PriEvent.SCROLL,
 
             "keyup",
@@ -100,6 +105,10 @@ class BrowserEventEngine {
             case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = this.on_mouse_move;
             case PriTapEvent.TAP : this.jsel.onclick = this.on_mouse_click;
 
+            case PriTapEvent.TOUCH_DOWN : this.jsel.ontouchstart = this.on_touch_down;
+            case PriTapEvent.TOUCH_UP : this.jsel.ontouchend = this.on_touch_up;
+            case PriTapEvent.TOUCH_MOVE : this.jsel.ontouchmove = this.on_touch_move;
+
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
             case "focusin" : this.jqel.on("focusin", this.on_focus_in);
@@ -117,6 +126,10 @@ class BrowserEventEngine {
             case PriTapEvent.TAP_UP : this.jsel.onmouseup = null;
             case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = null;
             case PriTapEvent.TAP : this.jsel.onclick = null;
+
+            case PriTapEvent.TOUCH_DOWN : this.jsel.ontouchstart = null;
+            case PriTapEvent.TOUCH_UP : this.jsel.ontouchend = null;
+            case PriTapEvent.TOUCH_MOVE : this.jsel.ontouchmove = null;
 
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);
@@ -172,6 +185,54 @@ class BrowserEventEngine {
 
         this.display.dispatchEvent(pe);
     }
+
+    private function on_touch_down(e:TouchEvent):Void {
+        if (this.display.disabled) return;
+        e.stopPropagation();
+
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TOUCH_DOWN);
+        pe.__real = cast e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
+        this.display.dispatchEvent(pe);
+    }
+
+    private function on_touch_up(e:TouchEvent):Void {
+        if (this.display.disabled) return;
+        e.stopPropagation();
+
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TOUCH_UP);
+        pe.__real = cast e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
+        this.display.dispatchEvent(pe);
+    }
+
+    private function on_touch_move(e:TouchEvent):Void {
+        if (this.display.disabled) return;
+        e.stopPropagation();
+
+        var pe:PriTapEvent = new PriTapEvent(PriTapEvent.TOUCH_MOVE);
+        pe.__real = cast e;
+
+        pe.altKey = pe.__real.altKey;
+        pe.ctrlKey = pe.__real.ctrlKey;
+        pe.shiftKey = pe.__real.shiftKey;
+        pe.metaKey = pe.__real.metaKey;
+
+        this.display.dispatchEvent(pe);
+
+    }
+
+
 
     private function on_mouse_down(e:MouseEvent):Void {
         if (this.display.disabled) return;
