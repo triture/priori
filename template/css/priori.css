@@ -36,6 +36,7 @@ option {
 }
 
 * {
+    -webkit-text-size-adjust: none;
     -webkit-tap-highlight-color: transparent;
     outline: none !important;
 }
