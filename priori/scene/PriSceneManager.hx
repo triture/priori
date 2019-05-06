@@ -45,6 +45,13 @@ class PriSceneManager {
         this.router = new RouteManager();
     }
 
+    public function clearHistoryAndNavigate(path:String):Void {
+        try {
+            js.Browser.window.history.go(js.Browser.window.history.length * -1);
+            this.replaceAndNavigate(path);
+        } catch (e:Dynamic) {}
+    }
+
     public function hasScope(scope:String) return this.router.hasScope(scope);
     public function addScope(scope:String):Void this.router.addScope(scope);
     public function removeScope(scope:String):Void this.router.removeScope(scope);
