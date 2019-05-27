@@ -26,6 +26,8 @@ class PriDataGrid extends PriGroup {
     @:isVar public var rowHeight(default, set):Float;
     @:isVar public var headerHeight(default, set):Float;
 
+    @:isVar public var bottomSpace(default, set):Float = 0;
+
     @:isVar public var verticalGridLines(default, set):Bool;
     @:isVar public var verticalGridLineColor(default, set):Int;
     @:isVar public var horizontalGridLines(default, set):Bool;
@@ -48,6 +50,8 @@ class PriDataGrid extends PriGroup {
     private var __rowContainer:PriContainer;
     private var __usedRows:Array<PriGridRow>;
     private var __pooledRows:Array<PriGridRow>;
+
+    private var finalElement:PriDisplay;
 
     private var __rowAutoSize:Bool;
 
@@ -74,6 +78,10 @@ class PriDataGrid extends PriGroup {
         this.scrollerContainer = new PriScrollableContainer();
         this.scrollerContainer.addEventListener(PriEvent.SCROLL, onScroll);
 
+        this.finalElement = new PriDisplay();
+        this.finalElement.width = 1;
+        this.finalElement.height = this.bottomSpace;
+
         this.__renderRowIndexStart = -1;
         this.__renderRowIndexEnd = -1;
 
@@ -99,6 +107,15 @@ class PriDataGrid extends PriGroup {
 
 
         this.addEventListener(PriDataGridEvent.SORT, this.onDataGridSort);
+    }
+
+    private function set_bottomSpace(value:Float):Float {
+        this.bottomSpace = value == null || value < 0 ? 0 : value;
+        if (this.__rowContainer != null) {
+            this.finalElement.height = this.bottomSpace;
+            this.finalElement.y = this.__rowContainer.maxY;
+        }
+        return value;
     }
 
     @:noCompletion private function set_scrollY(value:Float) {
@@ -140,6 +157,8 @@ class PriDataGrid extends PriGroup {
     override private function setup():Void {
         this.addChild(this.header);
         this.addChild(this.scrollerContainer);
+
+        this.scrollerContainer.addChild(this.finalElement);
         this.scrollerContainer.addChild(this.__rowContainer);
     }
 
@@ -175,6 +194,9 @@ class PriDataGrid extends PriGroup {
         this.__rowContainer.y = 0;
         this.__rowContainer.width = this.scrollerContainer.width;
 
+        this.finalElement.height = this.bottomSpace;
+        this.finalElement.y = this.__rowContainer.maxY;
+
         this.updateVerticalLines();
     }
 
@@ -194,6 +216,9 @@ class PriDataGrid extends PriGroup {
         }
 
         this.__rowContainer.height = rowContainerHeight;
+
+        this.finalElement.height = this.bottomSpace;
+        this.finalElement.y = this.__rowContainer.maxY;
     }
 
     private function organizeRowPosition():Void {
