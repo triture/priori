@@ -129,8 +129,12 @@ class PriSceneManager {
     }
 
     public function navigate(path:String):Void {
-        if (StringTools.startsWith(path,"/")) path = "#" + path;
+
+        if (StringTools.startsWith(path, "#")) path = path.substr(1);
+
+        if (StringTools.startsWith(path, "/")) path = "#" + path;
         else path = "#/" + path;
+
 
         if (js.Browser.location.hash == path) {
             this.navigateToCurrent();
