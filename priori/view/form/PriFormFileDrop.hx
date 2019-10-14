@@ -2,7 +2,11 @@ package priori.view.form;
 
 import haxe.io.BytesData;
 import haxe.io.Bytes;
+#if (haxe_ver >= 4.0)
+import js.html.ArrayBuffer;
+#else
 import js.html.compat.ArrayBuffer;
+#end
 import haxe.crypto.Base64;
 import js.html.FileReader;
 import priori.system.PriDevice;

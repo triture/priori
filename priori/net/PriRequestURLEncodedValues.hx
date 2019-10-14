@@ -2,10 +2,18 @@ package priori.net;
 
 import js.jquery.JQuery;
 
+#if (haxe_ver >= 4.0)
+class PriRequestURLEncodedValues {
+#else
 class PriRequestURLEncodedValues implements Dynamic {
+#end
 
     public function new() {
 
+    }
+
+    public function setField(field:String, value:Dynamic):Void {
+    	Reflect.setField(this, field, value);
     }
 
     public function toString():String {

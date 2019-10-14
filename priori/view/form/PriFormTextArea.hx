@@ -5,7 +5,7 @@ import priori.geom.PriColor;
 import priori.app.PriApp;
 import priori.event.PriEvent;
 import js.jquery.Event;
-import js.JQuery;
+import js.jquery.JQuery;
 
 class PriFormTextArea extends PriFormElementBase {
 

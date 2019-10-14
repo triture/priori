@@ -92,7 +92,10 @@ class PriURLLoader extends PriEventDispatcher {
 
             if (Std.is(request.data, PriRequestURLEncodedValues)) {
                 contentType = PriRequestContentType.FORM_URLENCODED;
-                value = cast(request.data, PriRequestURLEncodedValues).toString();
+                
+                var valueEncode:PriRequestURLEncodedValues = request.data;
+                value = valueEncode.toString();
+
             } else if (request.contentType == PriRequestContentType.APPLICATION_JSON && !Std.is(request.data, String)) {
                 value = haxe.Json.stringify(request.data);
             }
