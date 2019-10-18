@@ -1,5 +1,6 @@
 package priori.view.builder;
 
+import haxe.ds.StringMap;
 import haxe.macro.ExprTools;
 import haxe.macro.Expr.Catch;
 import haxe.macro.Expr.FieldType;
@@ -15,7 +16,7 @@ class PriBuilderMacros {
     static public function build():Array<Field> {
         trace('PRI BUILDER');
         
-        var fields = Context.getBuildFields();
+        var fields:Array<Field> = Context.getBuildFields();
         var val:String = null;
 
         if (!hasMetaKey('priori')) return fields;
@@ -30,40 +31,14 @@ class PriBuilderMacros {
 
             if (access.hasNode.view) {
                 for (item in access.node.view.elements) {
-
-                    var builderField:PriBuilderField = {
-                        name : '____' + Math.floor(10000000 * Math.random()),
-                        type : item.name,
-                        isPublic : false,
-                        macroType : Context.getType(item.name),
-                        macroComplexType : haxe.macro.TypeTools.toComplexType(Context.getType(item.name))
-                    }
-
-                    builderFields.push(builderField);
-
-                    if (item.has.id) {
-                        builderField.isPublic = true;
-                        builderField.name = item.att.id;
-                    }
-                    
-                    fields.push(
-                        {
-                            name : builderField.name,
-                            doc : '',
-                            access: [builderField.isPublic ? Access.APublic : Access.APrivate],
-                            // kind: FieldType.FVar(macro:String, macro $v{''}),
-                            // kind: FieldType.FVar(complexType, Context.parse('new ${builderField.type}()', Context.currentPos())),
-                            kind: FieldType.FVar(builderField.macroComplexType),
-                            pos: Context.currentPos()
-                        }
-                    );
+                    createElement(item, null, fields, builderFields);
                 }
             }
 
             var funbody = macro {
                 super.__priBuilderSetup();
                 $b{generateInitializations(builderFields)}
-                trace(1);
+                $b{generateAddChilds(builderFields)}
             }
 
             fields.push(
@@ -92,11 +67,89 @@ class PriBuilderMacros {
         return fields;
     }
 
+    private static function createElement(node:haxe.xml.Access, parent:PriBuilderField, fields:Array<Field>, builderFields:Array<PriBuilderField>) {
+        
+        var result:PriBuilderField = {
+            name : '____' + Math.floor(10000000 * Math.random()),
+            type : node.name,
+            isPublic : false,
+            macroType : Context.getType(node.name),
+            macroComplexType : haxe.macro.TypeTools.toComplexType(Context.getType(node.name)),
+
+            parent : parent
+        }
+
+        if (node.has.id) {
+            result.isPublic = true;
+            result.name = node.att.id;
+        }
+
+        fields.push(
+            {
+                name : result.name,
+                doc : '',
+                access: [result.isPublic ? Access.APublic : Access.APrivate],
+                kind: FieldType.FVar(result.macroComplexType),
+                pos: Context.currentPos()
+            }
+        );
+
+        builderFields.push(result);
+
+        for (subnode in node.elements) createElement(subnode, result, fields, builderFields);
+
+    }
+
+    private static function generateAddChilds(fields:Array<PriBuilderField>):Array<Expr> {
+        var result:Array<Expr> = [];
+
+        var parentingMap:StringMap<Array<PriBuilderField>> = new StringMap<Array<PriBuilderField>>();
+        
+        for (field in fields) {
+            
+            var parentKey:String = field.parent == null
+                ? "this"
+                : field.parent.name
+            ;
+
+            var itemList:Array<PriBuilderField> = parentingMap.get(parentKey);
+
+            if (itemList == null) {
+                itemList = [];
+                parentingMap.set(parentKey, itemList);
+            }
+            
+            itemList.push(field);
+        }
+
+        for (key in parentingMap.keys()) {
+            var itemList:Array<PriBuilderField> = parentingMap.get(key);
+            
+            for (item in itemList) {
+                var itemId = item.name;
+                var parentId = key;
+
+                if (parentId == "this") {
+                    result.push(
+                        macro this.addChild(this.$itemId)
+                    );
+                } else {
+                    result.push(
+                        macro this.$parentId.addChild(this.$itemId)
+                    );
+                }
+            }
+        }
+
+        return result;
+    }
+
     private static function generateInitializations(fields:Array<PriBuilderField>):Array<Expr> {
         
         var result:Array<Expr> = [];
 
         for (item in fields) {
+            
             result.push(
                 Context.parse(
                     "this." + item.name + " = new " + item.type + "()",
@@ -136,4 +189,6 @@ private typedef PriBuilderField = {
     var isPublic:Bool;
     var macroType:haxe.macro.Type;
     var macroComplexType:haxe.macro.ComplexType;
+
+    @:optional var parent:PriBuilderField;
 }
