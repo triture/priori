@@ -8,8 +8,11 @@ import priori.event.PriEvent;
 
 class PriContainer extends PriDisplay {
 
+    @:noCompletion
     @:allow(priori.event.PriEventDispatcher)
     private var _childList:Array<PriDisplay> = [];
+    
+    @:noCompletion
     private var _migratingView:Bool = false;
 
     public var numChildren(get, null):Int;

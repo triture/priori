@@ -110,8 +110,6 @@ class PriDisplay extends PriEventDispatcher {
 
     public var parent(get, null):PriContainer;
 
-
-
     public var visible(get, set):Bool;
     public var disabled(get, set):Bool;
     public var mouseEnabled(get, set):Bool;
@@ -151,7 +149,6 @@ class PriDisplay extends PriEventDispatcher {
     **/
     @:isVar public var filter(default, set):PriFilterStyle;
 
-
     public var anchorX(get, set):Float;
     public var anchorY(get, set):Float;
 
@@ -175,6 +172,7 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public var scaleY(get, set):Float;
 
+    @:noCompletion
     private var dh:DisplayHelper = DisplayHelperIgnition.getDisplayHerlper();
 
 
@@ -193,6 +191,7 @@ class PriDisplay extends PriEventDispatcher {
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
 
+    @:noCompletion 
     private function __updateStyle():Void {
         if (this.dh.holdStyleUpdate || this.dh.jselement == null) return;
 
@@ -205,11 +204,13 @@ class PriDisplay extends PriEventDispatcher {
 
     }
 
+    @:noCompletion 
     private function __onAdded(e:PriEvent):Void {
         this.updateDepth();
         DomHelper.borderUpdate(this.dh.elementBorder, this.dh);
     }
 
+    @:noCompletion
     private function set_corners(value:Array<Int>):Array<Int> {
         if (value == null || value.length == 0) {
             this.corners = value == null ? null : [];

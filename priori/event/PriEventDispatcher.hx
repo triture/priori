@@ -7,10 +7,9 @@ import priori.event.PriEvent;
 
 class PriEventDispatcher {
 
-    private var ___ede:Array<String> = [];
-    private var ___edl:Array<Dynamic> = [];
-
-    private var _isKilled:Bool = false;
+    @:noCompletion private var ___ede:Array<String> = [];
+    @:noCompletion private var ___edl:Array<Dynamic> = [];
+    @:noCompletion private var _isKilled:Bool = false;
 
     public var bubbleTo:PriEventDispatcher;
 
