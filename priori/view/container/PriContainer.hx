@@ -37,8 +37,11 @@ class PriContainer extends PriDisplay {
     **/
     public function addChildList(childList:Array<Dynamic>):Void {
         var realItens:Array<PriDisplay> = [];
-
+        #if (haxe_ver >= 4.0)
+        for (item in childList) if (Std.downcast(item, PriDisplay) != null) realItens.push(item);
+        #else
         for (item in childList) if (Std.instance(item, PriDisplay) != null) realItens.push(item);
+        #end
 
         var thisHasApp:Bool = this.hasApp();
         var thisDisabled:Bool = this.disabled;
@@ -77,7 +80,11 @@ class PriContainer extends PriDisplay {
     **/
     public function removeChildList(childList:Array<Dynamic>):Void {
         var realItens:Array<PriDisplay> = [];
+        #if (haxe_ver >= 4.0)
+        for (item in childList) if (Std.downcast(item, PriDisplay) != null) realItens.push(item);
+        #else
         for (item in childList) if (Std.instance(item, PriDisplay) != null) realItens.push(item);
+        #end
 
         var hasAppBefore:Bool = this.hasApp();
 
