@@ -122,21 +122,15 @@ class PriBuilderMacros {
             itemList.push(field);
         }
 
-        for (key in parentingMap.keys()) {
-            var itemList:Array<PriBuilderField> = parentingMap.get(key);
-            
-            for (item in itemList) {
-                var itemId = item.name;
-                var parentId = key;
+        // first we add non root objects
+        for (rootKey in [0, 1]) {
+            for (key in parentingMap.keys()) {
+                if ((rootKey == 0 && key != 'this') || rootKey == 1 && key == 'this') {
+                    var itemList:Array<PriBuilderField> = parentingMap.get(key);
 
-                if (parentId == "this") {
-                    result.push(
-                        macro this.addChild(this.$itemId)
-                    );
-                } else {
-                    result.push(
-                        macro this.$parentId.addChild(this.$itemId)
-                    );
+                    result.push(macro var _ac = []);
+                    for (item in itemList) result.push(macro _ac.push($i{item.name}));
+                    result.push(macro $i{key}.addChildList(_ac));
                 }
             }
         }
