@@ -1,5 +1,8 @@
 package priori.view.builder;
 
+import haxe.macro.TypeTools;
+import haxe.macro.ComplexTypeTools;
+import haxe.macro.Type;
 import haxe.ds.StringMap;
 import haxe.macro.ExprTools;
 import haxe.macro.Expr.Catch;
@@ -17,6 +20,8 @@ class PriBuilderMacros {
         trace('PRI BUILDER');
         
         var fields:Array<Field> = Context.getBuildFields();
+        var imports:Array<Type> = [];
+        
         var val:String = null;
 
         if (!hasMetaKey('priori')) return fields;
@@ -28,10 +33,25 @@ class PriBuilderMacros {
             var xml:Xml = Xml.parse(val);
             var access = new haxe.xml.Access(xml.firstElement());
             var builderFields:Array<PriBuilderField> = [];
+            
+            for (item in Context.getLocalImports()) {
+                if (item.mode == ImportMode.INormal) {
+                    var impList:Array<String> = [];
+                    for (item_ in item.path) impList.push(item_.name);
+
+                    for (item_ in Context.getModule(impList.join('.'))) imports.push(item_);
+                }
+            }
+
+            if (access.hasNode.imports) {
+                for (item in access.node.imports.elements) {
+                    createImport(item, imports);
+                }
+            }
 
             if (access.hasNode.view) {
                 for (item in access.node.view.elements) {
-                    createElement(item, null, fields, builderFields);
+                    createElement(item, null, fields, builderFields, imports);
                 }
             }
 
@@ -85,15 +105,43 @@ class PriBuilderMacros {
         return fields;
     }
 
-    private static function createElement(node:haxe.xml.Access, parent:PriBuilderField, fields:Array<Field>, builderFields:Array<PriBuilderField>) {
+    private static function getTypeFromClassName(typeName:String, imports:Array<Type>):Type {
+        for (item in imports) {
+            
+            var typeString:String = TypeTools.toString(item);
+            
+            if (typeName == typeString) return item;
+            else if (StringTools.endsWith(typeString, '.' + typeName)) return item;
+
+        }
+
+        return null;
+    }
+
+    private static function createImport(node:haxe.xml.Access, imports:Array<Type>):Void {
+        var module:String = node.name;
+        var types = Context.getModule(module);
+
+        for (item in types) imports.push(item);
+    }
+
+    private static function createElement(node:haxe.xml.Access, parent:PriBuilderField, fields:Array<Field>, builderFields:Array<PriBuilderField>, imports:Array<Type>) {
+        
+        var type:Type = getTypeFromClassName(node.name, imports);
+        if (type == null) {
+            try {
+                type = Context.getType(node.name);
+            } catch (e:Dynamic) {}
+        }
+        if (type == null) throw "Type not found : " + node.name;
         
         var result:PriBuilderField = {
             node : node,
             name : '____' + Math.floor(10000000 * Math.random()),
-            type : node.name,
+            type : TypeTools.toString(type),
             isPublic : false,
-            macroType : Context.getType(node.name),
-            macroComplexType : haxe.macro.TypeTools.toComplexType(Context.getType(node.name)),
+            macroType : type,
+            macroComplexType : haxe.macro.TypeTools.toComplexType(type),
 
             parent : parent
         }
@@ -115,7 +163,7 @@ class PriBuilderMacros {
 
         builderFields.push(result);
 
-        for (subnode in node.elements) createElement(subnode, result, fields, builderFields);
+        for (subnode in node.elements) createElement(subnode, result, fields, builderFields, imports);
 
     }
 
