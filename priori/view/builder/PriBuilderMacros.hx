@@ -35,13 +35,6 @@ class PriBuilderMacros {
                 }
             }
 
-            var funbody = macro {
-                super.__priBuilderSetup();
-                $b{generateInitializations(builderFields)}
-                $b{generateSetProperties(builderFields)}
-                $b{generateAddChilds(builderFields)}
-            }
-
             fields.push(
                 {
                     name : '__priBuilderSetup',
@@ -51,7 +44,31 @@ class PriBuilderMacros {
                         {
                             args : [],
                             ret : null,
-                            expr: funbody
+                            expr: macro {
+                                super.__priBuilderSetup();
+                                $b{generateInitializations(builderFields)}
+                                $b{generateSetupProperties(builderFields)}
+                                $b{generateAddChilds(builderFields)}
+                            }
+                        }
+                    )
+                }
+            );
+
+
+            fields.push(
+                {
+                    name : '__priBuilderPaint',
+                    pos: Context.currentPos(),
+                    access: [Access.APrivate, Access.AOverride],
+                    kind : FieldType.FFun(
+                        {
+                            args : [],
+                            ret : null,
+                            expr: macro {
+                                super.__priBuilderPaint();
+                                $b{generatePaintProperties(builderFields)}
+                            }
                         }
                     )
                 }
@@ -102,7 +119,7 @@ class PriBuilderMacros {
 
     }
 
-    private static function generateSetProperties(fields:Array<PriBuilderField>):Array<Expr> {
+    private static function generateSetupProperties(fields:Array<PriBuilderField>):Array<Expr> {
         var result:Array<Expr> = [];
 
         for (field in fields) {
@@ -111,26 +128,50 @@ class PriBuilderMacros {
                 if (att != "id") {
 
                     var value:Dynamic = field.node.att.resolve(att);
+                    
+                    if (!PriBuilderMacroHelper.checkIsExpression(value)) {
+                        if (PriBuilderMacroHelper.checkIsNumeric(value)) {
+                            if (PriBuilderMacroHelper.checkIsNumericFloat(value)) value = PriBuilderMacroHelper.getFloat(value);
+                            else value = PriBuilderMacroHelper.getInt(value);
+                        }
 
-                    if (PriBuilderMacroHelper.checkIsNumeric(value)) {
-                        if (PriBuilderMacroHelper.checkIsNumericFloat(value)) value = PriBuilderMacroHelper.getFloat(value);
-                        else value = PriBuilderMacroHelper.getInt(value);
-                    }
-
-                    // trace(value);
-
-                    if (value != null) {
-                        result.push(
-                            macro $i{field.name}.$att = $v{value}
-                        );
+                        if (value != null) {
+                            result.push(
+                                macro $i{field.name}.$att = $v{value}
+                            );
+                        }
                     }
                 }
             }
-            
-
-
         }
 
+        return result;
+    }
+
+    private static function generatePaintProperties(fields:Array<PriBuilderField>):Array<Expr> {
+        var result:Array<Expr> = [];
+
+        for (field in fields) {
+            
+            for (att in field.node.x.attributes()) {
+                if (att != "id") {
+
+                    var value:Dynamic = field.node.att.resolve(att);
+                    
+                    if (PriBuilderMacroHelper.checkIsExpression(value)) {
+                        value = PriBuilderMacroHelper.getExpression(value);
+                        
+                        var macrExpr = Context.parse(value, Context.currentPos());
+
+                        if (value != null) {
+                            result.push(
+                                macro $i{field.name}.$att = $e{macrExpr}
+                            );
+                        }
+                    }
+                }
+            }
+        }
 
         return result;
     }
@@ -234,6 +275,20 @@ private class PriBuilderMacroHelper {
         return Std.parseInt(Std.string(value));
     }
 
+    public static function getExpression(value:Dynamic):String {
+        var result:String = StringTools.trim(Std.string(value));
+        result = result.substr(2, -1);
+        return result;
+    }
+
+    public static function checkIsExpression(value:Null<String>):Bool {
+        if (value == null) return false;
+        else {
+            var r = new EReg("^\\${.+}$", "");
+            return r.match(StringTools.trim(value));
+        }
+    }
+
     public static function checkIsNumeric(value:Null<String>):Bool {
         if (value == null) return false;
         else {
@@ -256,14 +311,4 @@ private class PriBuilderMacroHelper {
         }
     }
 
-}
-
-@:enum 
-abstract PriBuilderMacrosPropertyType(Int) {
-    var TEXT = 0;
-    var FLOAT = 1;
-    var INT = 2;
-
-    var NULL = 98;
-    var OTHER = 99;
 }

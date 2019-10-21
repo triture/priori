@@ -12,6 +12,8 @@ class PriBuilder extends PriContainer {
 
         this.__priBuilderSetup();
         this.setup();
+
+        this.__priBuilderPaint();
         this.paint();
 
         this.addEventListener(PriEvent.RESIZE, this.___onResize);
@@ -19,19 +21,17 @@ class PriBuilder extends PriContainer {
 
     @:noCompletion
     private function ___onResize(e:PriEvent):Void {
+        this.__priBuilderPaint();
         this.paint();
     }
 
     @:noCompletion
-    private function __priBuilderSetup() {
-        
-    }
+    private function __priBuilderSetup():Void {}
 
-    private function setup() {
-        
-    }
+    @:noCompletion
+    private function __priBuilderPaint():Void {}
 
-    private function paint() {
-        
-    }
+    private function setup():Void {}
+
+    private function paint():Void {}
 }
