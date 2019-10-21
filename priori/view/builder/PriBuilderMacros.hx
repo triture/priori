@@ -38,6 +38,7 @@ class PriBuilderMacros {
             var funbody = macro {
                 super.__priBuilderSetup();
                 $b{generateInitializations(builderFields)}
+                $b{generateSetProperties(builderFields)}
                 $b{generateAddChilds(builderFields)}
             }
 
@@ -70,6 +71,7 @@ class PriBuilderMacros {
     private static function createElement(node:haxe.xml.Access, parent:PriBuilderField, fields:Array<Field>, builderFields:Array<PriBuilderField>) {
         
         var result:PriBuilderField = {
+            node : node,
             name : '____' + Math.floor(10000000 * Math.random()),
             type : node.name,
             isPublic : false,
@@ -98,6 +100,39 @@ class PriBuilderMacros {
 
         for (subnode in node.elements) createElement(subnode, result, fields, builderFields);
 
+    }
+
+    private static function generateSetProperties(fields:Array<PriBuilderField>):Array<Expr> {
+        var result:Array<Expr> = [];
+
+        for (field in fields) {
+            
+            for (att in field.node.x.attributes()) {
+                if (att != "id") {
+
+                    var value:Dynamic = field.node.att.resolve(att);
+
+                    if (PriBuilderMacroHelper.checkIsNumeric(value)) {
+                        if (PriBuilderMacroHelper.checkIsNumericFloat(value)) value = PriBuilderMacroHelper.getFloat(value);
+                        else value = PriBuilderMacroHelper.getInt(value);
+                    }
+
+                    // trace(value);
+
+                    if (value != null) {
+                        result.push(
+                            macro $i{field.name}.$att = $v{value}
+                        );
+                    }
+                }
+            }
+            
+
+
+        }
+
+
+        return result;
     }
 
     private static function generateAddChilds(fields:Array<PriBuilderField>):Array<Expr> {
@@ -178,6 +213,7 @@ class PriBuilderMacros {
 }
 
 private typedef PriBuilderField = {
+    var node:haxe.xml.Access;
     var name:String;
     var type:String;
     var isPublic:Bool;
@@ -185,4 +221,49 @@ private typedef PriBuilderField = {
     var macroComplexType:haxe.macro.ComplexType;
 
     @:optional var parent:PriBuilderField;
+}
+
+private class PriBuilderMacroHelper {
+    
+    public static function getFloat(value:Dynamic):Null<Float> {
+        var f = Std.parseFloat(Std.string(value));
+        return Math.isNaN(f) ? null : f;
+    }
+
+    public static function getInt(value:Dynamic):Null<Int> {
+        return Std.parseInt(Std.string(value));
+    }
+
+    public static function checkIsNumeric(value:Null<String>):Bool {
+        if (value == null) return false;
+        else {
+
+            // ^0x[0-9a-fA-F]+$ : match hexadecimal numbers 
+            // | or
+            // ^-?[0-9]*.?[0-9]+$ negatives, positives, floats or integers
+            var r = new EReg("^0x[0-9a-fA-F]+$|^-?[0-9]*.?[0-9]+$", "");
+
+            return r.match(StringTools.trim(value));
+        }
+    }
+
+    public static function checkIsNumericFloat(value:Null<String>):Bool {
+        if (value == null) return false;
+        else {
+            // ^-?[0-9]*[.][0-9]+$ negatives, positives, floats (must be a point somewhere)
+            var r = new EReg("^-?[0-9]*[.][0-9]+$", "");
+            return r.match(StringTools.trim(value));
+        }
+    }
+
+}
+
+@:enum 
+abstract PriBuilderMacrosPropertyType(Int) {
+    var TEXT = 0;
+    var FLOAT = 1;
+    var INT = 2;
+
+    var NULL = 98;
+    var OTHER = 99;
 }
