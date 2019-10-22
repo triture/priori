@@ -1,5 +1,6 @@
 package priori.view.builder;
 
+#if macro
 import haxe.macro.TypeTools;
 import haxe.macro.ComplexTypeTools;
 import haxe.macro.Type;
@@ -11,6 +12,7 @@ import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
 import haxe.macro.Expr;
+#end
 
 @:noCompletion
 class PriBuilderMacros {
@@ -29,77 +31,106 @@ class PriBuilderMacros {
         
         if (val == null) return fields;
 
-        try {
-            var xml:Xml = Xml.parse(val);
-            var access = new haxe.xml.Access(xml.firstElement());
-            var builderFields:Array<PriBuilderField> = [];
-            
-            for (item in Context.getLocalImports()) {
-                if (item.mode == ImportMode.INormal) {
-                    var impList:Array<String> = [];
-                    for (item_ in item.path) impList.push(item_.name);
+        var xml:Xml = null;
+        
+        // try to load xml data from file
+        var fileName:String = StringTools.trim(val.substr(0, 1024)).split('\n').join('');
+        
+        if (sys.FileSystem.exists(fileName) && !sys.FileSystem.isDirectory(fileName)) {
+            var data:String = sys.io.File.getContent(StringTools.trim(val));
 
-                    for (item_ in Context.getModule(impList.join('.'))) imports.push(item_);
+            try {
+                xml = Xml.parse(data);
+            } catch(e:Dynamic) {
+
+                // try to parse xml data from metatag
+                try {
+                    xml = Xml.parse(val);
+                } catch(e:Dynamic) {
+                    // Context.error("Invalid XML file", Context.currentPos());
+                    throw "Invalid XML";
                 }
-            }
 
-            if (access.hasNode.imports) {
-                for (item in access.node.imports.elements) {
-                    createImport(item, imports);
+            }
+        } else {
+            // try to parse xml data from metatag
+            try {
+                xml = Xml.parse(val);
+            } catch(e:Dynamic) {
+                // Context.error("Invalid XML file", Context.currentPos());
+                throw "Invalid XML";
+            }
+        }
+
+        if (xml != null) {
+            try {
+                
+                var access = new haxe.xml.Access(xml.firstElement());
+                var builderFields:Array<PriBuilderField> = [];
+                
+                for (item in Context.getLocalImports()) {
+                    if (item.mode == ImportMode.INormal) {
+                        var impList:Array<String> = [];
+                        for (item_ in item.path) impList.push(item_.name);
+
+                        for (item_ in Context.getModule(impList.join('.'))) imports.push(item_);
+                    }
                 }
-            }
 
-            if (access.hasNode.view) {
-                for (item in access.node.view.elements) {
-                    createElement(item, null, fields, builderFields, imports);
+                if (access.hasNode.imports) {
+                    for (item in access.node.imports.elements) {
+                        createImport(item, imports);
+                    }
                 }
-            }
 
-            fields.push(
-                {
-                    name : '__priBuilderSetup',
-                    pos: Context.currentPos(),
-                    access: [Access.APrivate, Access.AOverride],
-                    kind : FieldType.FFun(
-                        {
-                            args : [],
-                            ret : null,
-                            expr: macro {
-                                super.__priBuilderSetup();
-                                $b{generateInitializations(builderFields)}
-                                $b{generateSetupProperties(builderFields)}
-                                $b{generateAddChilds(builderFields)}
+                if (access.hasNode.view) {
+                    for (item in access.node.view.elements) {
+                        createElement(item, null, fields, builderFields, imports);
+                    }
+                }
+
+                fields.push(
+                    {
+                        name : '__priBuilderSetup',
+                        pos: Context.currentPos(),
+                        access: [Access.APrivate, Access.AOverride],
+                        kind : FieldType.FFun(
+                            {
+                                args : [],
+                                ret : null,
+                                expr: macro {
+                                    super.__priBuilderSetup();
+                                    $b{generateInitializations(builderFields)}
+                                    $b{generateSetupProperties(builderFields)}
+                                    $b{generateAddChilds(builderFields)}
+                                }
                             }
-                        }
-                    )
-                }
-            );
+                        )
+                    }
+                );
 
 
-            fields.push(
-                {
-                    name : '__priBuilderPaint',
-                    pos: Context.currentPos(),
-                    access: [Access.APrivate, Access.AOverride],
-                    kind : FieldType.FFun(
-                        {
-                            args : [],
-                            ret : null,
-                            expr: macro {
-                                super.__priBuilderPaint();
-                                $b{generatePaintProperties(builderFields)}
+                fields.push(
+                    {
+                        name : '__priBuilderPaint',
+                        pos: Context.currentPos(),
+                        access: [Access.APrivate, Access.AOverride],
+                        kind : FieldType.FFun(
+                            {
+                                args : [],
+                                ret : null,
+                                expr: macro {
+                                    super.__priBuilderPaint();
+                                    $b{generatePaintProperties(builderFields)}
+                                }
                             }
-                        }
-                    )
-                }
-            );
+                        )
+                    }
+                );
 
-            
-
-
-        } catch(e:Dynamic) {
-            trace(e);
-            throw "Invalid priori XML";
+            } catch(e:Dynamic) {
+                throw 'Invalid XML';
+            }
         }
 
         return fields;
@@ -210,7 +241,7 @@ class PriBuilderMacros {
                         value = PriBuilderMacroHelper.getExpression(value);
                         
                         var macrExpr = Context.parse(value, Context.currentPos());
-
+                        
                         if (value != null) {
                             result.push(
                                 macro $i{field.name}.$att = $e{macrExpr}
@@ -301,6 +332,7 @@ class PriBuilderMacros {
     #end
 }
 
+#if macro
 private typedef PriBuilderField = {
     var node:haxe.xml.Access;
     var name:String;
@@ -360,3 +392,4 @@ private class PriBuilderMacroHelper {
     }
 
 }
+#end
