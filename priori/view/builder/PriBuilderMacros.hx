@@ -22,6 +22,8 @@ class PriBuilderMacros {
         trace('PRI BUILDER');
         
         var fields:Array<Field> = Context.getBuildFields();
+        var propertiesElementsForSetup:Array<Expr> = [];
+        var propertiesElementsForPaint:Array<Expr> = [];
         var imports:Array<Type> = [];
         
         var val:String = null;
@@ -85,7 +87,7 @@ class PriBuilderMacros {
 
                 if (access.hasNode.view) {
                     for (item in access.node.view.elements) {
-                        createElement(item, null, fields, builderFields, imports);
+                        createElement(item, null, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
                     }
                 }
 
@@ -102,6 +104,7 @@ class PriBuilderMacros {
                                     super.__priBuilderSetup();
                                     $b{generateInitializations(builderFields)}
                                     $b{generateSetupProperties(builderFields)}
+                                    $b{propertiesElementsForSetup}
                                     $b{generateAddChilds(builderFields)}
                                 }
                             }
@@ -122,6 +125,7 @@ class PriBuilderMacros {
                                 expr: macro {
                                     super.__priBuilderPaint();
                                     $b{generatePaintProperties(builderFields)}
+                                    $b{propertiesElementsForPaint}
                                 }
                             }
                         )
@@ -156,46 +160,96 @@ class PriBuilderMacros {
         for (item in types) imports.push(item);
     }
 
-    private static function createElement(node:haxe.xml.Access, parent:PriBuilderField, fields:Array<Field>, builderFields:Array<PriBuilderField>, imports:Array<Type>) {
-        
-        var type:Type = getTypeFromClassName(node.name, imports);
-        if (type == null) {
-            try {
-                type = Context.getType(node.name);
-            } catch (e:Dynamic) {}
-        }
-        if (type == null) throw "Type not found : " + node.name;
-        
-        var result:PriBuilderField = {
-            node : node,
-            name : '____' + Math.floor(10000000 * Math.random()),
-            type : TypeTools.toString(type),
-            isPublic : false,
-            macroType : type,
-            macroComplexType : haxe.macro.TypeTools.toComplexType(type),
+    private static function createElement(
+        node:haxe.xml.Access, 
+        parent:PriBuilderField, 
+        fields:Array<Field>, 
+        builderFields:Array<PriBuilderField>, 
+        imports:Array<Type>,
+        propertiesElementsForSetup:Array<Expr>,
+        propertiesElementsForPaint:Array<Expr>
+    ) {
+        if (StringTools.startsWith(node.name, 'p:')) {
 
-            parent : parent
-        }
+            if (node.has.value) {
+                var propertie:String = node.name.split(":")[1];
+                var value:String = node.att.value;
 
-        if (node.has.id) {
-            result.isPublic = true;
-            result.name = node.att.id;
-        }
-
-        fields.push(
-            {
-                name : result.name,
-                doc : '',
-                access: [result.isPublic ? Access.APublic : Access.APrivate],
-                kind: FieldType.FVar(result.macroComplexType),
-                pos: Context.currentPos()
+                if (PriBuilderMacroHelper.checkIsExpression(value)) {
+                    propertiesElementsForPaint.push(generatePropertieExpression(parent == null ? 'this' : parent.name, propertie, value));
+                } else {
+                    propertiesElementsForSetup.push(generatePropertieExpression(parent == null ? 'this' : parent.name, propertie, value));
+                }
             }
-        );
 
-        builderFields.push(result);
+        } else {
+            var type:Type = getTypeFromClassName(node.name, imports);
+            if (type == null) {
+                try {
+                    type = Context.getType(node.name);
+                } catch (e:Dynamic) {}
+            }
+            if (type == null) throw "Type not found : " + node.name;
+            
+            var result:PriBuilderField = {
+                node : node,
+                name : '____' + Math.floor(10000000 * Math.random()),
+                type : TypeTools.toString(type),
+                isPublic : false,
+                macroType : type,
+                macroComplexType : haxe.macro.TypeTools.toComplexType(type),
 
-        for (subnode in node.elements) createElement(subnode, result, fields, builderFields, imports);
+                parent : parent
+            }
 
+            if (node.has.id) {
+                result.isPublic = true;
+                result.name = node.att.id;
+            }
+
+            fields.push(
+                {
+                    name : result.name,
+                    doc : '',
+                    access: [result.isPublic ? Access.APublic : Access.APrivate],
+                    kind: FieldType.FVar(result.macroComplexType),
+                    pos: Context.currentPos()
+                }
+            );
+
+            builderFields.push(result);
+
+            for (subnode in node.elements) createElement(subnode, result, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
+        }
+    }
+
+    private static function generatePropertieExpression(objectOwner:String, propertieName:String, value:String):Null<Expr> {
+        
+        if (objectOwner == null || propertieName == null || value == null) return null;
+
+        if (PriBuilderMacroHelper.checkIsExpression(value)) {
+
+            var val:String = PriBuilderMacroHelper.getExpression(value);
+            
+            var macrExpr = Context.parse(val, Context.currentPos());
+            
+            if (val != null) return macro $i{objectOwner}.$propertieName = $e{macrExpr}
+
+        } else {
+
+            var val:Dynamic = null;
+            
+            if (PriBuilderMacroHelper.checkIsNumeric(value)) {
+                if (PriBuilderMacroHelper.checkIsNumericFloat(value)) val = PriBuilderMacroHelper.getFloat(value);
+                else val = PriBuilderMacroHelper.getInt(value);
+            }
+
+            if (val != null) {
+                return macro $i{objectOwner}.$propertieName = $v{val};
+            }
+        }
+
+        return null;
     }
 
     private static function generateSetupProperties(fields:Array<PriBuilderField>):Array<Expr> {
@@ -206,19 +260,11 @@ class PriBuilderMacros {
             for (att in field.node.x.attributes()) {
                 if (att != "id") {
 
-                    var value:Dynamic = field.node.att.resolve(att);
+                    var value:String = field.node.att.resolve(att);
                     
                     if (!PriBuilderMacroHelper.checkIsExpression(value)) {
-                        if (PriBuilderMacroHelper.checkIsNumeric(value)) {
-                            if (PriBuilderMacroHelper.checkIsNumericFloat(value)) value = PriBuilderMacroHelper.getFloat(value);
-                            else value = PriBuilderMacroHelper.getInt(value);
-                        }
-
-                        if (value != null) {
-                            result.push(
-                                macro $i{field.name}.$att = $v{value}
-                            );
-                        }
+                        var expr:Expr = generatePropertieExpression(field.name, att, value);
+                        if (expr != null) result.push(expr);
                     }
                 }
             }
@@ -235,18 +281,11 @@ class PriBuilderMacros {
             for (att in field.node.x.attributes()) {
                 if (att != "id") {
 
-                    var value:Dynamic = field.node.att.resolve(att);
+                    var value:String = field.node.att.resolve(att);
                     
                     if (PriBuilderMacroHelper.checkIsExpression(value)) {
-                        value = PriBuilderMacroHelper.getExpression(value);
-                        
-                        var macrExpr = Context.parse(value, Context.currentPos());
-                        
-                        if (value != null) {
-                            result.push(
-                                macro $i{field.name}.$att = $e{macrExpr}
-                            );
-                        }
+                        var expr:Expr = generatePropertieExpression(field.name, att, value);
+                        if (expr != null) result.push(expr);
                     }
                 }
             }
