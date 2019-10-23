@@ -322,7 +322,7 @@ class PriBuilderMacros {
                 if ((rootKey == 0 && key != 'this') || rootKey == 1 && key == 'this') {
                     var itemList:Array<PriBuilderField> = parentingMap.get(key);
 
-                    result.push(macro var _ac = []);
+                    result.push(macro var _ac:Array<Dynamic> = []);
                     for (item in itemList) result.push(macro _ac.push($i{item.name}));
                     result.push(macro $i{key}.addChildList(_ac));
                 }
