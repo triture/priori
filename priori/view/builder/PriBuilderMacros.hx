@@ -86,6 +86,18 @@ class PriBuilderMacros {
                 }
 
                 if (access.hasNode.view) {
+                    
+                    for (att in access.node.view.x.attributes()) {
+                        var propertie:String = att;
+                        var value:String = access.node.view.att.resolve(att);
+
+                        if (PriBuilderMacroHelper.checkIsExpression(value)) {
+                            propertiesElementsForPaint.push(generatePropertieExpression('this', propertie, value));
+                        } else {
+                            propertiesElementsForSetup.push(generatePropertieExpression('this', propertie, value));
+                        }
+                    }
+
                     for (item in access.node.view.elements) {
                         createElement(item, null, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
                     }
@@ -242,6 +254,8 @@ class PriBuilderMacros {
             if (PriBuilderMacroHelper.checkIsNumeric(value)) {
                 if (PriBuilderMacroHelper.checkIsNumericFloat(value)) val = PriBuilderMacroHelper.getFloat(value);
                 else val = PriBuilderMacroHelper.getInt(value);
+            } else {
+                val = Std.string(value);
             }
 
             if (val != null) {
