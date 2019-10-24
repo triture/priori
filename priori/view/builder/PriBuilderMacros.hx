@@ -1,6 +1,9 @@
 package priori.view.builder;
 
+
+import haxe.macro.PositionTools;
 #if macro
+import haxe.xml.Parser.XmlParserException;
 import haxe.macro.TypeTools;
 import haxe.macro.ComplexTypeTools;
 import haxe.macro.Type;
@@ -39,28 +42,55 @@ class PriBuilderMacros {
         var fileName:String = StringTools.trim(val.substr(0, 1024)).split('\n').join('');
         
         if (sys.FileSystem.exists(fileName) && !sys.FileSystem.isDirectory(fileName)) {
+
             var data:String = sys.io.File.getContent(StringTools.trim(val));
 
             try {
                 xml = Xml.parse(data);
-            } catch(e:Dynamic) {
+            } catch(e:XmlParserException) {
 
-                // try to parse xml data from metatag
-                try {
-                    xml = Xml.parse(val);
-                } catch(e:Dynamic) {
-                    // Context.error("Invalid XML file", Context.currentPos());
-                    throw "Invalid XML";
-                }
+                var errorPos = Context.makePosition(
+                    {
+                        file : fileName,
+                        min : e.position,
+                        max : data.length
+                    }
+                );
+                
+                Context.warning(
+                    e.message,
+                    errorPos
+                );
+
+                var metaPos = getMetaPosition('priori');
+                errorPos = Context.makePosition(metaPos);
+
+                Context.fatalError(
+                    'Error on $fileName: ${e.message}',
+                    errorPos
+                );
 
             }
+
         } else {
             // try to parse xml data from metatag
             try {
                 xml = Xml.parse(val);
-            } catch(e:Dynamic) {
-                // Context.error("Invalid XML file", Context.currentPos());
-                throw "Invalid XML";
+            } catch(e:XmlParserException) {
+                
+                var metaPos = getMetaPosition('priori');
+                var errorPos = Context.makePosition(
+                    {
+                        file : metaPos.file,
+                        min : metaPos.min + e.position,
+                        max : metaPos.min + val.length
+                    }
+                );
+                
+                Context.fatalError(
+                    e.message,
+                    errorPos
+                );
             }
         }
 
@@ -369,17 +399,34 @@ class PriBuilderMacros {
         return meta.has(metaKey);
     }
 
+    private static function getMetaPosition(metaKey:String) {
+        var localClass = Context.getLocalClass();
+        var meta = localClass.get().meta;
+        
+        if (meta.has(metaKey)) {
+            var ext = meta.extract(metaKey);
+            
+            if (ext.length > 0 && ext[0].params.length > 0) {
+                return PositionTools.getInfos(ext[0].params[0].pos);
+            }
+        }
+
+        return null;
+    }
+    
+
     private static function getMetaValue(metaKey:String):Dynamic {
         var localClass = Context.getLocalClass();
         var meta = localClass.get().meta;
         
         if (meta.has(metaKey)) {
             var ext = meta.extract(metaKey);
+            
             if (ext.length > 0 && ext[0].params.length > 0) {
-                return ExprTools.getValue(ext[0].params[0]);                
+                return ExprTools.getValue(ext[0].params[0]);
             }
         }
-
+        
         return null;
     }
     #end

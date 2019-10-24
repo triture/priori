@@ -12,10 +12,10 @@ class PriBuilder extends PriContainer {
     public var top(get, set):Float;
     public var bottom(get, set):Float;
     
-    private var __left_value:Float;
-    private var __right_value:Float;
-    private var __top_value:Float;
-    private var __bottom_value:Float;
+    @:noCompletion private var __left_value:Float;
+    @:noCompletion private var __right_value:Float;
+    @:noCompletion private var __top_value:Float;
+    @:noCompletion private var __bottom_value:Float;
 
     public function new() {
         super();
@@ -65,6 +65,7 @@ class PriBuilder extends PriContainer {
         this.paint();
     }
 
+    @:noCompletion
     private function ___onAdded(e:PriEvent):Void {
         this.removeEventListener(PriEvent.ADDED, this.___onAdded);
         this.addEventListener(PriEvent.REMOVED, this.___onRemoved);
@@ -72,12 +73,14 @@ class PriBuilder extends PriContainer {
         this.___onParentResize(null);
     }
 
+    @:noCompletion
     private function ___onRemoved(e:PriEvent):Void {
         this.parent.removeEventListener(PriEvent.RESIZE, this.___onParentResize);
         this.removeEventListener(PriEvent.REMOVED, this.___onRemoved);
         this.addEventListener(PriEvent.ADDED, this.___onAdded);
     }
 
+    @:noCompletion
     private function ___onParentResize(e:PriEvent):Void {
         var p:PriDisplay = this.parent;
         
