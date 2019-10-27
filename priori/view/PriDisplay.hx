@@ -349,12 +349,19 @@ class PriDisplay extends PriEventDispatcher {
     static private var OUTER_DOM_SIZE_CACHE:StringMap<PriGeomBox> = new StringMap<PriGeomBox>();
 
     private function getOutDOMDimensions():PriGeomBox {
+        var element:js.html.DOMElement = this.dh.jselement;
 
-        var code:String = this.dh.jselement.outerHTML;
+        if (element.cloneNode != null) {
+            element = cast this.dh.jselement.cloneNode(true);
+            element.style.left = "0px";
+            element.style.top = "0px";
+        }
+        
+        var code:String = element.outerHTML;
 
         if (OUTER_DOM_SIZE_CACHE.exists(code)) return OUTER_DOM_SIZE_CACHE.get(code);
 
-        PriApp.g().frame.innerHTML = this.dh.jselement.outerHTML;
+        PriApp.g().frame.innerHTML = code;
 
         var box:PriGeomBox = DomHelper.getBoundingClientRect(PriApp.g().frame.getElementsByTagName("div")[0]);
 

@@ -102,14 +102,24 @@ class PriApp extends PriGroup {
 
         this.frame = Browser.document.createDivElement();
         this.frame.className = "priori_stylebase";
-        this.frame.style.cssText = "overflow:visible;width:1px;height:1px;visibility:hidden;";
+        this.frame.style.cssText = this.dh.jselement.style.cssText + "overflow:visible;width:1px;height:1px;visibility:hidden;";
         Browser.window.document.body.appendChild(this.frame);
 
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
+        
+        this.revalidate();
+    }
 
-        this.invalidate();
-        this.validate();
+    public function updateBasicFontStyle():Void {
+        StyleHelper.applyFontStyle(this.dh.styles, new PriFontStyle());
+        this.__updateStyle();
+
+        if (this.frame != null) {
+            this.frame.style.cssText = this.dh.jselement.style.cssText + "overflow:visible;width:1px;height:1px;visibility:hidden;";
+        }
+
+        this.revalidate();
     }
 
     override private function get_mousePoint():PriGeomPoint return new PriGeomPoint(this.___xmouse, this.___ymouse);
