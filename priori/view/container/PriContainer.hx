@@ -99,7 +99,7 @@ class PriContainer extends PriDisplay {
                 child.dh.parent = null;
 
                 if (hasAppBefore) child.dispatchEvent(new PriEvent(PriEvent.REMOVED_FROM_APP, true));
-                child.dispatchEvent(new PriEvent(PriEvent.REMOVED, true));
+                child.dispatchEvent(new PriEvent(PriEvent.REMOVED, true, false, this));
             }
         }
     }
