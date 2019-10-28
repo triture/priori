@@ -98,7 +98,7 @@ class PriBuilderMacros {
         if (xml != null) {
             try {
                 
-                var access = new haxe.xml.Access(xml.firstElement());
+                var access = new XmlAccessHelper(xml.firstElement());
                 var builderFields:Array<PriBuilderField> = [];
                 
                 for (item in Context.getLocalImports()) {
@@ -110,17 +110,17 @@ class PriBuilderMacros {
                     }
                 }
 
-                if (access.hasNode.imports) {
-                    for (item in access.node.imports.elements) {
+                if (access.hasNode("imports")) {
+                    for (item in access.getElementsFromNode("imports")) {
                         createImport(item, imports);
                     }
                 }
 
-                if (access.hasNode.view) {
+                if (access.hasNode("view")) {
                     
-                    for (att in access.node.view.x.attributes()) {
+                    for (att in access.getAttributesFromNode("view")) {
                         var propertie:String = att;
-                        var value:String = access.node.view.att.resolve(att);
+                        var value:String = access.getAttributeValue("view", att);
 
                         if (PriBuilderMacroHelper.checkIsExpression(value)) {
                             propertiesElementsForPaint.push(generatePropertieExpression('this', propertie, value));
@@ -129,7 +129,7 @@ class PriBuilderMacros {
                         }
                     }
 
-                    for (item in access.node.view.elements) {
+                    for (item in access.getElementsFromNode("view")) {
                         createElement(item, null, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
                     }
                 }
@@ -197,15 +197,15 @@ class PriBuilderMacros {
         return null;
     }
 
-    private static function createImport(node:haxe.xml.Access, imports:Array<Type>):Void {
-        var module:String = node.name;
+    private static function createImport(node:Xml, imports:Array<Type>):Void {
+        var module:String = node.nodeName;
         var types = Context.getModule(module);
 
         for (item in types) imports.push(item);
     }
 
     private static function createElement(
-        node:haxe.xml.Access, 
+        node:Xml,
         parent:PriBuilderField, 
         fields:Array<Field>, 
         builderFields:Array<PriBuilderField>, 
@@ -213,11 +213,13 @@ class PriBuilderMacros {
         propertiesElementsForSetup:Array<Expr>,
         propertiesElementsForPaint:Array<Expr>
     ) {
-        if (StringTools.startsWith(node.name, 'p:')) {
+        var access:XmlAccessHelper = new XmlAccessHelper(node);
 
-            if (node.has.value) {
-                var propertie:String = node.name.split(":")[1];
-                var value:String = node.att.value;
+        if (StringTools.startsWith(node.nodeName, 'p:')) {
+
+            if (node.exists("value")) {
+                var propertie:String = node.nodeName.split(":")[1];
+                var value:String = node.get("value");
 
                 if (PriBuilderMacroHelper.checkIsExpression(value)) {
                     propertiesElementsForPaint.push(generatePropertieExpression(parent == null ? 'this' : parent.name, propertie, value));
@@ -227,13 +229,13 @@ class PriBuilderMacros {
             }
 
         } else {
-            var type:Type = getTypeFromClassName(node.name, imports);
+            var type:Type = getTypeFromClassName(node.nodeName, imports);
             if (type == null) {
                 try {
-                    type = Context.getType(node.name);
+                    type = Context.getType(node.nodeName);
                 } catch (e:Dynamic) {}
             }
-            if (type == null) throw "Type not found : " + node.name;
+            if (type == null) throw "Type not found : " + node.nodeName;
             
             var result:PriBuilderField = {
                 node : node,
@@ -246,9 +248,9 @@ class PriBuilderMacros {
                 parent : parent
             }
 
-            if (node.has.id) {
+            if (node.exists("id")) {
                 result.isPublic = true;
-                result.name = node.att.id;
+                result.name = node.get("id");
             }
 
             fields.push(
@@ -263,7 +265,7 @@ class PriBuilderMacros {
 
             builderFields.push(result);
 
-            for (subnode in node.elements) createElement(subnode, result, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
+            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
         }
     }
 
@@ -303,10 +305,10 @@ class PriBuilderMacros {
 
         for (field in fields) {
             
-            for (att in field.node.x.attributes()) {
+            for (att in field.node.attributes()) {
                 if (att != "id") {
 
-                    var value:String = field.node.att.resolve(att);
+                    var value:String = field.node.get(att);
                     
                     if (!PriBuilderMacroHelper.checkIsExpression(value)) {
                         var expr:Expr = generatePropertieExpression(field.name, att, value);
@@ -324,10 +326,10 @@ class PriBuilderMacros {
 
         for (field in fields) {
             
-            for (att in field.node.x.attributes()) {
+            for (att in field.node.attributes()) {
                 if (att != "id") {
 
-                    var value:String = field.node.att.resolve(att);
+                    var value:String = field.node.get(att);
                     
                     if (PriBuilderMacroHelper.checkIsExpression(value)) {
                         var expr:Expr = generatePropertieExpression(field.name, att, value);
@@ -436,7 +438,7 @@ class PriBuilderMacros {
 
 #if macro
 private typedef PriBuilderField = {
-    var node:haxe.xml.Access;
+    var node:Xml;
     var name:String;
     var type:String;
     var isPublic:Bool;
@@ -493,5 +495,51 @@ private class PriBuilderMacroHelper {
         }
     }
 
+}
+
+private class XmlAccessHelper {
+
+    private var node:Xml;
+
+    public function new(node:Xml) {
+        this.node = node;
+    }
+
+    public function hasNode(nodeName:String):Bool {
+        for (el in this.node.elements()) if (el.nodeName == nodeName) return true;
+        return false;
+    }
+
+    public function getElementsFromNode(nodeName:String):Array<Xml> {
+        var result:Array<Xml> = [];
+
+        for (el in this.node.elementsNamed(nodeName)) {
+            for (cel in el.elements()) {
+                result.push(cel);
+            }
+        }
+
+        return result;
+    }
+
+    public function getAttributesFromNode(nodeName:String):Array<String> {
+        var result:Array<String> = [];
+
+        for (el in this.getElementsFromNode(nodeName)) {
+            for (att in el.attributes()) {
+                result.push(att);
+            }
+        }
+
+        return result;
+    }
+
+    public function getAttributeValue(nodeName:String, attribute:String):String {
+        for (el in this.getElementsFromNode(nodeName)) {
+            if (el.exists(attribute)) return el.get(attribute);
+        }
+
+        return "";
+    }
 }
 #end
