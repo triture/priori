@@ -98,7 +98,8 @@ class PriBuilderMacros {
         if (xml != null) {
             try {
                 
-                var access = new XmlAccessHelper(xml.firstElement());
+                var xmlBase:Xml = xml.firstElement();
+                var access = new XmlAccessHelper(xmlBase);
                 var builderFields:Array<PriBuilderField> = [];
                 
                 for (item in Context.getLocalImports()) {
@@ -118,14 +119,16 @@ class PriBuilderMacros {
 
                 if (access.hasNode("view")) {
                     
-                    for (att in access.getAttributesFromNode("view")) {
-                        var propertie:String = att;
-                        var value:String = access.getAttributeValue("view", att);
+                    for (el in xmlBase.elementsNamed("view")) {
+                        for (att in el.attributes()) {
+                            var propertie:String = att;
+                            var value:String = el.get(att);
 
-                        if (PriBuilderMacroHelper.checkIsExpression(value)) {
-                            propertiesElementsForPaint.push(generatePropertieExpression('this', propertie, value));
-                        } else {
-                            propertiesElementsForSetup.push(generatePropertieExpression('this', propertie, value));
+                            if (PriBuilderMacroHelper.checkIsExpression(value)) {
+                                propertiesElementsForPaint.push(generatePropertieExpression('this', propertie, value));
+                            } else {
+                                propertiesElementsForSetup.push(generatePropertieExpression('this', propertie, value));
+                            }
                         }
                     }
 
@@ -521,25 +524,6 @@ private class XmlAccessHelper {
 
         return result;
     }
-
-    public function getAttributesFromNode(nodeName:String):Array<String> {
-        var result:Array<String> = [];
-
-        for (el in this.getElementsFromNode(nodeName)) {
-            for (att in el.attributes()) {
-                result.push(att);
-            }
-        }
-
-        return result;
-    }
-
-    public function getAttributeValue(nodeName:String, attribute:String):String {
-        for (el in this.getElementsFromNode(nodeName)) {
-            if (el.exists(attribute)) return el.get(attribute);
-        }
-
-        return "";
-    }
 }
+
 #end
