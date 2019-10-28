@@ -1,14 +1,14 @@
 package priori.scene.view;
 
-import priori.view.container.PriGroup;
+import priori.view.builder.PriBuilder;
 
-class PriSceneView extends PriGroup {
+class PriSceneView extends PriBuilder {
 
     private var data:Dynamic;
 
     public function new(data:Dynamic) {
-        super();
-
         this.data = data;
+        
+        super();
     }
 }

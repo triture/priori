@@ -20,6 +20,8 @@ class PriSceneManager {
         return _singleton;
     }
 
+    inline public static function singleton():PriSceneManager return use();
+
     private var currentScene:PriSceneView;
     private var sceneHistory:Array<{scene:Class<PriSceneView>, args:Array<Dynamic>}>;
     private var isPreloading:Bool;
@@ -118,7 +120,7 @@ class PriSceneManager {
 
         AssetManager.g().load();
     }
-
+    
     public function updatePath(path:String):Void {
 
         if (StringTools.startsWith(path,"/")) path = "#" + path;
@@ -205,8 +207,6 @@ class PriSceneManager {
         if (this.currentScene != null) {
             this.currentScene.width = w;
             this.currentScene.height = h;
-
-            this.currentScene.validate();
         }
     }
 }

@@ -59,23 +59,33 @@ class PriBuilder extends PriContainer {
         return value;
     }
 
-    @:noCompletion
-    private function ___onResize(e:PriEvent):Void {
+    public function updateDisplay():Void {
         this.__priBuilderPaint();
         this.paint();
+        
+        for (i in 0 ... this.numChildren) {
+            var item:Dynamic = this.getChild(i);
+            if (item.updateDisplay != null) item.updateDisplay();
+        }
     }
+
+    @:noCompletion
+    private function ___onResize(e:PriEvent):Void this.updateDisplay();
 
     @:noCompletion
     private function ___onAdded(e:PriEvent):Void {
         this.removeEventListener(PriEvent.ADDED, this.___onAdded);
         this.addEventListener(PriEvent.REMOVED, this.___onRemoved);
-        this.parent.addEventListener(PriEvent.RESIZE, this.___onParentResize);
+        if (this.parent != null) this.parent.addEventListener(PriEvent.RESIZE, this.___onParentResize);
         this.___onParentResize(null);
     }
 
     @:noCompletion
     private function ___onRemoved(e:PriEvent):Void {
-        this.parent.removeEventListener(PriEvent.RESIZE, this.___onParentResize);
+        if (e != null && e.data != null) {
+            var oldParent:PriDisplay = e.data;
+            oldParent.removeEventListener(PriEvent.RESIZE, this.___onParentResize);
+        }
         this.removeEventListener(PriEvent.REMOVED, this.___onRemoved);
         this.addEventListener(PriEvent.ADDED, this.___onAdded);
     }
@@ -108,9 +118,7 @@ class PriBuilder extends PriContainer {
     }
 
     @:noCompletion
-    private function __priBuilderSetup():Void {
-
-    }
+    private function __priBuilderSetup():Void {}
 
     @:noCompletion
     private function __priBuilderPaint():Void {}

@@ -22,7 +22,8 @@ class PriBuilderMacros {
 
     #if macro
     static public function build():Array<Field> {
-        trace('PRI BUILDER');
+
+        Sys.println("   PriBuilder : Building " + Context.getLocalClass().toString());
         
         var fields:Array<Field> = Context.getBuildFields();
         var propertiesElementsForSetup:Array<Expr> = [];
@@ -175,7 +176,8 @@ class PriBuilderMacros {
                 );
 
             } catch(e:Dynamic) {
-                throw 'Invalid XML';
+                Sys.println("       ERROR - " + e);
+                Context.fatalError(Std.string(e), Context.currentPos());
             }
         }
 
