@@ -193,13 +193,15 @@ class PriDisplay extends PriEventDispatcher {
 
     @:noCompletion 
     private function __updateStyle():Void {
-        if (this.dh.holdStyleUpdate || this.dh.jselement == null) return;
+        var dh = this.dh;
 
-        var result:String = this.dh.styles.getValue();
+        if (dh.holdStyleUpdate || dh.jselement == null) return;
 
-        if (result != this.dh.styleString) {
-            this.dh.styleString = result;
-            this.dh.jselement.style.cssText = result;
+        var result:String = dh.styles.getValue();
+
+        if (result != dh.styleString) {
+            dh.styleString = result;
+            dh.jselement.style.cssText = result;
         }
 
     }
@@ -493,7 +495,7 @@ class PriDisplay extends PriEventDispatcher {
         this.dh.styles.set("left", value + "px");
 
         this.__updateStyle();
-
+        
         return value;
     }
 

@@ -482,7 +482,7 @@ private class PriBuilderMacroHelper {
 
             // ^0x[0-9a-fA-F]+$ : match hexadecimal numbers 
             // | or
-            // ^-?[0-9]*.?[0-9]+$ negatives, positives, floats or integers
+            // ^-?[0-9]*.?[0-9]+$ hexa, negatives, positives, floats or integers
             var r = new EReg("^0x[0-9a-fA-F]+$|^-?[0-9]*.?[0-9]+$", "");
 
             return r.match(StringTools.trim(value));
