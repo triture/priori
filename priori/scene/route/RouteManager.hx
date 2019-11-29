@@ -103,7 +103,13 @@ class RouteManager {
 
     private function onHashChange():Void this.openScene(this.getPathByHash());
 
-    public function navigateToCurrent():Void this.onHashChange();
+    public function navigateToCurrent():Void {
+        haxe.Timer.delay(
+            function():Void {
+                this.onHashChange();
+            }, 10
+        );
+    }
 
 }
 
