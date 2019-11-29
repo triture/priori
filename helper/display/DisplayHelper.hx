@@ -43,7 +43,7 @@ class PriMap {
 
     public function remove(key:String):Void this.set(key, null);
 
-    inline public function getValue():String {
+    public function getValue():String {
         var c:String = "";
 
         for (item in this.values) c += item;
@@ -68,7 +68,7 @@ typedef DisplayHelper = {
     var visible:Bool;
     var mouseEnabled:Bool;
 
-    var dragdata:DragData;
+    @:optional var dragdata:DragData;
 
     var anchorX:Float;
     var anchorY:Float;
@@ -78,11 +78,11 @@ typedef DisplayHelper = {
     var alpha:Float;
     var disabled:Bool;
 
-    var element:JQuery;
-    var elementBorder:Element;
-    var jselement:Element;
+    @:optional var element:JQuery;
+    @:optional var elementBorder:Element;
+    @:optional var jselement:Element;
 
-    var parent:PriContainer;
+    @:optional var parent:PriContainer;
 
     var eventHelper:BrowserEventEngine;
 

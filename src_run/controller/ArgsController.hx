@@ -27,7 +27,7 @@ class ArgsController {
             result.command = clone.shift();
         } else {
             result.error = true;
-            result.errorMessage = "Command Missing: use create, build or run";
+            result.errorMessage = "Command Missing: use create, build or vscode";
             return result;
         }
 

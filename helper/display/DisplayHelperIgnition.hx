@@ -47,8 +47,6 @@ class DisplayHelperIgnition {
             visible : true,
             mouseEnabled : true,
 
-            dragdata : null,
-
             anchorX : 0.5,
             anchorY : 0.5,
             rotation : 0,
@@ -56,12 +54,6 @@ class DisplayHelperIgnition {
             scaleY : 1,
             alpha : 1,
             disabled : false,
-
-            element : null,
-            elementBorder : null,
-            jselement : null,
-
-            parent : null,
 
             eventHelper : new BrowserEventEngine(),
             styles : map,

@@ -79,7 +79,7 @@ class PriApp extends PriGroup {
             Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
 
             Browser.window.document.addEventListener("mousedown", this.___onPointerMove, true);
-            Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
+            Browser.window.document.addEventListener("mousemove", this.___onPointerMove, true);
 
             Browser.window.document.addEventListener("focus", this.___onAppFocusIn, true);
             Browser.window.document.addEventListener("blur", this.___onAppFocusOut, true);
@@ -202,6 +202,5 @@ class PriApp extends PriGroup {
     private function ___onAppFocusIn():Void this.___hasFocus = true;
     private function ___onAppFocusOut():Void this.___hasFocus = false;
     override public function hasFocus():Bool return this.___hasFocus;
-
-
+    
 }

@@ -44,8 +44,37 @@ class PrioriRun {
             Helper.g().output.print("");
             Helper.g().output.print("   >>> Running " + args.command.toUpperCase() + " command", 0);
 
+            if (args.command == ArgsType.COMMAND_VSCODE) {
+                
+                var error:Bool = false;
 
-            if (args.command == ArgsType.COMMAND_BUILD || args.command == ArgsType.COMMAND_RUN) {
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.printWithUnderline("1. Loading Libs...");
+
+                // try to load priori lib
+                var prioriLibResult:String = PrioriRunController.getInstance().haxelib.load("priori");
+                if (prioriLibResult.length > 0) {
+                    Helper.g().output.print("");
+                    Helper.g().output.printError(prioriLibResult, "Lib error");
+                    return;
+                }
+
+                // try to load project lib
+                var projectLibResult:String = PrioriRunController.getInstance().haxelib.load(args.currPath, args.prioriFile);
+                if (projectLibResult.length > 0) {
+                    Helper.g().output.print("");
+                    Helper.g().output.printError(projectLibResult, "Lib error");
+                    return;
+                }
+
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.print("");
+                Helper.g().output.printWithUnderline("3. Generating vscode files from Haxe code...");
+
+
+            } else if (args.command == ArgsType.COMMAND_BUILD || args.command == ArgsType.COMMAND_RUN) {
 
                 var error:Bool = false;
 
@@ -76,7 +105,6 @@ class PrioriRun {
                 Helper.g().output.printWithUnderline("2. Copying template Files...");
 
 
-
                 var templateBuildResult:String = PrioriRunController.getInstance().template.build();
 
                 if (templateBuildResult.length > 0) {
@@ -84,7 +112,6 @@ class PrioriRun {
                     Helper.g().output.printError(templateBuildResult    );
                     return;
                 }
-
 
 
                 Helper.g().output.print("");
