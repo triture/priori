@@ -11,4 +11,11 @@ class PriSceneView extends PriBuilder {
         
         super();
     }
+    
+    @:noCompletion
+    inline public function validate():Void this.updateDisplay();
+
+    @:noCompletion
+    inline public function revalidate():Void this.updateDisplay();
+
 }
