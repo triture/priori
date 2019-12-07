@@ -31,7 +31,8 @@ class Validation {
 
         if (value == ArgsType.COMMAND_BUILD ||
             value == ArgsType.COMMAND_CREATE ||
-            value == ArgsType.COMMAND_RUN
+            value == ArgsType.COMMAND_RUN ||
+            value == ArgsType.COMMAND_VSCODE
 
         ) return true;
 

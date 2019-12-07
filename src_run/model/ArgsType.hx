@@ -10,4 +10,5 @@ class ArgsType {
     public static var COMMAND_BUILD:String = "build";
     public static var COMMAND_RUN:String = "run";
     public static var COMMAND_CREATE:String = "create";
+    public static var COMMAND_VSCODE:String = "vscode";
 }

@@ -1,0 +1,8 @@
+{
+    "haxe.configurations": [ // one or more configurations for the haxe completion server
+        ["priori-vscode.hxml"], // hxml file is a normal Haxe argument too
+    ],
+    "haxe.displayServer": { // configuration for starting haxe completion server itself
+        "arguments": ["-v"], // arguments before --wait (-v is useful for debugging)
+    }
+}
