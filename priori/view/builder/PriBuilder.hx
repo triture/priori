@@ -113,7 +113,7 @@ class PriBuilder extends PriContainer {
             } else if (this.top == null && this.bottom != null) {
                 this.maxY = p.height - this.height;
             }
-            this.endBathUpdate();
+            this.endBatchUpdate();
         }
     }
 

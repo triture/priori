@@ -91,7 +91,7 @@ class PriText extends PriDisplay {
         this.clipping = true;
         this.dh.height = null;
         this.dh.width = null;
-        this.endBathUpdate();
+        this.endBatchUpdate();
     }
 
     private function get_lineHeight():Float return this.dth.lineHeight;

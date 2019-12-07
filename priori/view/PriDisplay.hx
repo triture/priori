@@ -500,7 +500,7 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     public function startBatchUpdate():Void this.dh.holdStyleUpdate = true;
-    public function endBathUpdate():Void {
+    public function endBatchUpdate():Void {
         this.dh.holdStyleUpdate = false;
         this.__updateStyle();
     }
