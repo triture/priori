@@ -242,7 +242,7 @@ class PriDataGrid extends PriGroup {
             this.__usedRows[i].height = index == n-1 ? rowHeightCalculated.last : rowHeightCalculated.all;
             this.__usedRows[i].rowColor = this.rowColorSequence[index % this.rowColorSequence.length];
 
-            this.__usedRows[i].endBathUpdate();
+            this.__usedRows[i].endBatchUpdate();
 
             i++;
         }
@@ -279,7 +279,7 @@ class PriDataGrid extends PriGroup {
                 this.verticalLinesList[i].x = lastX;
                 this.verticalLinesList[i].bgColor = this.verticalGridLineColor;
 
-                this.verticalLinesList[i].endBathUpdate();
+                this.verticalLinesList[i].endBatchUpdate();
             }
         }
 
@@ -585,7 +585,7 @@ class PriDataGrid extends PriGroup {
             gridRow.selection = this.selection;
             gridRow.pointer = this.rowPointer;
 
-            gridRow.endBathUpdate();
+            gridRow.endBatchUpdate();
 
             if (gridRow.parent == null) this.__rowContainer.addChild(gridRow);
 
