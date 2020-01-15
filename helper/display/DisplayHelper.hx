@@ -1,5 +1,6 @@
 package helper.display;
 
+import haxe.ds.StringMap;
 import priori.view.container.PriContainer;
 import priori.geom.PriGeomPoint;
 import priori.geom.PriColor;
@@ -17,36 +18,42 @@ private typedef DragData = {
 
 class PriMap {
 
-    var keys:Dynamic = {};
-    var values:Array<String> = [];
+    private var map:StringMap<String>;
+    private var transition:StringMap<String>;
 
     public function new() {
-
+        this.map = new StringMap<String>();
+        this.transition = new StringMap<String>();
     }
 
     public function set(key:String, value:String):Void {
-
-        var val:String = "";
-
-        if (value == null || value.length == 0) val = "";
-        else val = key + ":" + value + ";";
-
-        var index:Int = this.keys[cast "$" + key];
-
-        if (index == null) {
-            this.keys[cast "$" + key] = this.values.length;
-            this.values.push(val);
-        } else {
-            this.values[index] = val;
-        }
+        if (value == null || value.length == 0) this.map.remove(key);
+        else this.map.set(key, value);
     }
 
-    public function remove(key:String):Void this.set(key, null);
+    public function setTransition(key:String, seconds:Float):Void {
+        if (seconds == null || seconds <= 0) this.transition.remove(key);
+        else this.transition.set(key, seconds + 's');
+    }
+
+    public function remove(key:String):Void this.map.remove(key);
 
     public function getValue():String {
         var c:String = "";
 
-        for (item in this.values) c += item;
+        for (key in this.map.keys()) {
+            c += key + ':' + this.map.get(key) + ';';
+        }
+
+        var t:String = "";
+        for (key in this.transition.keys()) {
+            t += key + ' ' + this.transition.get(key);
+        }
+
+        if (t.length > 0) {
+            c += 'transition:' + t + ';';
+            c += '-webkit-transition:' + t + ';';
+        }
 
         return c;
     }

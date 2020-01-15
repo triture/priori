@@ -1,5 +1,6 @@
 package priori.view;
 
+import priori.types.PriTransitionType;
 import haxe.ds.StringMap;
 import priori.app.PriApp;
 import helper.browser.BrowserHandler;
@@ -189,6 +190,30 @@ class PriDisplay extends PriEventDispatcher {
         this.addEventListener(PriEvent.ADDED_TO_APP, this.dh.eventHelper.onAddedToApp);
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
+    }
+
+    public function allowTransition(key:PriTransitionType, time:Float):Void {
+
+        switch (key) {
+            case PriTransitionType.POSITION : {
+                this.dh.styles.setTransition('left', time);
+                this.dh.styles.setTransition('top', time);
+            }
+
+            case PriTransitionType.X : {
+                this.dh.styles.setTransition('left', time);
+            }
+
+            case PriTransitionType.Y : {
+                this.dh.styles.setTransition('top', time);
+            }
+
+            case PriTransitionType.ALPHA : {
+                this.dh.styles.setTransition('opacity', time);
+            }
+        }
+
+        this.__updateStyle();
     }
 
     @:noCompletion 
