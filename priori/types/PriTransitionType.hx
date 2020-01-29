@@ -6,4 +6,6 @@ abstract PriTransitionType(String) {
     var X = 'x';
     var Y = 'y';
     var ALPHA = 'alpha';
+    var BACKGROUND_COLOR = 'background-color';
+    var TEXT_COLOR = 'color';
 }

@@ -211,6 +211,14 @@ class PriDisplay extends PriEventDispatcher {
             case PriTransitionType.ALPHA : {
                 this.dh.styles.setTransition('opacity', time);
             }
+
+            case PriTransitionType.BACKGROUND_COLOR : {
+                this.dh.styles.setTransition('background-color', time);
+            }
+
+            case PriTransitionType.TEXT_COLOR : {
+                this.dh.styles.setTransition('color', time);
+            }
         }
 
         this.__updateStyle();
