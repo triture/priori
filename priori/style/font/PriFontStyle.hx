@@ -90,50 +90,11 @@ class PriFontStyle {
         var color:String = this.color == null ? "" : this.color.toString();
         var decoration:String = "";
 
-        if (this.weight != null)
-            weight = switch (this.weight) {
-                case PriFontStyleWeight.NORMAL : "normal";
-                case PriFontStyleWeight.BOLD : "bold";
-                case PriFontStyleWeight.BOLDER : "bolder";
-                case PriFontStyleWeight.LIGHTER : "lighter";
-                case PriFontStyleWeight.THICK100 : "100";
-                case PriFontStyleWeight.THICK200 : "200";
-                case PriFontStyleWeight.THICK300 : "300";
-                case PriFontStyleWeight.THICK400 : "400";
-                case PriFontStyleWeight.THICK500 : "500";
-                case PriFontStyleWeight.THICK600 : "600";
-                case PriFontStyleWeight.THICK700 : "700";
-                case PriFontStyleWeight.THICK800 : "800";
-                case PriFontStyleWeight.THICK900 : "900";
-            }
-
-        if (this.italic != null)
-            italic = switch (this.italic) {
-                case PriFontStyleItalic.NORMAL : "normal";
-                case PriFontStyleItalic.ITALIC : "italic";
-                case PriFontStyleItalic.OBLIQUE : "oblique";
-            }
-
-        if (this.variant != null)
-            variant = switch (this.variant) {
-                case PriFontStyleVariant.NORMAL : "normal";
-                case PriFontStyleVariant.SMALL_CAPS : "small-caps";
-            }
-
-        if (this.align != null)
-            align = switch (this.align) {
-                case PriFontStyleAlign.LEFT : "left";
-                case PriFontStyleAlign.CENTER : "center";
-                case PriFontStyleAlign.RIGHT : "right";
-            }
-
-        if (this.decoration != null)
-            decoration = switch (this.decoration) {
-                case PriFontStyleDecoration.NONE : "none";
-                case PriFontStyleDecoration.UNDERLINE : "underline";
-                case PriFontStyleDecoration.OVERLINE : "overline";
-                case PriFontStyleDecoration.LINE_THROUGH : "line-through";
-            }
+        if (this.weight != null) weight = this.weight.toString();
+        if (this.italic != null) italic = this.italic.toString();
+        if (this.variant != null) variant = this.variant.toString();
+        if (this.align != null) align = this.align.toString();
+        if (this.decoration != null) decoration = this.decoration.toString();
 
         var styleData:Dynamic = PriFontStyle.getFontStyleObjectBase();
         styleData.fontFamily = family;
@@ -146,9 +107,7 @@ class PriFontStyle {
 
         return styleData;
     }
-
-    public function toString():String {
-        return haxe.Json.stringify(this.getFontStyleObject());
-    }
+    
+    public function toString():String return haxe.Json.stringify(this.getFontStyleObject());
 
 }

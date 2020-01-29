@@ -1,8 +1,11 @@
 package priori.style.font;
 
-enum PriFontStyleDecoration {
-    NONE;
-    UNDERLINE;
-    OVERLINE;
-    LINE_THROUGH;
+@:enum
+abstract PriFontStyleDecoration(String) {
+    var NONE = "none";
+    var UNDERLINE = "underline";
+    var OVERLINE = "overline";
+    var LINE_THROUGH = "line-through";
+
+    inline public function toString():String return this;
 }

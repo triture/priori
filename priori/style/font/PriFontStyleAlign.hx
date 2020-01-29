@@ -1,7 +1,10 @@
 package priori.style.font;
 
-enum PriFontStyleAlign {
-    LEFT;
-    CENTER;
-    RIGHT;
+@:enum
+abstract PriFontStyleAlign(String) {
+    var LEFT = "left";
+    var CENTER = "center";
+    var RIGHT = "right";
+    
+    inline public function toString():String return this;
 }
