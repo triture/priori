@@ -232,13 +232,22 @@ class PriBuilderMacros {
             }
 
         } else {
-            var type:Type = getTypeFromClassName(node.nodeName, imports);
+
+            var nodeName:String = node.nodeName;
+            var isPrivate:Bool = false;
+
+            if (StringTools.startsWith(nodeName, 'private:')) {
+                nodeName = nodeName.split('private:').join('');
+                isPrivate = true;
+            }
+
+            var type:Type = getTypeFromClassName(nodeName, imports);
             if (type == null) {
                 try {
-                    type = Context.getType(node.nodeName);
+                    type = Context.getType(nodeName);
                 } catch (e:Dynamic) {}
             }
-            if (type == null) throw "Type not found : " + node.nodeName;
+            if (type == null) throw "Type not found : " + nodeName;
             
             var result:PriBuilderField = {
                 node : node,
@@ -252,7 +261,7 @@ class PriBuilderMacros {
             }
 
             if (node.exists("id")) {
-                result.isPublic = true;
+                if (!isPrivate) result.isPublic = true;
                 result.name = node.get("id");
             }
 
