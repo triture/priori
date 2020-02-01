@@ -1,8 +1,7 @@
 package priori.view.builder;
 
-
-import haxe.macro.PositionTools;
 #if macro
+import haxe.macro.PositionTools;
 import haxe.xml.Parser.XmlParserException;
 import haxe.macro.TypeTools;
 import haxe.macro.ComplexTypeTools;
