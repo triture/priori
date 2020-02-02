@@ -166,13 +166,13 @@ class PriBuilder extends PriContainer {
             var pHeight:Float = p.height;
 
             this.startBatchUpdate();
-            if (this.left != null && this.right != null) {
-                super.set_x(this.left);
-                super.set_width(pWidth - this.left - this.right);
-            } else if (this.left != null && this.right == null) {
-                super.set_x(this.left);
-            } else if (this.left == null && this.right != null) {
-                super.set_maxX(pWidth - this.right);
+            if (this.__left_value != null && this.__right_value != null) {
+                super.set_x(this.__left_value);
+                super.set_width(pWidth - this.__left_value - this.__right_value);
+            } else if (this.__left_value != null && this.__right_value == null) {
+                super.set_x(this.__left_value);
+            } else if (this.__left_value == null && this.__right_value != null) {
+                super.set_maxX(pWidth - this.__right_value);
             }
 
             if (this.top != null && this.bottom != null) {
@@ -181,7 +181,7 @@ class PriBuilder extends PriContainer {
             } else if (this.top != null && this.bottom == null) {
                 super.set_y(this.top);
             } else if (this.top == null && this.bottom != null) {
-                super.set_maxY(pHeight - this.height);
+                super.set_maxY(pHeight - this.bottom);
             }
             this.endBatchUpdate();
         }
