@@ -28,6 +28,7 @@ class PriBuilderMacros {
         var propertiesElementsForSetup:Array<Expr> = [];
         var propertiesElementsForPaint:Array<Expr> = [];
         var imports:Array<Type> = [];
+        var importAlias:StringMap<String> = new StringMap<String>();
         
         var val:String = null;
 
@@ -112,10 +113,10 @@ class PriBuilderMacros {
 
                 if (access.hasNode("imports")) {
                     for (item in access.getElementsFromNode("imports")) {
-                        createImport(item, imports);
+                        createImport(item, imports, importAlias);
                     }
                 }
-
+                
                 if (access.hasNode("view")) {
                     
                     for (el in xmlBase.elementsNamed("view")) {
@@ -132,7 +133,7 @@ class PriBuilderMacros {
                     }
 
                     for (item in access.getElementsFromNode("view")) {
-                        createElement(item, null, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
+                        createElement(item, null, fields, builderFields, imports, importAlias, propertiesElementsForSetup, propertiesElementsForPaint);
                     }
                 }
 
@@ -186,7 +187,9 @@ class PriBuilderMacros {
         return fields;
     }
 
-    private static function getTypeFromClassName(typeName:String, imports:Array<Type>):Type {
+    private static function getTypeFromClassName(typeName:String, imports:Array<Type>, importAlias:StringMap<String>):Type {
+        if (importAlias.exists(typeName)) typeName = importAlias.get(typeName);
+        
         for (item in imports) {
             
             var typeString:String = TypeTools.toString(item);
@@ -199,10 +202,14 @@ class PriBuilderMacros {
         return null;
     }
 
-    private static function createImport(node:Xml, imports:Array<Type>):Void {
+    private static function createImport(node:Xml, imports:Array<Type>, importAlias:StringMap<String>):Void {
         var module:String = node.nodeName;
         var types = Context.getModule(module);
-
+        
+        if (node.exists('alias') && StringTools.trim(node.get('alias')).length > 0) {
+            importAlias.set(node.get('alias'), node.nodeName);
+        }
+        
         for (item in types) imports.push(item);
     }
 
@@ -212,6 +219,7 @@ class PriBuilderMacros {
         fields:Array<Field>, 
         builderFields:Array<PriBuilderField>, 
         imports:Array<Type>,
+        importAlias:StringMap<String>,
         propertiesElementsForSetup:Array<Expr>,
         propertiesElementsForPaint:Array<Expr>
     ) {
@@ -240,7 +248,7 @@ class PriBuilderMacros {
                 isPrivate = true;
             }
 
-            var type:Type = getTypeFromClassName(nodeName, imports);
+            var type:Type = getTypeFromClassName(nodeName, imports, importAlias);
             if (type == null) {
                 try {
                     type = Context.getType(nodeName);
@@ -276,7 +284,7 @@ class PriBuilderMacros {
 
             builderFields.push(result);
 
-            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, propertiesElementsForSetup, propertiesElementsForPaint);
+            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, importAlias, propertiesElementsForSetup, propertiesElementsForPaint);
         }
     }
 
