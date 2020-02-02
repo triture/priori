@@ -157,7 +157,7 @@ class PriContainer extends PriDisplay {
     }
 
     override private function set_width(value:Float):Float {
-        if (value != this.width) {
+        if (Math.max(0, value) != this.width) {
             super.set_width(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
@@ -166,11 +166,12 @@ class PriContainer extends PriDisplay {
     }
 
     override private function set_height(value:Float):Float {
-        if (value != this.height) {
+        if (Math.max(0, value) != this.height) {
             super.set_height(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
-
+        
         return value;
     }
+
 }
