@@ -32,10 +32,7 @@ abstract PriColor(Int) from Int to Int {
         return new PriColor((nr << 16) | (ng << 8) | nb);
     }
 
-    inline private function get_red():Int {
-        return (this >> 16) & 0xff;
-    }
-
+    inline private function get_red():Int return (this >> 16) & 0xff;
     inline private function set_red(value:Int):Int {
         var g:Int = green;
         var b:Int = blue;
@@ -45,10 +42,7 @@ abstract PriColor(Int) from Int to Int {
         return value;
     }
 
-    inline private function get_green():Int {
-        return (this >> 8) & 0xff;
-    }
-
+    inline private function get_green():Int return (this >> 8) & 0xff;
     inline private function set_green(value:Int):Int {
         var r:Int = red;
         var b:Int = blue;
@@ -58,10 +52,7 @@ abstract PriColor(Int) from Int to Int {
         return value;
     }
 
-    inline private function get_blue():Int {
-        return this & 0xff;
-    }
-
+    inline private function get_blue():Int return this & 0xff;
     inline private function set_blue(value:Int):Int {
         var r:Int = red;
         var g:Int = green;
@@ -81,11 +72,9 @@ abstract PriColor(Int) from Int to Int {
         return this;
     }
 
-    @:to inline public function toString():String {
-        return "#" + StringTools.hex(this, 6);
-    }
-
-    @:from inline static public function fromString(rgb:String):PriColor {
+    @:to public function toString():String return "#" + StringTools.hex(this, 6);
+    
+    @:from static public function fromString(rgb:String):PriColor {
         if (rgb.charAt(0) == "#") rgb = "0x" + rgb.substring(1);
         var colorInt:Int = Std.parseInt(rgb);
         if (colorInt == null) colorInt = 0;
