@@ -20,25 +20,14 @@ import haxe.macro.Expr;
 class PriBuilderMacros {
 
     #if macro
-    static public function build():Array<Field> {
 
-        Sys.println("   PriBuilder : Building " + Context.getLocalClass().toString());
-        
-        var fields:Array<Field> = Context.getBuildFields();
-        var propertiesElementsForSetup:Array<Expr> = [];
-        var propertiesElementsForPaint:Array<Expr> = [];
-        var imports:Array<Type> = [];
-        var importAlias:StringMap<String> = new StringMap<String>();
-        
+    static public function loadPrioriXML():Xml {
         var val:String = null;
-
-        if (!hasMetaKey('priori')) return fields;
-        else val = Std.string(getMetaValue('priori'));
-        
-        if (val == null) return fields;
-
         var xml:Xml = null;
-        
+
+        if (!hasMetaKey('priori')) return null;
+        else val = Std.string(getMetaValue('priori'));
+
         // try to load xml data from file
         var fileName:String = StringTools.trim(val.substr(0, 1024)).split('\n').join('');
         
@@ -95,6 +84,21 @@ class PriBuilderMacros {
             }
         }
 
+        return xml;
+    }
+
+    static public function build():Array<Field> {
+
+        Sys.println("   PriBuilder : Building " + Context.getLocalClass().toString());
+        
+        var fields:Array<Field> = Context.getBuildFields();
+        var propertiesElementsForSetup:Array<Expr> = [];
+        var propertiesElementsForPaint:Array<Expr> = [];
+        var imports:Array<Type> = [];
+        var importAlias:StringMap<String> = new StringMap<String>();
+        
+        var xml:Xml = loadPrioriXML();
+        
         if (xml != null) {
             try {
                 

@@ -59,7 +59,7 @@ class PriGroup extends PriContainer {
 
     private function _onAddedToApp(e:PriEvent):Void {
         this.removeEventListener(PriEvent.ADDED_TO_APP, this._onAddedToApp);
-
+        
         if (this._setupCalled == false) {
             this._setupCalled = true;
             this.setup();
@@ -68,13 +68,9 @@ class PriGroup extends PriContainer {
         this.validate();
     }
 
-    private function setup():Void {
+    private function setup():Void {}
 
-    }
-
-    private function paint():Void {
-
-    }
+    private function paint():Void {}
 
     public function isInvalid():Bool return _invalid;
     public function canPaint():Bool return this._setupCalled;

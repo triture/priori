@@ -36,8 +36,6 @@ class PriApp extends PriGroup {
     private var _delta:Float;
     private var _timer:Timer;
 
-    private var _fullSetupCalled:Bool;
-
     @:allow(priori.view.PriDisplay)
     private var frame:DivElement;
 
@@ -73,7 +71,6 @@ class PriApp extends PriGroup {
         Browser.window.document.body.style.border = "0px";
         Browser.window.document.body.style.margin = "0px";
 
-
         if (Browser.window.document.addEventListener != null) {
             Browser.window.document.addEventListener("touchstart", this.___onPointerMove, true);
             Browser.window.document.addEventListener("touchmove", this.___onPointerMove, true);
@@ -99,15 +96,17 @@ class PriApp extends PriGroup {
 
         Browser.window.document.body.appendChild(this.dh.jselement);
 
-
         this.frame = Browser.document.createDivElement();
         this.frame.className = "priori_stylebase";
         this.frame.style.cssText = this.dh.jselement.style.cssText + "overflow:visible;width:1px;height:1px;visibility:hidden;";
         Browser.window.document.body.appendChild(this.frame);
 
+        this.startApplication();
+    }
+
+    private function startApplication():Void {
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
-        
         this.revalidate();
     }
 
@@ -151,6 +150,11 @@ class PriApp extends PriGroup {
     override private function set_y(value:Float) return 0;
     override private function get_y():Float return 0;
 
+    override private function get_maxX():Float return 0;
+    override private function get_maxY():Float return 0;
+
+    override private function set_centerX(value:Float) return 0;
+    override private function set_centerY(value:Float) return 0;
 
     public function getMSUptate():Int return Std.int(1000 / this._fps);
 

@@ -95,7 +95,8 @@ class PriSceneManager {
             AssetManager.g().removeAllEventListenersFromType(AssetManagerEvent.ASSET_COMPLETE);
             AssetManager.g().removeAllEventListenersFromType(AssetManagerEvent.ASSET_ERROR);
             AssetManager.g().removeAllEventListenersFromType(AssetManagerEvent.ASSET_PROGRESS);
-
+            
+            this.changeScene(null);
             if (onComplete != null) onComplete();
         });
 
@@ -106,16 +107,26 @@ class PriSceneManager {
             AssetManager.g().removeAllEventListenersFromType(AssetManagerEvent.ASSET_ERROR);
             AssetManager.g().removeAllEventListenersFromType(AssetManagerEvent.ASSET_PROGRESS);
 
+            this.changeScene(null);
             if (onError != null) onError();
         });
 
-        AssetManager.g().addEventListener(AssetManagerEvent.ASSET_PROGRESS, function(e:AssetManagerEvent):Void {
-            cast(this.currentScene, PriPreloaderView).updateProgress(e.percentLoaded);
-        });
+        AssetManager.g().addEventListener(
+            AssetManagerEvent.ASSET_PROGRESS, 
+            function(e:AssetManagerEvent):Void {
+                if (this.currentScene != null && Std.is(this.currentScene, PriPreloaderView)) {
+                    var scene:PriPreloaderView = cast this.currentScene;
+                    scene.updateProgress(e.percentLoaded);
+                }
+            }
+        );
 
         this.open(cast preloadScene, []);
-        cast(this.currentScene, PriPreloaderView).updateProgress(0);
-
+        if (this.currentScene != null && Std.is(this.currentScene, PriPreloaderView)) {
+            var scene:PriPreloaderView = cast this.currentScene;
+            scene.updateProgress(0);
+        }
+        
         this.isPreloading = true;
 
         AssetManager.g().load();

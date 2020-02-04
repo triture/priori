@@ -37,7 +37,7 @@ class PriEventDispatcher {
                 this.___edl.splice(i, 1);
                 n--;
             }
-
+            
             i++;
         }
     }
