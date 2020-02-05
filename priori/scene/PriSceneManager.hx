@@ -27,7 +27,6 @@ class PriSceneManager {
     private var isPreloading:Bool;
 
     @:isVar public var holder(get, set):PriContainer;
-    @:isVar public var container(get, null):PriContainer;
 
     private var router:RouteManager;
     private var historyIndexPosition:Int;
@@ -40,10 +39,7 @@ class PriSceneManager {
 
         this.isPreloading = false;
         this.sceneHistory = [];
-
-        this.container = new PriContainer();
-        this.container.clipping = true;
-
+        
         this.router = new RouteManager();
     }
 
@@ -59,15 +55,29 @@ class PriSceneManager {
     public function removeScope(scope:String):Void this.router.removeScope(scope);
 
     private function get_router():RouteManager return this.router;
-    private function get_container():PriContainer return this.container;
     private function get_holder():PriContainer return this.holder;
 
     private function set_holder(value:PriContainer):PriContainer {
-        if (value != null && value != this.holder) {
-            if (this.holder != null) this.holder.removeEventListener(PriEvent.RESIZE, this.onAppResize);
-            value.addEventListener(PriEvent.RESIZE, this.onAppResize);
-            this.holder = value;
+        if (value == null || value == this.holder) return value;
+
+        if (this.holder != null) {
+            this.holder.removeEventListener(PriEvent.RESIZE, this.onAppResize);
         }
+
+        value.addEventListener(PriEvent.RESIZE, this.onAppResize);
+
+        if (this.currentScene != null) {
+            var w:Float = value.width;
+            var h:Float = value.height;
+
+            this.currentScene.width = w;
+            this.currentScene.height = h;
+
+            value.addChild(this.currentScene);
+        }
+
+        this.holder = value;
+        
         return value;
     }
 
@@ -177,22 +187,10 @@ class PriSceneManager {
             var w:Float = this.holder.width;
             var h:Float = this.holder.height;
 
-            this.container.width = w;
-            this.container.height = h;
-
             newScene.width = w;
             newScene.height = h;
 
-            this.container.addChild(newScene);
-
-            if (this.container.parent != this.holder) this.holder.addChild(this.container);
-
-//            if (keepInHistory == true) {
-//                this.sceneHistory.push({
-//                    scene : scene,
-//                    args : args
-//                });
-//            }
+            this.holder.addChild(newScene);
         }
 
         this.onAppResize(null);
@@ -211,10 +209,7 @@ class PriSceneManager {
     private function onAppResize(e:PriEvent):Void {
         var w:Float = this.holder.width;
         var h:Float = this.holder.height;
-
-        this.container.width = w;
-        this.container.height = h;
-
+        
         if (this.currentScene != null) {
             this.currentScene.width = w;
             this.currentScene.height = h;
