@@ -503,7 +503,7 @@ private class PriBuilderMacroHelper {
             // ^0x[0-9a-fA-F]+$ : match hexadecimal numbers 
             // | or
             // ^-?[0-9]*.?[0-9]+$ hexa, negatives, positives, floats or integers
-            var r = new EReg("^0x[0-9a-fA-F]+$|^-?[0-9]*.?[0-9]+$", "");
+            var r = new EReg("^0x[0-9a-fA-F]+$|^-?[0-9]*\\.?[0-9]+$", "");
 
             return r.match(StringTools.trim(value));
         }
@@ -513,7 +513,7 @@ private class PriBuilderMacroHelper {
         if (value == null) return false;
         else {
             // ^-?[0-9]*[.][0-9]+$ negatives, positives, floats (must be a point somewhere)
-            var r = new EReg("^-?[0-9]*[.][0-9]+$", "");
+            var r = new EReg("^-?[0-9]*[\\.][0-9]+$", "");
             return r.match(StringTools.trim(value));
         }
     }
