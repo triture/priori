@@ -504,29 +504,38 @@ class PriDisplay extends PriEventDispatcher {
 
 
     private function set_maxX(value:Float) {
-        this.x = value - this.widthScaled;
+        this.dh.x = value - this.widthScaled;
+        this.dh.styles.set("left", this.dh.x + "px");
+        this.__updateStyle();
         return value;
     }
 
     private function set_maxY(value:Float) {
-        this.y = value - this.heightScaled;
+        this.dh.y = value - this.heightScaled;
+        this.dh.styles.set("top", this.dh.y + "px");
+        this.__updateStyle();
         return value;
     }
 
     private function set_centerX(value:Float) {
-        this.x = value - this.widthScaled/2;
+        this.dh.x = value - this.widthScaled/2;
+        this.dh.styles.set("left", this.dh.x + "px");
+        this.__updateStyle();
+
         return value;
     }
 
     private function set_centerY(value:Float) {
-        this.y = value - this.heightScaled/2;
+        this.dh.y = value - this.heightScaled/2;
+        this.dh.styles.set("top", this.dh.y + "px");
+        this.__updateStyle();
+
         return value;
     }
 
     private function set_x(value:Float) {
         this.dh.x = value;
         this.dh.styles.set("left", value + "px");
-
         this.__updateStyle();
         
         return value;
@@ -542,7 +551,6 @@ class PriDisplay extends PriEventDispatcher {
     private function set_y(value:Float) {
         this.dh.y = value;
         this.dh.styles.set("top", value + "px");
-
         this.__updateStyle();
 
         return value;
