@@ -23,10 +23,11 @@ class PriBuilder extends PriContainer {
         this.__priBuilderSetup();
         this.setup();
 
+        this.addEventListener(PriEvent.RESIZE, this.___onResize);
+        
         this.__priBuilderPaint();
         this.paint();
 
-        this.addEventListener(PriEvent.RESIZE, this.___onResize);
         this.addEventListener(PriEvent.ADDED, this.___onAdded);
     }
 
