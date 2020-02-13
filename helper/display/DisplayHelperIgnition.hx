@@ -19,6 +19,7 @@ class DisplayHelperIgnition {
             ellipsis : true,
             editable : false,
             lineHeight : null,
+            letterSpace : null,
 
             textColor:null,
             fontFamily:null,

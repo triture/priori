@@ -17,6 +17,7 @@ typedef DisplayTextHelper = {
     var ellipsis:Bool;
     var editable:Bool;
     var lineHeight:Float;
+    var letterSpace:Float;
 
     var textColor:PriColor;
     var fontFamily:String;

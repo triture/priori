@@ -96,6 +96,8 @@ class PriText extends PriDisplay {
     public var align(get, set):PriFontStyleAlign;
     public var decoration(get, set):PriFontStyleDecoration;
 
+    public var letterSpace(get, set):Float;
+
     private var dth:DisplayTextHelper = DisplayHelperIgnition.getDisplayTextHelper();
 
     public function new() {
@@ -146,6 +148,19 @@ class PriText extends PriDisplay {
         return value;
     }
 
+    private function get_letterSpace():Float return this.dth.letterSpace == null ? 0 : this.dth.letterSpace;
+    private function set_letterSpace(value:Float):Float {
+        var v:Float = value == 0 ? null : value;
+        if (v == this.dth.letterSpace) return value;
+
+        if (v == null) this.dh.styles.remove('letter-spacing');
+        else this.dh.styles.set('letter-spacing', v + 'px');
+
+        this.__updateStyle();
+
+        return value;
+    }
+
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
@@ -171,7 +186,7 @@ class PriText extends PriDisplay {
             this.dth.variant = value.variant;
 
             StyleHelper.applyFontStyle(this.dh.styles, value);
-            
+
         }
 
         this.__updateStyle();
