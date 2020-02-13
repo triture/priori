@@ -21,39 +21,55 @@ class PriMap {
     private var map:StringMap<String>;
     private var transition:StringMap<String>;
 
+    private var cache:String;
+
     public function new() {
         this.map = new StringMap<String>();
         this.transition = new StringMap<String>();
     }
 
     public function set(key:String, value:String):Void {
-        if (value == null || value.length == 0) this.map.remove(key);
-        else this.map.set(key, value);
+        if (value == null || value.length == 0) {
+            this.remove(key);
+        } else if (this.map.get(key) != value) {
+            this.map.set(key, value);
+            this.cache = null;
+        }
     }
 
     public function setTransition(key:String, seconds:Float):Void {
-        if (seconds == null || seconds <= 0) this.transition.remove(key);
-        else this.transition.set(key, seconds + 's');
+        if (seconds == null || seconds <= 0) {
+            this.transition.remove(key);
+            this.cache = null;
+        } else if (this.transition.get(key) != seconds + 's') {
+            this.transition.set(key, seconds + 's');
+            this.cache = null;
+        }
     }
 
-    public function remove(key:String):Void this.map.remove(key);
+    public function remove(key:String):Void {
+        if (!this.map.exists(key)) return;
+
+        this.cache = null;
+        this.map.remove(key);
+    }
 
     public function getValue():String {
+        if (this.cache != null) return this.cache;
+        
         var c:String = "";
 
-        for (key in this.map.keys()) {
-            c += key + ':' + this.map.get(key) + ';';
-        }
-
+        for (key in this.map.keys()) c += key + ':' + this.map.get(key) + ';';
+        
         var t:String = "";
-        for (key in this.transition.keys()) {
-            t += key + ' ' + this.transition.get(key);
-        }
-
+        for (key in this.transition.keys()) t += key + ' ' + this.transition.get(key);
+        
         if (t.length > 0) {
             c += 'transition:' + t + ';';
             c += '-webkit-transition:' + t + ';';
         }
+
+        this.cache = c;
 
         return c;
     }

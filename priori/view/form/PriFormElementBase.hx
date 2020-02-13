@@ -50,8 +50,7 @@ class PriFormElementBase extends PriExtendable {
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.styles);
-        else StyleHelper.applyFontStyle(this.dh.styles, value);
+        StyleHelper.applyFontStyle(this.dh.styles, value);
 
         this.__updateStyle();
 

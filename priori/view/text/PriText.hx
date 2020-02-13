@@ -1,5 +1,11 @@
 package priori.view.text;
 
+import priori.style.font.PriFontStyleItalic;
+import priori.style.font.PriFontStyleDecoration;
+import priori.style.font.PriFontStyleAlign;
+import priori.style.font.PriFontStyleVariant;
+import priori.style.font.PriFontStyleWeight;
+import priori.geom.PriColor;
 import helper.display.DisplayHelperIgnition;
 import helper.display.DisplayTextHelper;
 import helper.browser.StyleHelper;
@@ -82,6 +88,14 @@ class PriText extends PriDisplay {
     **/
     public var lineHeight(get, set):Float;
 
+    public var textColor(get, set):PriColor;
+    public var fontFamily(get, set):String;
+    public var weight(get, set):PriFontStyleWeight;
+    public var italic(get, set):PriFontStyleItalic;
+    public var variant(get, set):PriFontStyleVariant;
+    public var align(get, set):PriFontStyleAlign;
+    public var decoration(get, set):PriFontStyleDecoration;
+
     private var dth:DisplayTextHelper = DisplayHelperIgnition.getDisplayTextHelper();
 
     public function new() {
@@ -132,15 +146,124 @@ class PriText extends PriDisplay {
         return value;
     }
 
-
     private function set_fontStyle(value:PriFontStyle):PriFontStyle {
         this.fontStyle = value;
 
-        if (value == null) StyleHelper.applyCleanFontStyle(this.dh.styles);
-        else StyleHelper.applyFontStyle(this.dh.styles, value);
+        if (value == null) {
+            this.dth.textColor = null;
+            this.dth.fontFamily = null;
+            this.dth.weight = null;
+            this.dth.italic = null;
+            this.dth.align = null;
+            this.dth.decoration = null;
+            this.dth.variant = null;
+            
+            StyleHelper.applyFontStyle(this.dh.styles, null);
+            
+        } else {
+            
+            this.dth.fontFamily = value.family;
+            this.dth.weight = value.weight;
+            this.dth.italic = value.italic;
+            this.dth.align = value.align;
+            this.dth.textColor = value.color;
+            this.dth.decoration = value.decoration;
+            this.dth.variant = value.variant;
+
+            StyleHelper.applyFontStyle(this.dh.styles, value);
+            
+        }
 
         this.__updateStyle();
 
+        return value;
+    }
+
+    private function get_textColor():PriColor return this.dth.textColor;
+    private function set_textColor(value:PriColor):PriColor {
+        if (dth.textColor == value) return value;
+        this.dth.textColor = value;
+
+        if (value == null) this.dh.styles.remove('color');
+        else this.dh.styles.set('color', value.toString());
+        
+        this.__updateStyle();
+        return value;
+    }
+    private function get_fontFamily():String return this.dth.fontFamily;
+    private function set_fontFamily(value:String):String {
+        if (dth.fontFamily == value) return value;
+        this.dth.fontFamily = value;
+
+        if (value == null) this.dh.styles.remove('font-family');
+        else this.dh.styles.set('font-family', value);
+        
+        this.__updateStyle();
+        return value;
+    }
+    private function get_weight():PriFontStyleWeight return this.dth.weight;
+    private function set_weight(value:PriFontStyleWeight):PriFontStyleWeight {
+        if (dth.weight == value) return value;
+        this.dth.weight = value;
+
+        if (value == null) this.dh.styles.remove('font-weight');
+        else this.dh.styles.set('font-weight', value.toString());
+
+        this.__updateStyle();
+        return value;
+    }
+    private function get_italic():PriFontStyleItalic return this.dth.italic;
+    private function set_italic(value):PriFontStyleItalic {
+        if (dth.italic == value) return value;
+        this.dth.italic = value;
+
+        if (value == null) this.dh.styles.remove('font-style');
+        else this.dh.styles.set('font-style', value.toString());
+
+        this.__updateStyle();
+        return value;
+    }
+    private function get_variant():PriFontStyleVariant return this.dth.variant;
+    private function set_variant(value:PriFontStyleVariant):PriFontStyleVariant {
+        if (dth.variant == value) return value;
+        this.dth.variant = value;
+
+        if (value == null) {
+            this.dh.styles.remove('font-style');
+            this.dh.styles.remove('text-transform');
+        } else {
+            if (value == PriFontStyleVariant.ALL_CAPS) {
+                this.dh.styles.set('text-transform', 'uppercase');
+                this.dh.styles.remove('font-variant');
+            } else {
+                this.dh.styles.remove('text-transform');
+                this.dh.styles.set('font-variant', value.toString());
+            }
+        }
+
+        this.__updateStyle();
+        return value;
+    }
+    private function get_align():PriFontStyleAlign return this.dth.align;
+    private function set_align(value:PriFontStyleAlign):PriFontStyleAlign {
+        if (dth.align == value) return value;
+        this.dth.align = value;
+
+        if (value == null) this.dh.styles.remove('text-align');
+        else this.dh.styles.set('text-align', value.toString());
+
+        this.__updateStyle();
+        return value;
+    }
+    private function get_decoration():PriFontStyleDecoration return this.dth.decoration;
+    private function set_decoration(value:PriFontStyleDecoration):PriFontStyleDecoration {
+        if (dth.decoration == value) return value;
+        this.dth.decoration = value;
+
+        if (value == null) this.dh.styles.remove('text-decoration');
+        else this.dh.styles.set('text-decoration', value.toString());
+
+        this.__updateStyle();
         return value;
     }
 

@@ -18,7 +18,15 @@ class DisplayHelperIgnition {
             selectable : false,
             ellipsis : true,
             editable : false,
-            lineHeight : null
+            lineHeight : null,
+
+            textColor:null,
+            fontFamily:null,
+            weight:null,
+            italic:null,
+            variant:null,
+            align:null,
+            decoration:null
         }
     }
 

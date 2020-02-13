@@ -87,6 +87,13 @@ class PriBuilderMacros {
         return xml;
     }
 
+    static private var allowedChars:Array<String> = "ABCDEFGHIJKLMNOPQRSTUVXYWZabcdefghijklmnopqrstuvxywz0123456789".split("");
+    static private function generateRandomString():String {
+        var result:String = "";
+        for (i in 0 ... 15) result += allowedChars[Math.floor(Math.random()*allowedChars.length)];
+        return result;
+    }
+
     static public function build():Array<Field> {
 
         Sys.println("   PriBuilder : Building " + Context.getLocalClass().toString());
@@ -262,7 +269,7 @@ class PriBuilderMacros {
             
             var result:PriBuilderField = {
                 node : node,
-                name : '____' + Math.floor(10000000 * Math.random()),
+                name : '____' + generateRandomString(),
                 type : TypeTools.toString(type),
                 isPublic : false,
                 macroType : type,

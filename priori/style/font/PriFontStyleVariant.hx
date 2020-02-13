@@ -4,6 +4,7 @@ package priori.style.font;
 abstract PriFontStyleVariant(String) {
     var NORMAL = "normal";
     var SMALL_CAPS = "small-caps";
-
+    var ALL_CAPS = "all-caps";
+    
     inline public function toString():String return this;
 }
