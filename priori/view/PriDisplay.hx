@@ -390,6 +390,12 @@ class PriDisplay extends PriEventDispatcher {
             element = cast this.dh.jselement.cloneNode(true);
             element.style.left = "0px";
             element.style.top = "0px";
+            element.style.color = "";
+            element.style.zIndex = "";
+            element.style.transition = "";
+            element.style.pointerEvents = "";
+            element.style.cursor = "";
+            element.style.backgroundColor = "";
         }
         
         var code:String = element.outerHTML;
