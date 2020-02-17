@@ -232,8 +232,10 @@ class PriBuilderMacros {
         imports:Array<Type>,
         importAlias:StringMap<String>,
         propertiesElementsForSetup:Array<Expr>,
-        propertiesElementsForPaint:Array<Expr>
+        propertiesElementsForPaint:Array<Expr>,
+        recursionLevel:Int = 0
     ) {
+        
         var access:XmlAccessHelper = new XmlAccessHelper(node);
 
         if (StringTools.startsWith(node.nodeName, 'p:')) {
@@ -266,7 +268,7 @@ class PriBuilderMacros {
                 } catch (e:Dynamic) {}
             }
             if (type == null) throw "Type not found : " + nodeName;
-            
+
             var result:PriBuilderField = {
                 node : node,
                 name : '____' + generateRandomString(),
@@ -283,6 +285,11 @@ class PriBuilderMacros {
                 result.name = node.get("id");
             }
 
+            #if prioridebug
+            var space:String = ([for (i in 0 ... recursionLevel) "  "] ).join("");
+            Sys.println('     ${space}-> ' + (node.nodeName != TypeTools.toString(type) ? node.nodeName + '  >>  ' + TypeTools.toString(type) : node.nodeName) +  ' #' + result.name);
+            #end
+
             fields.push(
                 {
                     name : result.name,
@@ -294,8 +301,9 @@ class PriBuilderMacros {
             );
 
             builderFields.push(result);
-
-            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, importAlias, propertiesElementsForSetup, propertiesElementsForPaint);
+            
+            recursionLevel++;
+            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, importAlias, propertiesElementsForSetup, propertiesElementsForPaint, recursionLevel);
         }
     }
 
@@ -377,6 +385,8 @@ class PriBuilderMacros {
 
         var parentingMap:StringMap<Array<PriBuilderField>> = new StringMap<Array<PriBuilderField>>();
         
+        var keyOrder:Array<String> = [];
+
         for (field in fields) {
             
             var parentKey:String = field.parent == null
@@ -387,24 +397,22 @@ class PriBuilderMacros {
             var itemList:Array<PriBuilderField> = parentingMap.get(parentKey);
 
             if (itemList == null) {
+                keyOrder.push(parentKey);
                 itemList = [];
                 parentingMap.set(parentKey, itemList);
             }
             
             itemList.push(field);
         }
+        
+        for (key in keyOrder) {
+            result.push(macro var _ac:Array<Dynamic> = []);
 
-        // first we add non root objects
-        for (rootKey in [0, 1]) {
-            for (key in parentingMap.keys()) {
-                if ((rootKey == 0 && key != 'this') || rootKey == 1 && key == 'this') {
-                    var itemList:Array<PriBuilderField> = parentingMap.get(key);
-
-                    result.push(macro var _ac:Array<Dynamic> = []);
-                    for (item in itemList) result.push(macro _ac.push($i{item.name}));
-                    result.push(macro $i{key}.addChildList(_ac));
-                }
+            for (item in parentingMap.get(key)) {
+                result.push(macro _ac.push($i{item.name}));
             }
+
+            result.push(macro $i{key}.addChildList(_ac));
         }
 
         return result;
