@@ -372,7 +372,11 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    private function ___onchange():Void this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+    private function ___onchange():Void {
+        this.dth.text = null;
+        this.dth.html = null;
+        this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+    }
 
     private function get_selectable():Bool return this.dth.selectable;
     private function set_selectable(value:Bool):Bool {
