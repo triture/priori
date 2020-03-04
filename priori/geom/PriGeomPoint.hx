@@ -10,6 +10,10 @@ class PriGeomPoint {
         this.y = y;
     }
 
+    public function distanceFrom(point:PriGeomPoint):Float {
+        return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2));
+    }
+
     public function clone():PriGeomPoint {
         return new PriGeomPoint(this.x, this.y);
     }
