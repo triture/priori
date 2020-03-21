@@ -123,7 +123,16 @@ class PriText extends PriDisplay {
     }
 
     private function get_text():String {
-        if (this.dth.editable || this.dth.text == null) this.dth.text = this.dh.jselement.innerText;
+        if (this.dth.editable || this.dth.text == null) {
+
+            var html:String = this.dh.jselement.innerHTML;
+            var reg = new EReg('<\\/?[\\w\\s]*>|<.+[\\W]>', 'g');
+            
+            var cleanText:String = StringTools.htmlUnescape(reg.replace(html, ''));
+
+            this.dth.text = cleanText;
+        }
+
         return this.dth.text;
     }
     private function set_text(value:String):String {
