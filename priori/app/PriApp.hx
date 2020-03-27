@@ -39,6 +39,8 @@ class PriApp extends PriGroup {
     @:allow(priori.view.PriDisplay)
     private var frame:DivElement;
 
+    public var title(get, set):String;
+
     public function new() {
 
         if (_g != null) throw "Do not create PriApp instance";
@@ -108,6 +110,16 @@ class PriApp extends PriGroup {
         this.dispatchEvent(new PriEvent(PriEvent.ADDED_TO_APP, true));
         this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         this.revalidate();
+    }
+
+    private function get_title():String {
+        var result:String = js.Browser.document.title;
+        return result == null ? '' : result;
+    }
+
+    private function set_title(value:String):String {
+        js.Browser.document.title = value;
+        return value;
     }
 
     public function updateBasicFontStyle():Void {
