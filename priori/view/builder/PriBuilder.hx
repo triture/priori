@@ -17,6 +17,8 @@ class PriBuilder extends PriContainer {
     @:noCompletion private var __top_value:Float;
     @:noCompletion private var __bottom_value:Float;
 
+    public var preventRepaint:Bool = false;
+
     public function new() {
         super();
 
@@ -64,13 +66,15 @@ class PriBuilder extends PriContainer {
     }
 
     public function updateDisplay():Void {
-        this.__priBuilderPaint();
-        this.paint();
-        this.updateRelativePositions();
-        
-        for (i in 0 ... this.numChildren) {
-            var item:Dynamic = this.getChild(i);
-            if (item.updateDisplay != null) item.updateDisplay();
+        if (!this.preventRepaint) {
+            this.__priBuilderPaint();
+            this.paint();
+            this.updateRelativePositions();
+
+            for (i in 0 ... this.numChildren) {
+                var item:Dynamic = this.getChild(i);
+                if (item.updateDisplay != null) item.updateDisplay();
+            }
         }
     }
 
