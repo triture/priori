@@ -135,6 +135,7 @@ class PriFormTextArea extends PriFormElementBase {
     private function set_value(value:String):String {
         this._baseElement.val(value);
         this.__placeholderValidate();
+        this.__update_autosize();
         return value;
     }
 
