@@ -20,12 +20,22 @@ class PriFormTextArea extends PriFormElementBase {
     private var __placeHolderColorValue:PriColor = null;
 
     @:isVar public var autoSize(default, set):Bool = false;
+    @:isVar public var maxChars(default, set):Int = null;
 
     public function new() {
         super();
         this.clipping = false;
 
         this.addEventListener(PriEvent.CHANGE, function(e:PriEvent):Void this.__placeholderValidate());
+    }
+
+    private function set_maxChars(value:Int):Int {
+        this.maxChars = value;
+
+        if (value == null || value < 1) this._baseElement.removeProp('maxlength');
+        else this._baseElement.prop('maxlength', value);
+
+        return value;
     }
 
     private function set_autoSize(value:Bool):Bool {
@@ -57,7 +67,13 @@ class PriFormTextArea extends PriFormElementBase {
 
             e.style.height = 'auto';
 
-            this.height = Math.max(Math.max(1 + e.scrollHeight, e.clientHeight), this.fontSize);
+            var newHeight:Float = Math.round(Math.max(Math.max(1 + e.scrollHeight, e.clientHeight), this.fontSize));
+
+            if (this.height != newHeight) {
+                this.height = newHeight;
+                this.dispatchEvent(new PriEvent(PriEvent.RESIZE));
+
+            } else this.height = newHeight;
         }
     }
 
