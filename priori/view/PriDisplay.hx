@@ -393,7 +393,7 @@ class PriDisplay extends PriEventDispatcher {
             element.style.color = "";
             element.style.zIndex = "";
             element.style.transition = "";
-            element.style.pointerEvents = "";
+            (cast element.style).pointerEvents = "";
             element.style.cursor = "";
             element.style.backgroundColor = "";
         }
