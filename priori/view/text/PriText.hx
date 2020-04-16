@@ -121,9 +121,12 @@ class PriText extends PriDisplay {
 
         return value;
     }
-
+    
     private function get_text():String {
-        if (this.dth.editable || this.dth.text == null) this.dth.text = this.dh.jselement.innerText;
+        if (this.dth.editable || this.dth.text == null) {
+            this.dth.text = this.dh.jselement.textContent;
+        }
+
         return this.dth.text;
     }
     private function set_text(value:String):String {
@@ -372,7 +375,11 @@ class PriText extends PriDisplay {
         return value;
     }
 
-    private function ___onchange():Void this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+    private function ___onchange():Void {
+        this.dth.text = null;
+        this.dth.html = null;
+        this.dispatchEvent(new PriEvent(PriEvent.CHANGE));
+    }
 
     private function get_selectable():Bool return this.dth.selectable;
     private function set_selectable(value:Bool):Bool {

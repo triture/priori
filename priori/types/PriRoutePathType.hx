@@ -1,6 +1,13 @@
 package priori.types;
 
-
+/**
+* Create a route var using ?var_name:var_type
+*
+* Allowed Types:
+*   ?var_name:String
+*   ?var_name:Number
+*
+**/
 abstract PriRoutePathType(String) to String {
 
     inline function new(value:String) {

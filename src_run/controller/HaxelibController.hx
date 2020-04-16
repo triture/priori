@@ -159,7 +159,7 @@ class HaxelibController {
 
         if (result != "") {
             try {
-                if (FileSystem.exists(result)) return result;
+                if (FileSystem.exists(result)) return this.getRootLibFolder(result);
             } catch (e:Dynamic) {
                 result = "";
             }
@@ -172,7 +172,7 @@ class HaxelibController {
                 if (trim != "" && StringTools.startsWith(trim, "-") == false) {
                     try {
                         if (FileSystem.exists(trim)) {
-                            return trim;
+                            return this.getRootLibFolder(trim);
                             break;
                         }
                     } catch (e:Dynamic) {
@@ -183,5 +183,23 @@ class HaxelibController {
         }
 
         return null;
+    }
+
+    private function getRootLibFolder(path:String):String {
+        var up:String = "";
+
+        var cleanPath:String = StringTools.trim(path);
+        if (StringTools.endsWith(cleanPath, '/') == false && StringTools.endsWith(cleanPath, '\\') == false) {
+            cleanPath += '/';
+        }
+
+        for (i in 0 ... 15) {
+            if (FileSystem.exists(cleanPath + up + 'haxelib.json')) {
+                return cleanPath + up;
+            }
+            up += "../";
+        }
+
+        return path;
     }
 }

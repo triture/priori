@@ -367,7 +367,7 @@ class PriDisplay extends PriEventDispatcher {
 
     private function getRandomId(len:Int = 7):String {
         var length:Int = len;
-        var charactersToUse:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var charactersToUse:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
         var result:String = "";
 
         result = "";
