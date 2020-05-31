@@ -1,5 +1,6 @@
 package priori.view.form;
 
+import priori.view.text.PriText;
 import js.html.TextAreaElement;
 import js.html.Element;
 import priori.geom.PriColor;
@@ -21,6 +22,8 @@ class PriFormTextArea extends PriFormElementBase {
 
     @:isVar public var autoSize(default, set):Bool = false;
     @:isVar public var maxChars(default, set):Int = null;
+
+    private var sizeReference:PriText;
 
     public function new() {
         super();
@@ -44,6 +47,8 @@ class PriFormTextArea extends PriFormElementBase {
         this.autoSize = value;
 
         if (value) {
+            this.updateSizeReference();
+
             this.addEventListener(PriEvent.CHANGE, this.__on_content_change);
             this.__update_autosize();
         } else {
@@ -54,20 +59,40 @@ class PriFormTextArea extends PriFormElementBase {
         return value;
     }
 
+    private function updateSizeReference():Void {
+        if (!this.autoSize) return;
+
+        if (this.sizeReference == null) {
+            this.sizeReference = new PriText();
+            this.sizeReference.autoSize = true;
+            this.sizeReference.multiLine = true;
+        }
+
+        this.sizeReference.fontSize = this.fontSize;
+        this.sizeReference.fontStyle = this.fontStyle;
+        this.sizeReference.text = this.value;
+        this.sizeReference.width = this.width;
+    }
+
     override private function set_width(value:Float):Float {
         var result:Float = super.set_width(value);
         this.__update_autosize();
         return result;
     }
 
+    override private function set_fontSize(value:Float):Float {
+        var result = super.set_fontSize(value);
+        this.updateSizeReference();
+
+        return result;
+    }
+
     private function __on_content_change(e:PriEvent):Void this.__update_autosize();
     private function __update_autosize():Void {
         if (this.autoSize) {
-            var e:TextAreaElement = cast this._baseElement[0];
+            this.updateSizeReference();
 
-            e.style.height = 'auto';
-
-            var newHeight:Float = Math.round(Math.max(Math.max(1 + e.scrollHeight, e.clientHeight), this.fontSize));
+            var newHeight:Float = Math.round(Math.max(this.sizeReference.height + 1, this.fontSize + 5));
 
             if (this.height != newHeight) {
                 this.height = newHeight;
