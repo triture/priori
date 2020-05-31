@@ -838,8 +838,8 @@ class PriDisplay extends PriEventDispatcher {
         list.reverse();
 
         for (display in list) {
-            result.x -= display.x + display.getJSElement().scrollLeft;
-            result.y -= display.y + display.getJSElement().scrollTop;
+            result.x -= display.x - display.getJSElement().scrollLeft;
+            result.y -= display.y - display.getJSElement().scrollTop;
         }
 
         return result;
