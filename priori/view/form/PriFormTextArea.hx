@@ -1,5 +1,6 @@
 package priori.view.form;
 
+import priori.style.font.PriFontStyle;
 import priori.view.text.PriText;
 import js.html.TextAreaElement;
 import js.html.Element;
@@ -47,8 +48,6 @@ class PriFormTextArea extends PriFormElementBase {
         this.autoSize = value;
 
         if (value) {
-            this.updateSizeReference();
-
             this.addEventListener(PriEvent.CHANGE, this.__on_content_change);
             this.__update_autosize();
         } else {
@@ -57,6 +56,12 @@ class PriFormTextArea extends PriFormElementBase {
 
 
         return value;
+    }
+
+    override private function set_fontStyle(value:PriFontStyle):PriFontStyle {
+        var result = super.set_fontStyle(value);
+        this.__update_autosize();
+        return result;
     }
 
     private function updateSizeReference():Void {
@@ -70,8 +75,8 @@ class PriFormTextArea extends PriFormElementBase {
 
         this.sizeReference.fontSize = this.fontSize;
         this.sizeReference.fontStyle = this.fontStyle;
-        this.sizeReference.text = this.value;
         this.sizeReference.width = this.width;
+        this.sizeReference.text = this.value;
     }
 
     override private function set_width(value:Float):Float {
@@ -82,8 +87,7 @@ class PriFormTextArea extends PriFormElementBase {
 
     override private function set_fontSize(value:Float):Float {
         var result = super.set_fontSize(value);
-        this.updateSizeReference();
-
+        this.__update_autosize();
         return result;
     }
 
@@ -98,7 +102,7 @@ class PriFormTextArea extends PriFormElementBase {
                 this.height = newHeight;
                 this.dispatchEvent(new PriEvent(PriEvent.RESIZE));
 
-            } else this.height = newHeight;
+            }
         }
     }
 
