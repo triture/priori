@@ -73,10 +73,12 @@ class PriFormTextArea extends PriFormElementBase {
             this.sizeReference.multiLine = true;
         }
 
+        var v:String = this.value;
+
         this.sizeReference.fontSize = this.fontSize;
         this.sizeReference.fontStyle = this.fontStyle;
         this.sizeReference.width = this.width;
-        this.sizeReference.text = this.value;
+        this.sizeReference.text = v.charAt(v.length-1) == '\n' ? v + '.' : v;
     }
 
     override private function set_width(value:Float):Float {
