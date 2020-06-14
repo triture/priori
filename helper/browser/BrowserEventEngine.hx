@@ -97,6 +97,8 @@ class BrowserEventEngine {
     }
 
     public function attachToElement(event:String):Void {
+        var hasMethod:Bool = this.jsel.addEventListener != null;
+
         switch event {
             case PriMouseEvent.MOUSE_OUT : this.jsel.onmouseleave = this.on_mouse_leave;
             case PriMouseEvent.MOUSE_OVER : this.jsel.onmouseenter = this.on_mouse_enter;
@@ -105,9 +107,9 @@ class BrowserEventEngine {
             case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = this.on_mouse_move;
             case PriTapEvent.TAP : this.jsel.onclick = this.on_mouse_click;
 
-            case PriTapEvent.TOUCH_DOWN : this.jsel.ontouchstart = this.on_touch_down;
-            case PriTapEvent.TOUCH_UP : this.jsel.ontouchend = this.on_touch_up;
-            case PriTapEvent.TOUCH_MOVE : this.jsel.ontouchmove = this.on_touch_move;
+            case PriTapEvent.TOUCH_DOWN : if (hasMethod) this.jsel.addEventListener('touchstart', this.on_touch_down);
+            case PriTapEvent.TOUCH_UP : if (hasMethod) this.jsel.addEventListener('touchend', this.on_touch_up);
+            case PriTapEvent.TOUCH_MOVE : if (hasMethod) this.jsel.addEventListener('touchmove', this.on_touch_move);
 
             case "keyup" : this.jqel.on("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.on("keydown", this.on_keyboard_down);
@@ -119,6 +121,8 @@ class BrowserEventEngine {
     }
 
     public function dettachFromElement(event:String):Void {
+        var hasMethod:Bool = this.jsel.removeEventListener != null;
+
         switch event {
             case PriMouseEvent.MOUSE_OUT : this.jsel.onmouseleave = null;
             case PriMouseEvent.MOUSE_OVER : this.jsel.onmouseenter = null;
@@ -127,9 +131,9 @@ class BrowserEventEngine {
             case PriMouseEvent.MOUSE_MOVE : this.jsel.onmousemove = null;
             case PriTapEvent.TAP : this.jsel.onclick = null;
 
-            case PriTapEvent.TOUCH_DOWN : this.jsel.ontouchstart = null;
-            case PriTapEvent.TOUCH_UP : this.jsel.ontouchend = null;
-            case PriTapEvent.TOUCH_MOVE : this.jsel.ontouchmove = null;
+            case PriTapEvent.TOUCH_DOWN : if (hasMethod) this.jsel.removeEventListener('touchstart', this.on_touch_down);
+            case PriTapEvent.TOUCH_UP : if (hasMethod) this.jsel.removeEventListener('touchend', this.on_touch_up);
+            case PriTapEvent.TOUCH_MOVE : if (hasMethod) this.jsel.removeEventListener('touchmove', this.on_touch_move);
 
             case "keyup" : this.jqel.off("keyup", this.on_keyboard_up);
             case "keydown" : this.jqel.off("keydown", this.on_keyboard_down);
