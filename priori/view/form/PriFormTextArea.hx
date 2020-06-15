@@ -101,7 +101,7 @@ class PriFormTextArea extends PriFormElementBase {
         if (this.autoSize) {
             this.updateSizeReference();
 
-            var newHeight:Float = Math.round(Math.max(this.sizeReference.height + 1, this.fontSize + 5));
+            var newHeight:Float = Math.round(Math.max(SR.height + 1, this.fontSize + 5));
 
             if (this.height != newHeight) {
                 this.height = newHeight;
