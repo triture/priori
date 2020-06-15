@@ -24,7 +24,7 @@ class PriFormTextArea extends PriFormElementBase {
     @:isVar public var autoSize(default, set):Bool = false;
     @:isVar public var maxChars(default, set):Int = null;
 
-    private var sizeReference:PriText;
+    static private var SR:PriText;
 
     public function new() {
         super();
@@ -67,18 +67,21 @@ class PriFormTextArea extends PriFormElementBase {
     private function updateSizeReference():Void {
         if (!this.autoSize) return;
 
-        if (this.sizeReference == null) {
-            this.sizeReference = new PriText();
-            this.sizeReference.autoSize = true;
-            this.sizeReference.multiLine = true;
+        if (SR == null) {
+            SR = new PriText();
+            SR.autoSize = true;
+            SR.multiLine = true;
         }
 
         var v:String = this.value;
 
-        this.sizeReference.fontSize = this.fontSize;
-        this.sizeReference.fontStyle = this.fontStyle;
-        this.sizeReference.width = this.width;
-        this.sizeReference.text = v.charAt(v.length-1) == '\n' ? v + '.' : v;
+        SR.startBatchUpdate();
+        SR.dh.styles.set('overflow-wrap', 'break-word');
+        SR.fontSize = this.fontSize;
+        SR.fontStyle = this.fontStyle;
+        SR.width = this.width;
+        SR.text = v.charAt(v.length-1) == '\n' ? v + '.' : v;
+        SR.endBatchUpdate();
     }
 
     override private function set_width(value:Float):Float {
