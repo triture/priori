@@ -62,7 +62,7 @@ class PriMap {
         for (key in this.map.keys()) c += key + ':' + this.map.get(key) + ';';
         
         var t:String = "";
-        for (key in this.transition.keys()) t += key + ' ' + this.transition.get(key);
+        for (key in this.transition.keys()) t = t + (t.length > 0 ? ',' : '') + key + ' ' + this.transition.get(key);
         
         if (t.length > 0) {
             c += 'transition:' + t + ';';
