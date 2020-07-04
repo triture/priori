@@ -26,6 +26,10 @@ class PriFrame extends PriDisplay {
         this.dh.jselement.appendChild(this._iframe);
     }
 
+    public function sendMessage(data:Dynamic):Void {
+        if (this._iframe.contentWindow != null) this._iframe.contentWindow.postMessage(data, '*');
+    }
+
     public function setHtml(value:String):Void {
         this._iframe.srcdoc = value;
     }
