@@ -43,6 +43,12 @@ class PriApp extends PriGroup {
 
     public function new() {
 
+        try {
+            var seo:js.html.Element = js.Browser.document.getElementById('priori_seo_content');
+            if (seo != null) seo.remove();
+            seo = null;
+        } catch (e:Dynamic) {}
+
         if (_g != null) throw "Do not create PriApp instance";
         else _g = this;
 
