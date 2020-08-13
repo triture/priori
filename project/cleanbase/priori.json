@@ -17,5 +17,10 @@
     "src"
   ],
 
+  "seo" : {
+    "url" : "",
+    "ereg" : []
+  },
+
   "output" : "build"
 }

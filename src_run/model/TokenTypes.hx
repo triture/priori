@@ -6,4 +6,5 @@ class TokenTypes {
     inline public static var TOKEN_META:String = "{meta}";
     inline public static var TOKEN_LINK:String = "{link}";
     inline public static var TOKEN_PRIORI:String = "{priori}";
+    inline public static var TOKEN_SEO:String = "{seo}";
 }

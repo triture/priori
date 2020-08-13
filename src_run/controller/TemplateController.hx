@@ -118,7 +118,10 @@ class TemplateController {
         content = this.replace(content, TokenTypes.TOKEN_LINK, link.join("\n"));
         content = this.replace(content, TokenTypes.TOKEN_PRIORI, [prioriJSReplacement].join("\n"));
 
+        content = this.replaceSEO(content, app);
+
         try {
+            Helper.g().output.print("> Saving index.html... ", 3);
             File.saveContent(indexPath, content);
             Helper.g().output.append("DONE");
         } catch (e:Dynamic) {
@@ -126,6 +129,56 @@ class TemplateController {
         }
 
         return "";
+    }
+
+    private function replaceSEO(content:String, app:HaxelibVO):String {
+        var token:String = TokenTypes.TOKEN_SEO;
+        var seoContent:String = "";
+
+        if (content.indexOf(token) >= 0) {
+
+            if (app.priori.seo != null && app.priori.seo.url != null && app.priori.seo.url.length > 0) {
+                // try to load data
+                Helper.g().output.print("> Loading SEO DATA from " + app.priori.seo.url + '... ', 3);
+
+                var seoLoaded:Bool = false;
+                var loadedContent:String = "";
+
+                try {
+                    loadedContent = sys.Http.requestUrl(app.priori.seo.url);
+                    seoLoaded = true;
+
+                    Helper.g().output.append("DONE");
+                } catch (e:Dynamic) {
+                    Helper.g().output.append("ERROR");
+                }
+
+                if (seoLoaded && app.priori.seo.ereg != null && app.priori.seo.ereg.length > 0) {
+
+                    Helper.g().output.print("> Extracting loaded data... ", 3);
+
+                    for (item in app.priori.seo.ereg) {
+
+                        Helper.g().output.print('> Running EReg ${item}... ', 4);
+
+                        try {
+                            var er:EReg = new EReg(item, 'ms');
+                            if (er.match(loadedContent)) loadedContent = er.matched(0);
+                            Helper.g().output.append("DONE");
+                        } catch (e:Dynamic) {
+                            trace(e);
+                            seoLoaded = false;
+                            Helper.g().output.append("ERROR - " + Std.string(e));
+                        }
+                    }
+                }
+
+                if (seoLoaded) seoContent = '<div id="priori_seo_content" style="width:0px;height:0px;overflow:hidden;">\n${loadedContent}\n</div>';
+
+            }
+        }
+
+        return this.replace(content, token, seoContent);
     }
 
     private function replace(content:String, token:String, value:String):String {
