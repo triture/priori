@@ -1,5 +1,6 @@
 package priori.app;
 
+import js.html.KeyboardEvent;
 import js.html.DivElement;
 import priori.view.PriFrame;
 import priori.event.PriFocusEvent;
@@ -40,6 +41,11 @@ class PriApp extends PriGroup {
     private var frame:DivElement;
 
     public var title(get, set):String;
+
+    public static var SHIFT_IS_ACTIVE:Bool = false;
+    public static var CTRL_IS_ACTIVE:Bool = false;
+    public static var COMMAND_IS_ACTIVE:Bool = false;
+    public static var ALT_IS_ACTIVE:Bool = false;
 
     public function new() {
 
@@ -88,6 +94,9 @@ class PriApp extends PriGroup {
 
             Browser.window.document.addEventListener("focus", this.___onAppFocusIn, true);
             Browser.window.document.addEventListener("blur", this.___onAppFocusOut, true);
+
+            Browser.window.document.addEventListener('keydown', this.__onAppKey, true);
+            Browser.window.document.addEventListener('keyup', this.__onAppKey, true);
         } else {
             Browser.window.document.onmousedown = this.___onPointerMove;
             Browser.window.document.ontouchstart = this.___onPointerMove;
@@ -95,6 +104,9 @@ class PriApp extends PriGroup {
             Browser.window.document.ontouchmove = this.___onPointerMove;
             Browser.window.document.onfocus = this.___onAppFocusIn;
             Browser.window.document.onblur = this.___onAppFocusOut;
+
+            Browser.window.document.onkeydown = this.__onAppKey;
+            Browser.window.document.onkeyup = this.__onAppKey;
         }
 
         Browser.window.onresize = this.___onWindowResize;
@@ -219,6 +231,13 @@ class PriApp extends PriGroup {
     public static function g():PriApp {
         if (_g == null) throw "Application not yet created";
         return _g;
+    }
+
+    private function __onAppKey(e:KeyboardEvent):Void {
+        ALT_IS_ACTIVE = e.altKey;
+        CTRL_IS_ACTIVE = e.ctrlKey;
+        SHIFT_IS_ACTIVE = e.shiftKey;
+        COMMAND_IS_ACTIVE = (e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93);
     }
 
     private function ___onAppFocusIn():Void this.___hasFocus = true;
