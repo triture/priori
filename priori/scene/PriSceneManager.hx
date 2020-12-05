@@ -1,5 +1,6 @@
 package priori.scene;
 
+import priori.event.PriEventDispatcher;
 import priori.types.PriRoutePathType;
 import priori.scene.route.RouteManager;
 import priori.scene.view.PriPreloaderViewDefault;
@@ -11,7 +12,7 @@ import priori.assets.AssetManager;
 import priori.assets.AssetManagerEvent;
 import priori.app.PriApp;
 
-class PriSceneManager {
+class PriSceneManager extends PriEventDispatcher {
 
     private static var _singleton:PriSceneManager;
 
@@ -32,6 +33,7 @@ class PriSceneManager {
     private var historyIndexPosition:Int;
 
     private function new() {
+        super();
 
         this.holder = PriApp.g();
 
@@ -42,6 +44,8 @@ class PriSceneManager {
         
         this.router = new RouteManager();
     }
+
+    public function getCurrentScene():PriSceneView return this.currentScene;
 
     public function clearHistoryAndNavigate(path:String):Void {
         try {
@@ -191,9 +195,11 @@ class PriSceneManager {
             newScene.height = h;
 
             this.holder.addChild(newScene);
-        }
 
-        this.onAppResize(null);
+            this.onAppResize(null);
+
+            this.dispatchEvent(new PriEvent(PriSceneManagerEvents.CHANGE_SCENE));
+        }
     }
 
     private function open(scene:Class<PriSceneView>, ?args:Array<Dynamic> = null):Void {
