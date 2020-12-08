@@ -18,12 +18,15 @@ class PriBuilder extends PriContainer {
     @:noCompletion private var __bottom_value:Float;
 
     public var preventRepaint:Bool = false;
+    private var setupInitialized:Bool = false;
 
     public function new() {
         super();
 
         this.__priBuilderSetup();
         this.setup();
+
+        this.setupInitialized = true;
 
         this.addEventListener(PriEvent.RESIZE, this.___onResize);
         
@@ -66,7 +69,7 @@ class PriBuilder extends PriContainer {
     }
 
     public function updateDisplay():Void {
-        if (!this.preventRepaint) {
+        if (!this.preventRepaint && this.setupInitialized) {
             this.__priBuilderPaint();
             this.paint();
             this.updateRelativePositions();
