@@ -12,6 +12,8 @@ class PriEvent {
     inline public static var COMPLETE:String = "prievent_base_complete";
     inline public static var DELETE:String = "prievent_base_delete";
     inline public static var DRAG:String = "prievent_base_drag";
+    inline public static var DRAG_START:String = "prievent_base_drag_start";
+    inline public static var DRAG_STOP:String = "prievent_base_drag_stop";
     inline public static var ERROR:String = "prievent_base_error";
     inline public static var OK:String = "prievent_base_ok";
     inline public static var OPEN:String = "prievent_base_open";

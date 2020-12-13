@@ -176,7 +176,7 @@ class PriDisplay extends PriEventDispatcher {
     @:noCompletion
     private var dh:DisplayHelper = DisplayHelperIgnition.getDisplayHerlper();
 
-
+    public var isDragging(get, null):Bool;
 
     public function new() {
         super();
@@ -191,6 +191,8 @@ class PriDisplay extends PriEventDispatcher {
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
     }
+
+    private function get_isDragging():Bool return !(this.dh.dragdata == null);
 
     public function allowTransition(key:PriTransitionType, time:Float):Void {
 
@@ -867,6 +869,8 @@ class PriDisplay extends PriEventDispatcher {
     public function startDrag(lockCenter:Bool = false, bounds:PriGeomBox = null):Void {
         this.stopDrag();
 
+        this.dispatchEvent(new PriEvent(PriEvent.DRAG_START));
+
         if (lockCenter) {
             if (this.parent != null) {
                 var parentMouse:PriGeomPoint = this.parent.mousePoint;
@@ -917,7 +921,10 @@ class PriDisplay extends PriEventDispatcher {
     public function stopDrag():Void {
         if (this.dh.dragdata != null) {
             this.dh.dragdata.t.stop();
+            this.dh.dragdata.t.run = null;
             this.dh.dragdata = null;
+
+            this.dispatchEvent(new PriEvent(PriEvent.DRAG_STOP));
         }
     }
 
