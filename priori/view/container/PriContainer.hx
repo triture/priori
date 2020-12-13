@@ -23,7 +23,7 @@ class PriContainer extends PriDisplay {
 
     private function get_numChildren():Int return this._childList.length;
 
-    public function getChild(index:Int):PriDisplay return (index < this._childList.length) ? this._childList[index] : null;
+    public function getChild(index:Int):PriDisplay return (index != null && index >= 0 && index < this._childList.length) ? this._childList[index] : null;
 
     public function addChildAtIndex(child:PriDisplay, index:Int):Void this.addChildListAtIndex([child], index);
 
