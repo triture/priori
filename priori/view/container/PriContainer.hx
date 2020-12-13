@@ -23,22 +23,18 @@ class PriContainer extends PriDisplay {
 
     private function get_numChildren():Int return this._childList.length;
 
-    public function getChild(index:Int):PriDisplay {
-        var result:PriDisplay = null;
+    public function getChild(index:Int):PriDisplay return (index < this._childList.length) ? this._childList[index] : null;
 
-        if (index < this._childList.length) {
-            result = this._childList[index];
-        }
-
-        return result;
-    }
+    public function addChildAtIndex(child:PriDisplay, index:Int):Void this.addChildListAtIndex([child], index);
 
     /**
     * Adds all objects of the Array to this PriContainer instance.
     *
     * Itens that not inherit from PriDisplay class are ignored.
     **/
-    public function addChildList(childList:Array<Dynamic>):Void {
+    public function addChildList(childList:Array<Dynamic>):Void this.addChildListAtIndex(childList, null);
+
+    public function addChildListAtIndex(childList:Array<Dynamic>, index:Int):Void {
         var realItens:Array<PriDisplay> = [];
         #if (haxe_ver >= 4.0)
         for (item in childList) if (Std.downcast(item, PriDisplay) != null) realItens.push(item);
@@ -46,18 +42,26 @@ class PriContainer extends PriDisplay {
         for (item in childList) if (Std.instance(item, PriDisplay) != null) realItens.push(item);
         #end
 
+        for (child in realItens) child.removeFromParent();
+
         var thisHasApp:Bool = this.hasApp();
         var thisDisabled:Bool = this.disabled;
         var thisHasDisabledParent:Bool = this.hasDisabledParent();
 
+        var referenceElement:PriDisplay = (index == null || index < 0) ? null : this.getChild(index);
         var docFrag:DocumentFragment = Browser.document.createDocumentFragment();
 
+        var childPos:Int = index;
+
         for (child in realItens) {
-            child.removeFromParent();
 
-            this._childList.push(child);
+            if (referenceElement == null) this._childList.push(child);
+            else {
+                this._childList.insert(childPos, child);
+                childPos++;
+            }
+
             child.dh.parent = this;
-
 
             if (thisHasApp) {
                 if (thisDisabled) DomHelper.disableAll(child.getJSElement());
@@ -67,7 +71,8 @@ class PriContainer extends PriDisplay {
             docFrag.appendChild(child.getJSElement());
         }
 
-        this.dh.jselement.appendChild(docFrag);
+        if (referenceElement == null) this.dh.jselement.appendChild(docFrag);
+        else this.dh.jselement.insertBefore(docFrag, referenceElement.getJSElement());
 
         for (i in 0 ... realItens.length) {
             var child:PriDisplay = realItens[i];
