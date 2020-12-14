@@ -869,7 +869,13 @@ class PriDisplay extends PriEventDispatcher {
     public function startDrag(lockCenter:Bool = false, bounds:PriGeomBox = null):Void {
         this.stopDrag();
 
-        this.dispatchEvent(new PriEvent(PriEvent.DRAG_START));
+        this.dispatchEvent(new PriEvent(PriEvent.DRAG_START, false, false, {distance:0.0}));
+
+        this.dh.dragdata = {
+            originalPointMouse : PriApp.g().mousePoint,
+            originalPosition : new PriGeomPoint(this.x, this.y),
+            lastPosition : new PriGeomPoint(this.x, this.y)
+        };
 
         if (lockCenter) {
             if (this.parent != null) {
@@ -877,15 +883,13 @@ class PriDisplay extends PriEventDispatcher {
                 this.centerX = parentMouse.x;
                 this.centerY = parentMouse.y;
 
-                this.dispatchEvent(new PriEvent(PriEvent.DRAG));
+                this.dh.dragdata.lastPosition.x = this.x;
+                this.dh.dragdata.lastPosition.y = this.y;
+
+                var distance:Float = this.dh.dragdata.originalPosition.distanceFrom(this.dh.dragdata.lastPosition);
+                this.dispatchEvent(new PriEvent(PriEvent.DRAG, false, false, {distance:distance}));
             }
         }
-
-        this.dh.dragdata = {
-            originalPointMouse : PriApp.g().mousePoint,
-            originalPosition : new PriGeomPoint(this.x, this.y),
-            lastPosition : new PriGeomPoint(this.x, this.y)
-        };
 
         var runFunction = function():Void {
             var curPoint:PriGeomPoint = PriApp.g().mousePoint;
@@ -901,9 +905,11 @@ class PriDisplay extends PriEventDispatcher {
             }
 
             if (this.dh.dragdata.lastPosition.x != this.x || this.dh.dragdata.lastPosition.y != this.y) {
-                this.dispatchEvent(new PriEvent(PriEvent.DRAG));
                 this.dh.dragdata.lastPosition.x = this.x;
                 this.dh.dragdata.lastPosition.y = this.y;
+
+                var distance:Float = this.dh.dragdata.originalPosition.distanceFrom(this.dh.dragdata.lastPosition);
+                this.dispatchEvent(new PriEvent(PriEvent.DRAG, false, false, {distance:distance}));
             }
         }
 
@@ -920,11 +926,13 @@ class PriDisplay extends PriEventDispatcher {
     **/
     public function stopDrag():Void {
         if (this.dh.dragdata != null) {
+            var distance:Float = this.dh.dragdata.originalPosition.distanceFrom(this.dh.dragdata.lastPosition);
+
             this.dh.dragdata.t.stop();
             this.dh.dragdata.t.run = null;
             this.dh.dragdata = null;
 
-            this.dispatchEvent(new PriEvent(PriEvent.DRAG_STOP));
+            this.dispatchEvent(new PriEvent(PriEvent.DRAG_STOP, false, false, {distance:distance}));
         }
     }
 
