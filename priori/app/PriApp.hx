@@ -237,7 +237,10 @@ class PriApp extends PriGroup {
         ALT_IS_ACTIVE = e.altKey;
         CTRL_IS_ACTIVE = e.ctrlKey;
         SHIFT_IS_ACTIVE = e.shiftKey;
-        COMMAND_IS_ACTIVE = (e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93);
+
+        if (e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93) {
+            COMMAND_IS_ACTIVE = (e.type == 'keydown');
+        }
     }
 
     private function ___onAppFocusIn():Void this.___hasFocus = true;
