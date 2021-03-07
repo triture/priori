@@ -118,6 +118,8 @@ class PriDisplay extends PriEventDispatcher {
     public var clipping(get, set):Bool;
     public var rotation(get, set):Float;
 
+    public var testIdentifier(get, set):String;
+
     /**
     * Indicates the object can be focused by mouse or keyboard tab key.
     **/
@@ -190,6 +192,25 @@ class PriDisplay extends PriEventDispatcher {
         this.addEventListener(PriEvent.ADDED_TO_APP, this.dh.eventHelper.onAddedToApp);
 
         this.addEventListener(PriEvent.ADDED, __onAdded);
+    }
+
+    private function get_testIdentifier():String {
+        #if production
+        return '';
+        #else
+        return this.dh.jselement.getAttribute('test');
+        #end
+    }
+
+    private function set_testIdentifier(value:String):String {
+        #if production
+        return value;
+        #else
+        if (value == "" || value == null) this.dh.jselement.removeAttribute("test");
+        else this.dh.jselement.setAttribute("test", value);
+
+        return value;
+        #end
     }
 
     private function get_isDragging():Bool return !(this.dh.dragdata == null);
