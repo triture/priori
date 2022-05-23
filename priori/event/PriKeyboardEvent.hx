@@ -36,6 +36,7 @@ class PriKeyboardEvent extends PriEvent {
         clone.altKey = this.altKey;
         clone.ctrlKey = this.ctrlKey;
         clone.shiftKey = this.shiftKey;
+        clone.metaKey = this.metaKey;
 
         return clone;
     }
