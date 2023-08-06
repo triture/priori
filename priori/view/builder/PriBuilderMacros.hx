@@ -326,6 +326,8 @@ class PriBuilderMacros {
             if (PriBuilderMacroHelper.checkIsNumeric(value)) {
                 if (PriBuilderMacroHelper.checkIsNumericFloat(value)) val = PriBuilderMacroHelper.getFloat(value);
                 else val = PriBuilderMacroHelper.getInt(value);
+            } else if (PriBuilderMacroHelper.checkIsBool(value)) {
+                val = PriBuilderMacroHelper.getBool(value);
             } else {
                 val = Std.string(value);
             }
@@ -497,6 +499,12 @@ private class PriBuilderMacroHelper {
         return Std.parseInt(Std.string(value));
     }
 
+    public static function getBool(value:Dynamic):Null<Bool> {
+        if (value == ":true") return true;
+        else if (value == ":false") return false;
+        else return null;
+    }
+
     public static function getExpression(value:Dynamic):String {
         var result:String = StringTools.trim(Std.string(value));
         result = result.substr(2, -1);
@@ -505,10 +513,16 @@ private class PriBuilderMacroHelper {
 
     public static function checkIsExpression(value:Null<String>):Bool {
         if (value == null) return false;
-        else {
-            var r = new EReg("^\\${.+}$", "");
-            return r.match(StringTools.trim(value));
-        }
+        
+        var r = new EReg("^\\${.+}$", "");
+        return r.match(StringTools.trim(value));
+    }
+
+    public static function checkIsBool(value:Null<String>):Bool {
+        if (value == null) return false;
+
+        if (value == ":true" || value == ":false") return true;
+        else return false;
     }
 
     public static function checkIsNumeric(value:Null<String>):Bool {
