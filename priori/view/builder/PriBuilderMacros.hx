@@ -95,8 +95,9 @@ class PriBuilderMacros {
     }
 
     static public function build():Array<Field> {
+        var className:String = Context.getLocalClass().toString();
 
-        Sys.println("   PriBuilder : Building " + Context.getLocalClass().toString());
+        Sys.println("   PriBuilder : Building " + className);
         
         var fields:Array<Field> = Context.getBuildFields();
         var propertiesElementsForSetup:Array<Expr> = [];
@@ -292,6 +293,7 @@ class PriBuilderMacros {
 
             fields.push(
                 {
+                    meta : !result.isPublic ? [{pos : Context.currentPos(), name : ':noCompletion', params:[]}] : null,
                     name : result.name,
                     doc : '',
                     access: [result.isPublic ? Access.APublic : Access.APrivate],
