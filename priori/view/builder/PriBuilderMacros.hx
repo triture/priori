@@ -293,7 +293,7 @@ class PriBuilderMacros {
 
             fields.push(
                 {
-                    meta : !result.isPublic ? [{pos : Context.currentPos(), name : ':noCompletion', params:[]}] : null,
+                    meta : !node.exists("id") ? [{pos : Context.currentPos(), name : ':noCompletion', params:[]}] : null,
                     name : result.name,
                     doc : '',
                     access: [result.isPublic ? Access.APublic : Access.APrivate],
