@@ -222,26 +222,12 @@ class PriDisplay extends PriEventDispatcher {
                 this.dh.styles.setTransition('left', time);
                 this.dh.styles.setTransition('top', time);
             }
-
-            case PriTransitionType.X : {
-                this.dh.styles.setTransition('left', time);
-            }
-
-            case PriTransitionType.Y : {
-                this.dh.styles.setTransition('top', time);
-            }
-
-            case PriTransitionType.ALPHA : {
-                this.dh.styles.setTransition('opacity', time);
-            }
-
-            case PriTransitionType.BACKGROUND_COLOR : {
-                this.dh.styles.setTransition('background-color', time);
-            }
-
-            case PriTransitionType.TEXT_COLOR : {
-                this.dh.styles.setTransition('color', time);
-            }
+            case PriTransitionType.X : this.dh.styles.setTransition('left', time);
+            case PriTransitionType.Y : this.dh.styles.setTransition('top', time);
+            case PriTransitionType.ALPHA : this.dh.styles.setTransition('opacity', time);
+            case PriTransitionType.BACKGROUND_COLOR : this.dh.styles.setTransition('background-color', time);
+            case PriTransitionType.TEXT_COLOR : this.dh.styles.setTransition('color', time);
+            case PriTransitionType.FONT_SIZE : this.dh.styles.setTransition('font-size', time);
         }
 
         this.__updateStyle();

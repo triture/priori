@@ -1,7 +1,6 @@
 package priori.types;
 
-@:enum
-abstract PriFormInputTextFieldType(String) {
+enum abstract PriFormInputTextFieldType(String) {
     var TEXT = "text";
     var EMAIL = "email";
     var PASSWORD = "password";
