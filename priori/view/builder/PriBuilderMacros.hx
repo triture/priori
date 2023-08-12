@@ -342,21 +342,44 @@ class PriBuilderMacros {
         return null;
     }
 
+    private static function reorderAttributes(node:Xml):Array<String> {
+        var att:Iterator<String> = node.attributes();
+        var result:Array<String> = [];
+
+        for (a in att) result.push(a);
+        
+        result.sort(function(a:String, b:String):Int {
+            if (a < b) return -1;
+            else if (a > b) return 1;
+            else return 0;
+        });
+        
+        for (i in 0 ... result.length) {
+            if (result[i].indexOf(":") == -1) continue;
+            var value:Dynamic = node.get(result[i]);
+            result[i] = result[i].substr(result[i].indexOf(":") + 1);
+            node.set(result[i], value);
+        }
+        
+        return result;
+    }
+
     private static function generateSetupProperties(fields:Array<PriBuilderField>):Array<Expr> {
         var result:Array<Expr> = [];
 
         for (field in fields) {
+            var atts:Array<String> = reorderAttributes(field.node);
             
-            for (att in field.node.attributes()) {
-                if (att != "id") {
-
-                    var value:String = field.node.get(att);
-                    
-                    if (!PriBuilderMacroHelper.checkIsExpression(value)) {
-                        var expr:Expr = generatePropertieExpression(field.name, att, value);
-                        if (expr != null) result.push(expr);
-                    }
+            for (att in atts) {
+                if (att == "id") continue;
+                
+                var value:String = field.node.get(att);
+                
+                if (!PriBuilderMacroHelper.checkIsExpression(value)) {
+                    var expr:Expr = generatePropertieExpression(field.name, att, value);
+                    if (expr != null) result.push(expr);
                 }
+                
             }
         }
 
