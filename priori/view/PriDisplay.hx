@@ -417,6 +417,8 @@ class PriDisplay extends PriEventDispatcher {
 
         OUTER_DOM_SIZE_CACHE.set(code, box);
 
+        PriApp.g().frame.innerHTML = '';
+
         return box;
     }
 
