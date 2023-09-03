@@ -986,4 +986,8 @@ class PriDisplay extends PriEventDispatcher {
         return false;
     }
 
+    public function toString():String {
+        return Type.getClassName(Type.getClass(this)) + (this.testIdentifier == null ? "" : " (" + this.testIdentifier + ")");
+    }
+
 }
