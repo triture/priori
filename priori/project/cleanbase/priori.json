@@ -1,0 +1,28 @@
+{
+  "project_name" : "Project Name",
+
+  "lang" : "en",
+
+  "meta" : [],
+
+  "link" : [],
+
+  "d_flags" : [],
+
+  "dependencies" : [
+    "source-map"
+  ],
+
+  "main" : "Main",
+
+  "src" : [
+    "src"
+  ],
+
+  "seo" : {
+    "url" : "",
+    "ereg" : []
+  },
+
+  "output" : "build"
+}

@@ -1,0 +1,5 @@
+-main PrioriRun
+
+-cp src-runner
+
+-neko ./build/runner/run.n

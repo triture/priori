@@ -1,0 +1,10 @@
+-cp src-runner
+-cp src-test
+
+-lib utest
+
+-D debug
+
+-main unit.PrioriUnitTest
+
+--neko ./build/test/priori-unit-test.n

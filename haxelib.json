@@ -1,6 +1,7 @@
 {
   "name": "priori",
   "url": "https://github.com/triture/priori",
+  "classPath" : "priori/src-priori",
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp", "frontend", "interface", "display"],
   "description": "Priori helps you to build consistents front-ends for Web Apps with Haxe. Write html and css codes are not required. Create complex components and interactions just using haxe code.",

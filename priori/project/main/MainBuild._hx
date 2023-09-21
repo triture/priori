@@ -1,0 +1,11 @@
+package ;
+import {APPCLASS};
+
+class {MAINBUILDCLASS} {
+
+    static public function main():Void {
+        haxe.Timer.delay(() -> {
+            new {APPCLASS}();
+        }, 0);
+    }
+}

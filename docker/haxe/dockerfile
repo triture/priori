@@ -1,0 +1,34 @@
+FROM haxe:4.3.1-buster
+
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install -y unzip
+RUN apt-get install -y zip
+RUN apt-get install -y gcc
+RUN apt-get install -y g++
+
+# INSTALL HAXE LIBS
+RUN mkdir -p /haxelib
+RUN haxelib setup /haxelib
+
+RUN yes | haxelib install datetime
+RUN yes | haxelib install jQueryExtern
+RUN yes | haxelib install actuate
+RUN yes | haxelib install haxe-crypto
+RUN yes | haxelib install hxcpp
+RUN yes | haxelib install utest
+RUN yes | haxelib install hscript
+
+# INSTALLING SELENIUM SUPPORT
+ENV DEBIAN_FRONTEND noninteractive
+
+# ruby & gem
+RUN apt-get install -y wget
+RUN apt-get install -y make
+RUN apt-get install -y ruby-full
+RUN apt-get install zlib1g-dev
+RUN gem install bundler -v 2.3.26
+
+WORKDIR /priori
+
+CMD ["sh", "/docker-shared/alive.sh"]

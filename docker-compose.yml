@@ -1,0 +1,22 @@
+version: '3'
+services:
+
+    haxe:
+        restart: always
+        build:
+            context: ./docker/haxe/
+            dockerfile: dockerfile
+        environment: 
+            RUN_BASH_SCRIPT: "/priori/run-build.sh"
+            KEEP_CONTAINER_ALIVE: "yes"
+        volumes:
+            - ./docker/shared:/docker-shared
+            - ./priori:/priori
+        ports:
+            - "7571:80"
+    
+    selenium-chrome:
+        restart: always
+        build:
+            context: ./docker/selenium-chrome/
+            dockerfile: dockerfile

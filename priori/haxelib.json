@@ -1,0 +1,11 @@
+{
+    "name": "priori",
+    "classPath" : "src-priori",
+    "license": "MIT",
+    "tags": [],
+    "description": "mock for priori on docker",
+    "contributors": [ "triture" ],
+    "dependencies": {
+      "jQueryExtern" : ""
+    }
+  }

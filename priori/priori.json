@@ -23,10 +23,14 @@
     "jQueryExtern"
   ],
 
-  "src" : [
-    "priori/src-priori"
+  "d_flags" : [
+    "js-e=5"
   ],
 
-  "template" : "priori/template",
-  "output" : "build"
+  "src" : [
+    "src-priori"
+  ],
+
+  "template" : "template",
+  "output" : "./build/dev"
 }

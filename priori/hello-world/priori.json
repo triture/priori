@@ -1,0 +1,23 @@
+{
+  "project_name" : "Hello World",
+
+  "lang" : "en",
+
+  "meta" : [],
+
+  "link" : [],
+
+  "d_flags" : [
+    "source-map"
+  ],
+
+  "dependencies" : [],
+
+  "main" : "Main",
+
+  "src" : [
+    "src"
+  ],
+
+  "output" : "../build/hello-world"
+}

@@ -54,8 +54,8 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - ~~9 Slice Images~~ **Done**
 - ~~Shadow property~~ **Done**
 - Background Images
-- ~~Better Border Support (Current version is buggy)~~ **Done**
-- Full compatibility for Android and IOs devices
+- ~~Better Border Support~~ **Done**
+- ~~Full compatibility for Android and IOs devices~~ **Done**
 - Youtube, Vimeo and other video streaming (?) support
 - ~~Better performance for PriDataGrid~~ **Done**
 - ~~Fix scroller on mobile devices~~ **Done**
@@ -65,7 +65,8 @@ Check out some Priori [examples](https://github.com/triture/priori-example).
 - Better support for Keyboard events
 - Form Container
 - Form validation support
-- Several bug fixes
+- ~~Routes and Scene Manager concept!~~ **Done**
+- ~~XML constructor to build display components~~ **Done**
 
 ## Changelog
 ### 0.8.1 - 09/03/2017
