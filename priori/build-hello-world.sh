@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -rf /priori/hello-world
-neko ./build/runner/run.n create -p ./hello-world
+rm -rf /priori/hello-world                      && \
+haxelib run priori create -p ./hello-world      && \
 
-cd /priori/hello-world
-neko ../build/runner/run.n build
+cd /priori/hello-world                          && \
+haxelib run priori build

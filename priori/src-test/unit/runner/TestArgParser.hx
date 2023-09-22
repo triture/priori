@@ -10,6 +10,7 @@ class TestArgParser extends Test {
     
     function test_result_basic_object_without_params() {
         // ARRANGE
+        var localPath:String = '.';
         var resultObject:ArgsData;
         var expectedObject:ArgsData = {
             command : ArgsCommand.RUN,
@@ -20,7 +21,7 @@ class TestArgParser extends Test {
             noHash : false
         }
         // ACT
-        resultObject = ArgParser.parse([]);
+        resultObject = ArgParser.parse([localPath]);
 
         // ASSERT
         Assert.same(expectedObject, resultObject, true);
@@ -28,6 +29,7 @@ class TestArgParser extends Test {
 
     function test_result_basic_object_without_params_with_other_command() {
         // ARRANGE
+        var localPath:String = '.';
         var resultObject:ArgsData;
         var expectedObject:ArgsData = {
             command : ArgsCommand.CREATE,
@@ -38,24 +40,29 @@ class TestArgParser extends Test {
             noHash : false
         }
         // ACT
-        resultObject = ArgParser.parse(['create']);
+        resultObject = ArgParser.parse(['create', localPath]);
 
         // ASSERT
         Assert.same(expectedObject, resultObject, true);
     }
 
     function test_raises_error_on_invalid_command() {
+        var localPath:String = '.';
+
         // ASSERT
-        Assert.raises(ArgParser.parse.bind(['no-command']));
+        Assert.raises(ArgParser.parse.bind(['no-command', localPath]));
     }
 
     function test_raises_error_on_invalid_param_quantity() {
+        var localPath:String = '.';
+
         // ASSERT
-        Assert.raises(ArgParser.parse.bind(['run', '-extra-param']));
+        Assert.raises(ArgParser.parse.bind(['run', '-extra-param', localPath]));
     }
 
     function test_full_set_of_data() {
         // ARRANGE
+        var localPath:String = '.';
         var resultObject:ArgsData;
         var expectedObject:ArgsData = {
             command : ArgsCommand.RUN,
@@ -74,7 +81,8 @@ class TestArgParser extends Test {
             '-f', 'priori-test.json',
             '-p', './new_path',
             '-port', '8080',
-            '-nohash', 'true'
+            '-nohash', 'true',
+            localPath
         ]);
 
         // ASSERT

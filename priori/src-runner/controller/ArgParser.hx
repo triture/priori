@@ -9,13 +9,13 @@ class ArgParser {
     static public function parse(values:Array<String>):ArgsData {
         var result:ArgsData = {
             command : ArgsCommand.RUN,
-            currPath : '.',
+            currPath : values.pop(),
             prioriFile : 'priori.json',
             port : 7571,
             dList : [],
             noHash : false
         };
-
+        
         if (values.length == 0) return result;
         result.command = getValidCommand(values);
 
