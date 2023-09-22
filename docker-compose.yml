@@ -7,7 +7,6 @@ services:
             context: ./docker/haxe/
             dockerfile: dockerfile
         environment: 
-            RUN_BASH_SCRIPT: "/priori/run-build.sh"
             KEEP_CONTAINER_ALIVE: "yes"
         volumes:
             - ./docker/shared:/docker-shared
