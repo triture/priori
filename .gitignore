@@ -1,3 +1,5 @@
 *.iml
 .idea
 dox
+/priori/build
+/priori/hello-world
