@@ -28,8 +28,9 @@ class PrioriRun {
                 case VSCODE: CommandVSCode.run(args);
             }
 
-            TerminalPrinter.breakLines();
+            TerminalPrinter.breakLines(2);
             TerminalPrinter.printLine('[green]PRIORI ${args.command} SUCCESS[/green]');
+            TerminalPrinter.breakLines();
             
             Sys.exit(0);
         } catch (e:Dynamic) {
@@ -37,6 +38,7 @@ class PrioriRun {
             TerminalPrinter.breakLines(2);
             TerminalPrinter.printLine('[red]PRIORI ERROR:[/red]');
             TerminalPrinter.printLine('[red]${Std.string(e)}[/red]');
+            TerminalPrinter.breakLines();
             Sys.exit(1);
         }
 

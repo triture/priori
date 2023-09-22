@@ -82,7 +82,7 @@ class BuilderController {
 
         var commandResult:Int = Sys.command('haxe', args);
 
-        // Helper.g().path.removeDirectory(tempCompilerPath);
+        Helper.g().path.removeDirectory(tempCompilerPath);
 
         if (commandResult != 0) throw "Error building app";
     }

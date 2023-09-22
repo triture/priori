@@ -7,11 +7,11 @@
 
   "link" : [],
 
-  "d_flags" : [],
-
-  "dependencies" : [
+  "d_flags" : [
     "source-map"
   ],
+
+  "dependencies" : [],
 
   "main" : "Main",
 
