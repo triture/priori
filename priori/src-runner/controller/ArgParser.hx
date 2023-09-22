@@ -32,7 +32,7 @@ class ArgParser {
     }
 
     static private function loopWithArgs(result:ArgsData, values:Array<String>):ArgsData {
-        if (values.length % 2 != 0) throw 'Invalid Params Composition. Some value is missing.';
+        if (values.length % 2 != 0) throw 'Invalid Params Composition. Some value is missing. ${values}';
 
         while (values.length > 0) {
             var arg:String = values.shift();
