@@ -11,6 +11,7 @@ class BuilderController {
 
     static public function build(args:ArgsData, libs:Array<HaxelibData>):Void {
         if (libs.length == 0) return;
+
         var app:HaxelibData = libs[0];
         var buildPath:String = app.priori.output;
         var prioriHaxelibPath:String = HaxelibController.getHaxelibPath("priori");
@@ -19,6 +20,7 @@ class BuilderController {
         var argsSourcePath:Array<String> = [];
         var argsFlags:Array<String> = [];
 
+        libs.reverse();
         for (lib in libs) {
             if (lib.isHaxelib) {
                 argsHaxelib.push('-L');
@@ -31,6 +33,7 @@ class BuilderController {
                 }
             }
         }
+        libs.reverse();
 
         for (source in app.priori.src) {
             argsSourcePath.push('-cp');

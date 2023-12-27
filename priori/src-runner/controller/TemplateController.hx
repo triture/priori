@@ -88,12 +88,14 @@ class TemplateController {
         var meta:Array<String> = [];
         var link:Array<String> = [];
 
+        libs.reverse();
         for (lib in libs) {
             if (lib.hasPrioriJson) {
                 meta = meta.concat(lib.priori.meta);
                 link = link.concat(lib.priori.link);
             }
         }
+        libs.reverse();
 
         var prioriJSReplacement:String = '<script type="text/javascript" src="js/priori.js';
         if (!args.noHash) {
