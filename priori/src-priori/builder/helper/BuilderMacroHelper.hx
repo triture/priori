@@ -46,5 +46,19 @@ class BuilderMacroHelper {
         Context.fatalError(error.message, errorPos);
     }
 
+    public static function print(message:String):Void {
+        Sys.println("   PriBuilder : " + message);
+    }
+
+    public static function generateRandomString():String {
+        var chars:String = "ABCDEFGHIJKLMNOPQRSTUVXYWZabcdefghijklmnopqrstuvxywz0123456789";
+        var result:String = "";
+
+        for (i in 0 ... 15) result += chars.charAt(
+            Math.floor(Math.random() * chars.length)
+        );
+
+        return result;
+    }
 
 }

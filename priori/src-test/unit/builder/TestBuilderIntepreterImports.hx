@@ -1,7 +1,7 @@
 package unit.builder;
 
-import builder.model.data.BuilderKeyValueData;
-import builder.model.enums.BuilderElementVisibilityType;
+import builder.model.data.BuilderImportData;
+import haxe.ds.StringMap;
 import utest.Assert;
 import builder.model.data.BuilderData;
 import builder.BuilderInterpreter;
@@ -15,7 +15,7 @@ class TestBuilderIntepreterImports extends Test {
         var valueXml:String = "<priori></priori>";
 
         var expecteData:BuilderData = {
-            imports: [],
+            imports: new StringMap<BuilderImportData>(),
             views: [],
             properties: []
         };
@@ -37,7 +37,7 @@ class TestBuilderIntepreterImports extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "Display" => {
                     name: "priori.view.PriDisplay",
                     alias: "Display"
                 }
@@ -63,7 +63,7 @@ class TestBuilderIntepreterImports extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
@@ -105,6 +105,43 @@ class TestBuilderIntepreterImports extends Test {
         Assert.same(expecteData, resultData);
         Assert.equals(expectedHasError, resultHasError);
         Assert.equals(expectedErrorPos, resultErrorPos);
+    }
+
+    function test_load_xml_import_without_alias_for_same_class_name_should_input_full_class_name_as_alias() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <imports>
+                    <pack.a.Display />
+                    <pack.b.Display />
+                </imports>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: [
+                "Display" => {
+                    name: "pack.a.Display",
+                    alias: "Display"
+                },
+                "pack.b.Display" => {
+                    name: "pack.b.Display",
+                    alias: "pack.b.Display"
+                }
+            ],
+            views: [],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
     }
 
 }

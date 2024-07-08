@@ -1,5 +1,7 @@
 package unit.builder;
 
+import builder.model.data.BuilderImportData;
+import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
 import builder.model.enums.BuilderElementVisibilityType;
 import utest.Assert;
@@ -25,14 +27,14 @@ class TestBuilderIntepreterViewsProperty extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
             ],
             views: [
                 {
-                    name: "PriDisplay",
+                    name: "priori.view.PriDisplay",
                     visibility: BuilderElementVisibilityType.PUBLIC,
                     properties: [
                         new BuilderKeyValueData("width", "100")
@@ -71,14 +73,14 @@ class TestBuilderIntepreterViewsProperty extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
             ],
             views: [
                 {
-                    name: "PriDisplay",
+                    name: "priori.view.PriDisplay",
                     visibility: BuilderElementVisibilityType.PUBLIC,
                     properties: [
                         new BuilderKeyValueData("width", "100")
@@ -115,7 +117,7 @@ class TestBuilderIntepreterViewsProperty extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
@@ -124,6 +126,45 @@ class TestBuilderIntepreterViewsProperty extends Test {
             properties: [
                 new BuilderKeyValueData("width", "100")
             ]
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_property_withou_value_cannot_be_processed() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = "
+            <priori>
+                <views>
+                    <PriDisplay >
+                        <p:width />
+                    </PriDisplay>
+                </views>
+            </priori>
+        ";
+
+        var expecteData:BuilderData = {
+            imports: ["PriDisplay" => {
+                name: "PriDisplay",
+                alias: "PriDisplay"
+            }],
+            views: [
+                {
+                    name: "PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
         };
 
         var resultData:BuilderData;

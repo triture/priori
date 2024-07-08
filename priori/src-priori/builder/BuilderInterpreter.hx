@@ -1,5 +1,6 @@
 package builder;
 
+import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
 import builder.model.enums.BuilderElementVisibilityType;
 import builder.model.data.BuilderInstanceData;
@@ -37,14 +38,13 @@ class BuilderInterpreter {
             return;
         }
         
-        var root:Xml = xml.firstElement();
-
         this.data = {
-            imports: [],
+            imports: new StringMap<BuilderImportData>(),
             views: [],
             properties: []
         };
 
+        var root:Xml = xml.firstElement();
         this.interpretImports(root);
         this.interpretViews(root);
     }
@@ -55,7 +55,7 @@ class BuilderInterpreter {
 
         for (views in data.elementsNamed("views")) {
             for (element in views.elements()) {
-                if (StringTools.startsWith(element.nodeName, "p:")) resultProperties.push(this.extractElementPropertyFromNode(element));
+                if (StringTools.startsWith(element.nodeName, "p:")) this.extractElementPropertyFromNode(element, resultProperties);
                 else resultViews.push(this.interpretViewElement(element));
             }
         }
@@ -71,24 +71,32 @@ class BuilderInterpreter {
         var properties:Array<BuilderKeyValueData> = this.extractElementProperties(data);
         var children:Array<BuilderInstanceData> = [];
 
+        // var className:String = cleanName.split('.').pop();
+        if (!this.data.imports.exists(cleanName)) this.addImportDirectFromNode(cleanName);
+
+        var classPath:String = this.data.imports.exists(cleanName) 
+            ? this.data.imports.get(cleanName).name 
+            : cleanName;
+
         for (element in data.elements()) {
-            if (StringTools.startsWith(element.nodeName, "p:")) properties.push(this.extractElementPropertyFromNode(element));
+            if (StringTools.startsWith(element.nodeName, "p:")) this.extractElementPropertyFromNode(element, properties);
             else children.push(this.interpretViewElement(element));
         }
 
         return {
-            name: cleanName,
+            name: classPath,
             visibility: visibility,
             properties: properties,
             children: children
         };
     }
 
-    private function extractElementPropertyFromNode(data:Xml):BuilderKeyValueData {
+    private function extractElementPropertyFromNode(data:Xml, deposit:Array<BuilderKeyValueData>):Void {
         var nodeName:String = data.nodeName;
         var cleanName:String = nodeName.split(":").pop();
+        var value:String = data.get("value");
 
-        return new BuilderKeyValueData(cleanName, data.get("value"));
+        if (value != null) deposit.push(new BuilderKeyValueData(cleanName, value));
     }
 
     private function extractElementProperties(data:Xml):Array<BuilderKeyValueData> {
@@ -104,7 +112,7 @@ class BuilderInterpreter {
     }
 
     private function interpretImports(data:Xml):Void {
-        var result:Array<BuilderImportData> = [];
+        var result:StringMap<BuilderImportData> = this.data.imports;
 
         for (imports in data.elementsNamed("imports")) {
             for (element in imports.elements()) {
@@ -112,16 +120,26 @@ class BuilderInterpreter {
                 var name:String = element.nodeName;
                 var alias:String = element.get("alias");
 
-                if (isEmpty(alias)) alias = name.split('.').pop();
+                var autoAlias:String = name.split('.').pop();
 
-                result.push({
+                if (isEmpty(alias)) {
+                    if (result.exists(autoAlias)) alias = name;
+                    else alias = autoAlias;
+                }
+
+                result.set(alias, {
                     name: name,
                     alias: alias
                 });
             }
         }
+    }
 
-        this.data.imports = result;
+    private function addImportDirectFromNode(name:String):Void {
+        this.data.imports.set(name, {
+            name: name,
+            alias: name
+        });
     }
 
     private function isEmpty(value:String):Bool {

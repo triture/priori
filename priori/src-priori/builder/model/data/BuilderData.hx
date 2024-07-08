@@ -1,5 +1,6 @@
 package builder.model.data;
 
+import haxe.ds.StringMap;
 import builder.model.data.BuilderInstanceData;
 
 // XML EXAMPLE
@@ -14,7 +15,7 @@ import builder.model.data.BuilderInstanceData;
 // </priori>
 typedef BuilderData = {
 
-    var imports:Array<BuilderImportData>;
+    var imports:StringMap<BuilderImportData>;
     var views:Array<BuilderInstanceData>;
     var properties:Array<BuilderKeyValueData>;
 

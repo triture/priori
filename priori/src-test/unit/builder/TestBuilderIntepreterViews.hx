@@ -14,9 +14,9 @@ class TestBuilderIntepreterViews extends Test {
         var builderInterpreter = new BuilderInterpreter();
         var valueXml:String = "<priori><imports><priori.view.PriDisplay /></imports><views></views></priori>";
 
-        var expecteData:BuilderData = {
+        var expecteData:Dynamic = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
@@ -42,14 +42,14 @@ class TestBuilderIntepreterViews extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
             ],
             views: [
                 {
-                    name: "PriDisplay",
+                    name: "priori.view.PriDisplay",
                     visibility: BuilderElementVisibilityType.PUBLIC,
                     properties: [],
                     children: []
@@ -75,14 +75,14 @@ class TestBuilderIntepreterViews extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
             ],
             views: [
                 {
-                    name: "PriDisplay",
+                    name: "priori.view.PriDisplay",
                     visibility: BuilderElementVisibilityType.PRIVATE,
                     properties: [],
                     children: []
@@ -119,19 +119,19 @@ class TestBuilderIntepreterViews extends Test {
 
         var expecteData:BuilderData = {
             imports: [
-                {
+                "PriDisplay" => {
                     name: "priori.view.PriDisplay",
                     alias: "PriDisplay"
                 }
             ],
             views: [
                 {
-                    name: "PriDisplay",
+                    name: "priori.view.PriDisplay",
                     visibility: BuilderElementVisibilityType.PUBLIC,
                     properties: [],
                     children: [
                         {
-                            name: "PriDisplay",
+                            name: "priori.view.PriDisplay",
                             visibility: BuilderElementVisibilityType.PUBLIC,
                             properties: [],
                             children: []
@@ -152,4 +152,203 @@ class TestBuilderIntepreterViews extends Test {
         Assert.same(expecteData, resultData);
     }
 
+    function test_load_xml_views_without_import_should_add_import_elements_using_full_name() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = "
+            <priori>
+                <views>
+                    <priori.view.PriDisplay />
+                </views>
+            </priori>
+        ";
+
+        var expecteData:BuilderData = {
+            imports: [
+                "priori.view.PriDisplay" => {
+                    name: "priori.view.PriDisplay",
+                    alias: "priori.view.PriDisplay"
+                }
+            ],
+            views: [
+                {
+                    name: "priori.view.PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_alias_and_full_name_should_be_allowed() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <imports>
+                    <priori.view.PriDisplay alias="Display" />
+                </imports>
+                <views>
+                    <priori.view.PriDisplay />
+                    <Display />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: [
+                "priori.view.PriDisplay" => {
+                    name: "priori.view.PriDisplay",
+                    alias: "priori.view.PriDisplay"
+                },
+                "Display" => {
+                    name: "priori.view.PriDisplay",
+                    alias: "Display"
+                }
+            ],
+            views: [
+                {
+                    name: "priori.view.PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                },
+                {
+                    name: "priori.view.PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_multiple_alias_should_be_allowed() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <imports>
+                    <priori.view.PriDisplay alias="DisplayA" />
+                    <priori.view.PriDisplay alias="DisplayB" />
+                </imports>
+                <views>
+                    <DisplayA />
+                    <DisplayB />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: [
+                "DisplayA" => {
+                    name: "priori.view.PriDisplay",
+                    alias: "DisplayA"
+                },
+                "DisplayB" => {
+                    name: "priori.view.PriDisplay",
+                    alias: "DisplayB"
+                }
+            ],
+            views: [
+                {
+                    name: "priori.view.PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                },
+                {
+                    name: "priori.view.PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_same_class_name_from_other_modules_should_be_allowed() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <imports>
+                    <pack.a.Name alias="NameA" />
+                    <pack.b.Name alias="NameB" />
+                </imports>
+                <views>
+                    <NameA />
+                    <NameB />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: [
+                "NameA" => {
+                    name: "pack.a.Name",
+                    alias: "NameA"
+                },
+                "NameB" => {
+                    name: "pack.b.Name",
+                    alias: "NameB"
+                }
+            ],
+            views: [
+                {
+                    name: "pack.a.Name",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                },
+                {
+                    name: "pack.b.Name",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
 }
