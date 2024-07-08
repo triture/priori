@@ -1,5 +1,6 @@
 package priori.view.builder;
 
+import builder.helper.BuilderMacroHelper;
 #if macro
 import haxe.macro.PositionTools;
 import haxe.xml.Parser.XmlParserException;
@@ -20,6 +21,19 @@ import haxe.macro.Expr;
 class PriBuilderMacros {
 
     #if macro
+
+    static private function loadXmlData():String {
+        var result:String;
+        var dataFromTag:String = BuilderMacroHelper.getMetaValue('priori');
+        var dataFromFile:String = BuilderMacroHelper.loadDataFromFile(dataFromTag);
+
+        if (dataFromFile != null) result = dataFromFile;
+        else if (dataFromTag != null) result = dataFromTag;
+
+        if (result == null) return null;
+
+        return result;
+    }
 
     static public function loadPrioriXML():Xml {
         var val:String = null;

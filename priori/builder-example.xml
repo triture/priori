@@ -1,0 +1,55 @@
+
+# PRIVATE DISPLAY
+<priori>
+    <imports>
+        <priori.view.PriDisplay />
+    </imports>
+    <views>
+        <PriDisplay id="publicDisplay" />
+        <private:PriDisplay id="privateDisplay" />
+    </views>
+</priori>
+
+# PUBLIC DISPLAY
+<priori>
+    <imports>
+        <priori.view.PriDisplay />
+    </imports>
+    <views>
+        <public:PriDisplay id="publicDisplay" />
+    </views>
+</priori>
+
+# IMPORT ELEMENT WITH ALIAS
+<priori>
+    <imports>
+        <priori.view.PriDisplay alias="D"/>
+    </imports>
+    <views>
+        <D id="display" />
+    </views>
+</priori>
+
+# INSERT ELEMENT WITHOUT IMPORT
+<priori>
+    <views>
+        <priori.view.PriDisplay id="displayWithoutImport" />
+    </views>
+</priori>
+
+# ELEMENT WITH PROPERTIES
+<priori>
+    <views>
+        <priori.view.PriDisplay width="100" height="200" />
+    </views>
+</priori>
+
+# ROOT ELEMENT WITH PROPERTY AS ELEMENT
+<priori>
+    <views>
+        <p:width value="100" />
+        <priori.view.PriDisplay>
+            <p:width value="100" />
+        </priori.view.PriDisplay>
+    </views>
+</priori>

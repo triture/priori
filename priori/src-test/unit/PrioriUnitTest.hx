@@ -1,5 +1,8 @@
 package unit;
 
+import unit.builder.TestBuilderIntepreterViewsProperty;
+import unit.builder.TestBuilderIntepreterViews;
+import unit.builder.TestBuilderIntepreterImports;
 import unit.runner.TestArgParser;
 import unit.runner.TestTerminalPrinter;
 import utest.ui.Report;
@@ -14,6 +17,10 @@ class PrioriUnitTest {
 
         runner.addCase(new TestTerminalPrinter());
         runner.addCase(new TestArgParser());
+
+        runner.addCase(new TestBuilderIntepreterImports());
+        runner.addCase(new TestBuilderIntepreterViews());
+        runner.addCase(new TestBuilderIntepreterViewsProperty());
         
 
         Report.create(runner);

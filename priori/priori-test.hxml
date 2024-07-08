@@ -1,5 +1,6 @@
 -cp src-runner
 -cp src-test
+-cp src-priori
 
 -lib utest
 
