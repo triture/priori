@@ -53,3 +53,28 @@
         </priori.view.PriDisplay>
     </views>
 </priori>
+
+# PROPERTY FORCED TO BE STRING
+<priori>
+    <views>
+        <p:something value:String="100" />
+        <priori.view.PriDisplay something:String="100" />
+    </views>
+</priori>
+
+# PROPERTY FORCED TO BE BOOLEAN
+<priori>
+    <views>
+        <p:something value=":true" />
+        <priori.view.PriDisplay something=":true" />
+    </views>
+</priori>
+
+# PROPERTY FORCED TO BE LITERAL
+<priori>
+    <views>
+        <priori.view.PriDisplay somethingNumeric:Literal="100" />
+        <priori.view.PriDisplay somethingBolean:Literal="true" />
+        <priori.view.PriDisplay somethingCallingAFunction:Literal="SomeClass.somefunction()" />
+    </views>
+</priori>

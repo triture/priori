@@ -19,7 +19,13 @@ abstract BuilderKeyValueData({key:String, value:String, typed:BuilderKeyValueTyp
         else if (this.value == ':true') return 'true';
         else if (this.value == ':false') return 'false';
         else if (isNumeric() || isNumericFloat()) return this.value;
+        else if (isNumericHashtagHex()) return this.value.split('#').join('0x');
         else return '"${this.value}"';
+    }
+
+    private function isNumericHashtagHex():Bool {
+        var r = new EReg("^#[0-9a-fA-F]+$", "");
+        return r.match(StringTools.trim(this.value));
     }
 
     private function isNumeric():Bool {

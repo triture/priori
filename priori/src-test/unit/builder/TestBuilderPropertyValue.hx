@@ -176,4 +176,17 @@ class TestBuilderPropertyValue extends Test {
         // ASSERT
         Assert.equals(expected, result);
     }
+
+    function test_hex_with_hashtag_should_start_with_0x() {
+        // ARRANGE
+        var value = new BuilderKeyValueData("key", "#FF");
+        var expected:String = '0xFF';
+        var result:String;
+        
+        // ACT
+        result = value.getMacroValue();
+
+        // ASSERT
+        Assert.equals(expected, result);
+    }
 }

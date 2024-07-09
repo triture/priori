@@ -292,4 +292,33 @@ class TestBuilderIntepreterViewsProperty extends Test {
         Assert.same(expecteData, resultData);
     }
 
+    function test_load_xml_forced_typed_property_on_prop_nodes_should_works() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <views>
+                    <p:label value:String="100" />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: new StringMap<BuilderImportData>(),
+            views: [],
+            properties: [
+                new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING)
+            ]
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
 }

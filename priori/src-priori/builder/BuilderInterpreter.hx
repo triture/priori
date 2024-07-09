@@ -73,7 +73,6 @@ class BuilderInterpreter {
         var properties:Array<BuilderKeyValueData> = this.extractElementProperties(data);
         var children:Array<BuilderInstanceData> = [];
 
-        // var className:String = cleanName.split('.').pop();
         if (!this.data.imports.exists(cleanName)) this.addImportDirectFromNode(cleanName);
 
         var classPath:String = this.data.imports.exists(cleanName) 
@@ -107,9 +106,18 @@ class BuilderInterpreter {
     private function extractElementPropertyFromNode(data:Xml, deposit:Array<BuilderKeyValueData>):Void {
         var nodeName:String = data.nodeName;
         var cleanName:String = nodeName.split(":").pop();
-        var value:String = data.get("value");
 
-        if (value != null) deposit.push(new BuilderKeyValueData(cleanName, value));
+        for (property in data.attributes()) {
+            var propertyBlock:Array<String> = property.split(":");
+            var propertyName:String = propertyBlock[0];
+            var value:String = data.get(property);
+
+            if (propertyName == "value" && value != null) {
+                var propertyType:BuilderKeyValueType = propertyBlock.length == 1 ? BuilderKeyValueType.DYNAMIC : propertyBlock[1];
+                deposit.push(new BuilderKeyValueData(cleanName, data.get(property), propertyType));
+                break;
+            }
+        }
     }
 
     private function extractElementProperties(data:Xml):Array<BuilderKeyValueData> {

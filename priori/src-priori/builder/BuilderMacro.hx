@@ -149,12 +149,12 @@ class BuilderMacro {
     }
 
     private function createAddCode(parent:String, item:BuilderInstanceData, result:Array<Expr>):Void {
-        var code:String = '${parent}.addChild(this.${item.id});';
-        result.push(Context.parse(code, Context.currentPos()));
-
         for (child in item.children) {
             this.createAddCode('${parent}.${item.id}', child, result);
         }
+
+        var code:String = '${parent}.addChild(this.${item.id});';
+        result.push(Context.parse(code, Context.currentPos()));
     }
 
     private function createRootProperty(properties:Array<BuilderKeyValueData>, result:Array<Expr>):Void {
