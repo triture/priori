@@ -5,3 +5,4 @@ dox
 /priori/hello-world
 /priori/run.n
 priori/examples/example-builder/build
+priori/examples/example-builder/dump

@@ -61,4 +61,8 @@ class BuilderMacroHelper {
         return result;
     }
 
+    public static function isEmptyString(value:String):Bool {
+        return value == null || StringTools.trim(value) == "";
+    }
+
 }

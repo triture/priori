@@ -1,5 +1,7 @@
 package builder;
 
+import builder.model.enums.BuilderKeyValueType;
+import builder.helper.BuilderMacroHelper;
 import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
 import builder.model.enums.BuilderElementVisibilityType;
@@ -83,12 +85,23 @@ class BuilderInterpreter {
             else children.push(this.interpretViewElement(element));
         }
 
-        return {
+        var result:BuilderInstanceData = {
             name: classPath,
             visibility: visibility,
             properties: properties,
             children: children
         };
+
+        for (property in properties) {
+            if (property.getKey() == "id") {
+                var idValue:String = property.getValue();
+                if (!BuilderMacroHelper.isEmptyString(idValue)) result.id = idValue;
+                properties.remove(property);
+                break;
+            }
+        }
+
+        return result;
     }
 
     private function extractElementPropertyFromNode(data:Xml, deposit:Array<BuilderKeyValueData>):Void {
@@ -103,8 +116,13 @@ class BuilderInterpreter {
         var result:Array<BuilderKeyValueData> = [];
 
         for (property in data.attributes()) {
+            var propertyBlock:Array<String> = property.split(":");
+
+            var propertyName:String = propertyBlock[0];
+            var propertyType:BuilderKeyValueType = propertyBlock.length == 1 ? BuilderKeyValueType.DYNAMIC : propertyBlock[1];
+            
             result.push(
-                new BuilderKeyValueData(property, data.get(property))
+                new BuilderKeyValueData(propertyName, data.get(property), propertyType)
             );
         }
 

@@ -7,7 +7,7 @@ import priori.view.builder.PriBuilder;
     <imports>
         <priori.view.container.PriContainer alias="Container" />
     </imports>
-    <view>
+    <views>
         <p:bgColor value="#f3f3f3"/>
         <p:width value="300"/>
         <p:height value="300"/>
@@ -16,7 +16,7 @@ import priori.view.builder.PriBuilder;
             <Container width="20" height="20" bgColor="#00ff00" />
         </Container>
 
-    </view>
+    </views>
 </priori>
 ')
 class BuilderTest extends PriBuilder {

@@ -215,29 +215,11 @@ class PriBuilderMacros {
     }
 
     private static function getTypeFromClassName(typeName:String, imports:Array<Type>, importAlias:StringMap<String>):Type {
-        if (importAlias.exists(typeName)) typeName = importAlias.get(typeName);
-        
-        for (item in imports) {
-            
-            var typeString:String = TypeTools.toString(item);
-            
-            if (typeName == typeString) return item;
-            else if (StringTools.endsWith(typeString, '.' + typeName)) return item;
-
-        }
-
         return null;
     }
 
     private static function createImport(node:Xml, imports:Array<Type>, importAlias:StringMap<String>):Void {
-        var module:String = node.nodeName;
-        var types = Context.getModule(module);
         
-        if (node.exists('alias') && StringTools.trim(node.get('alias')).length > 0) {
-            importAlias.set(node.get('alias'), node.nodeName);
-        }
-        
-        for (item in types) imports.push(item);
     }
 
     private static function createElement(
@@ -252,76 +234,6 @@ class PriBuilderMacros {
         recursionLevel:Int = 0
     ) {
         
-        var access:XmlAccessHelper = new XmlAccessHelper(node);
-
-        if (StringTools.startsWith(node.nodeName, 'p:')) {
-
-            if (node.exists("value")) {
-                var propertie:String = node.nodeName.split(":")[1];
-                var value:String = node.get("value");
-
-                if (PriBuilderMacroHelper.checkIsExpression(value)) {
-                    propertiesElementsForPaint.push(generatePropertieExpression(parent == null ? 'this' : parent.name, propertie, value));
-                } else {
-                    propertiesElementsForSetup.push(generatePropertieExpression(parent == null ? 'this' : parent.name, propertie, value));
-                }
-            }
-
-        } else {
-
-            var nodeName:String = node.nodeName;
-            var isPrivate:Bool = false;
-
-            if (StringTools.startsWith(nodeName, 'private:')) {
-                nodeName = nodeName.split('private:').join('');
-                isPrivate = true;
-            }
-
-            var type:Type = getTypeFromClassName(nodeName, imports, importAlias);
-            if (type == null) {
-                try {
-                    type = Context.getType(nodeName);
-                } catch (e:Dynamic) {}
-            }
-            if (type == null) throw "Type not found : " + nodeName;
-
-            var result:PriBuilderField = {
-                node : node,
-                name : '____' + BuilderMacroHelper.generateRandomString(),
-                type : TypeTools.toString(type),
-                isPublic : false,
-                macroType : type,
-                macroComplexType : haxe.macro.TypeTools.toComplexType(type),
-
-                parent : parent
-            }
-
-            if (node.exists("id")) {
-                if (!isPrivate) result.isPublic = true;
-                result.name = node.get("id");
-            }
-
-            #if prioridebug
-            var space:String = ([for (i in 0 ... recursionLevel) "  "] ).join("");
-            Sys.println('     ${space}-> ' + (node.nodeName != TypeTools.toString(type) ? node.nodeName + '  >>  ' + TypeTools.toString(type) : node.nodeName) +  ' #' + result.name);
-            #end
-
-            fields.push(
-                {
-                    meta : !node.exists("id") ? [{pos : Context.currentPos(), name : ':noCompletion', params:[]}] : null,
-                    name : result.name,
-                    doc : '',
-                    access: [result.isPublic ? Access.APublic : Access.APrivate],
-                    kind: FieldType.FVar(result.macroComplexType),
-                    pos: Context.currentPos()
-                }
-            );
-
-            builderFields.push(result);
-            
-            recursionLevel++;
-            for (subnode in node.elements()) createElement(subnode, result, fields, builderFields, imports, importAlias, propertiesElementsForSetup, propertiesElementsForPaint, recursionLevel);
-        }
     }
 
     private static function generatePropertieExpression(objectOwner:String, propertieName:String, value:String):Null<Expr> {

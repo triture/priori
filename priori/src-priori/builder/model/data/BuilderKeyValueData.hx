@@ -1,12 +1,38 @@
 package builder.model.data;
 
-abstract BuilderKeyValueData({key:String, value:String}) {
+import builder.model.enums.BuilderKeyValueType;
+
+abstract BuilderKeyValueData({key:String, value:String, typed:BuilderKeyValueType}) {
  
-    public function new(key:String, value:String) {
-        this = {key: key, value: value};
+    public function new(key:String, value:String, ?typed:BuilderKeyValueType) {
+        if (typed == null) typed = BuilderKeyValueType.DYNAMIC;
+
+        this = {key: key, value: value, typed: typed};
     }
 
     public function getKey():String return this.key;
     public function getValue():String return this.value;
     
+    public function getMacroValue():String {
+        if (this.typed == BuilderKeyValueType.STRING) return '"${this.value}"';
+        if (this.typed == BuilderKeyValueType.LITERAL) return '${this.value}';
+        else if (this.value == ':true') return 'true';
+        else if (this.value == ':false') return 'false';
+        else if (isNumeric() || isNumericFloat()) return this.value;
+        else return '"${this.value}"';
+    }
+
+    private function isNumeric():Bool {
+        // ^0x[0-9a-fA-F]+$ : match hexadecimal numbers 
+        // | or
+        // ^-?[0-9]*.?[0-9]+$ hexa, negatives, positives, floats or integers
+        var r = new EReg("^0x[0-9a-fA-F]+$|^-?[0-9]*\\.?[0-9]+$", "");
+        return r.match(StringTools.trim(this.value));
+    }
+
+    private function isNumericFloat():Bool {
+        // ^-?[0-9]*[.][0-9]+$ negatives, positives, floats (must be a point somewhere)
+        var r = new EReg("^-?[0-9]*[\\.][0-9]+$", "");
+        return r.match(StringTools.trim(this.value));
+    }
 }

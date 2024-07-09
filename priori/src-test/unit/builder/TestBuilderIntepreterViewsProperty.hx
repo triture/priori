@@ -1,5 +1,6 @@
 package unit.builder;
 
+import builder.model.enums.BuilderKeyValueType;
 import builder.model.data.BuilderImportData;
 import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
@@ -161,6 +162,120 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     name: "PriDisplay",
                     visibility: BuilderElementVisibilityType.PUBLIC,
                     properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_id_property_shoud_be_converted_to_id() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <views>
+                    <PriDisplay id="id" />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: ["PriDisplay" => {
+                name: "PriDisplay",
+                alias: "PriDisplay"
+            }],
+            views: [
+                {
+                    id : "id",
+                    name: "PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_empry_id_property_shoud_be_ignored() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <views>
+                    <PriDisplay id="" />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: ["PriDisplay" => {
+                name: "PriDisplay",
+                alias: "PriDisplay"
+            }],
+            views: [
+                {
+                    name: "PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: []
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
+
+    function test_load_xml_numeric_property_should_be_interpreted_as_string() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <views>
+                    <PriDisplay label:String="100" />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: ["PriDisplay" => {
+                name: "PriDisplay",
+                alias: "PriDisplay"
+            }],
+            views: [
+                {
+                    name: "PriDisplay",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [
+                        new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING)
+                    ],
                     children: []
                 }
             ],

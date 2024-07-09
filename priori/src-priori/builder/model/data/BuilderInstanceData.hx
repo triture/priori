@@ -9,6 +9,8 @@ import builder.model.enums.BuilderElementVisibilityType;
 // <PriContainer> <PriDisplay id="display" x="10" /> </PriContainer>
 
 typedef BuilderInstanceData = {
+    @:optional var id:String;
+    
     var name:String;
     var visibility:BuilderElementVisibilityType;
     var properties:Array<BuilderKeyValueData>;
