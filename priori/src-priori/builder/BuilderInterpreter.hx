@@ -117,10 +117,18 @@ class BuilderInterpreter {
             var propertyBlock:Array<String> = property.split(":");
             var propertyName:String = propertyBlock[0];
             var value:String = data.get(property);
+            var isExpession:Bool = this.isPaintExpression(StringTools.trim(value));
 
             if (propertyName == "value" && value != null) {
                 var propertyType:BuilderKeyValueType = propertyBlock.length == 1 ? BuilderKeyValueType.DYNAMIC : propertyBlock[1];
-                deposit.push(new BuilderKeyValueData(cleanName, data.get(property), propertyType));
+                
+                if (isExpession) {
+                    value = StringTools.trim(value);
+                    propertyType = BuilderKeyValueType.PAINT;
+                    value = value.substring(2, value.length - 1);
+                }
+
+                deposit.push(new BuilderKeyValueData(cleanName, value, propertyType));
                 break;
             }
         }
@@ -135,9 +143,16 @@ class BuilderInterpreter {
             var propertyName:String = propertyBlock[0];
             var propertyType:BuilderKeyValueType = propertyBlock.length == 1 ? BuilderKeyValueType.DYNAMIC : propertyBlock[1];
             
-            result.push(
-                new BuilderKeyValueData(propertyName, data.get(property), propertyType)
-            );
+            var value:String = data.get(property);
+            var isExpession:Bool = this.isPaintExpression(StringTools.trim(value));
+
+            if (isExpession) {
+                value = StringTools.trim(value);
+                propertyType = BuilderKeyValueType.PAINT;
+                value = value.substring(2, value.length - 1);
+            }
+
+            result.push(new BuilderKeyValueData(propertyName, value, propertyType));
         }
 
         return result;
@@ -178,5 +193,12 @@ class BuilderInterpreter {
         if (value == null) return true;
         else if (StringTools.trim(value).length == 0) return true;
         else return false;
+    }
+
+    private function isPaintExpression(value:String):Bool {
+        if (value == null) return false;
+        
+        var r = new EReg("^\\${.+}$", "");
+        return r.match(StringTools.trim(value));
     }
 }

@@ -349,4 +349,35 @@ class TestBuilderIntepreterViewsProperty extends Test {
         // ASSERT
         Assert.same(expecteData, resultData);
     }
+
+    function test_load_xml_detect_paint_expression() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = "
+            <priori>
+                <views>
+                    <p:width value:Paint=\"100\" />
+                    <p:height value=\"${this.getSize()}\" />
+                </views>
+            </priori>
+        ";
+
+        var expecteData:BuilderData = {
+            imports: new StringMap<BuilderImportData>(),
+            views: [],
+            properties: [
+                new BuilderKeyValueData("width", "100", BuilderKeyValueType.PAINT),
+                new BuilderKeyValueData("height", "this.getSize()", BuilderKeyValueType.PAINT)
+            ]
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
 }

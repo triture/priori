@@ -1,5 +1,6 @@
 package builder;
 
+import builder.model.enums.BuilderKeyValueType;
 import builder.model.data.BuilderKeyValueData;
 import haxe.macro.Expr;
 import haxe.macro.Expr.Access;
@@ -34,8 +35,7 @@ class BuilderMacro {
 
         this.constructImportTypes();
         this.constructFields();
-
-        this.constructSetupCode();
+        this.constructCode();
     }
 
     public function getFields():Array<Field> return this.fields;
@@ -118,64 +118,105 @@ class BuilderMacro {
         return result;
     }
 
-    private function constructSetupCode():Void {
+    private function constructCode():Void {
         this.fields.push({
             name : '__priBuilderSetup',
             pos: Context.currentPos(),
             access: [Access.APrivate, Access.AOverride],
-            kind : FieldType.FFun(
-                {
-                    args : [],
-                    ret : null,
-                    expr: macro {
-                        super.__priBuilderSetup();
-                        $b{generateInitializations()}
-                    }
+            kind : FieldType.FFun({
+                args : [],
+                ret : null,
+                expr: macro {
+                    super.__priBuilderSetup();
+                    $b{generateSetupCode()}
                 }
-            )
+            })
+        });
+
+        fields.push({
+            name : '__priBuilderPaint',
+            pos: Context.currentPos(),
+            access: [Access.APrivate, Access.AOverride],
+            kind : FieldType.FFun({
+                args : [],
+                ret : null,
+                expr: macro {
+                    super.__priBuilderPaint();
+                    $b{generatePaintCode()}
+                }
+            })
         });
     }
 
-    private function generateInitializations():Array<Expr> {
+    private function generateSetupCode():Array<Expr> {
+        var codes:Array<String> = [];
         var result:Array<Expr> = [];
+        var allowed:Array<BuilderKeyValueType> = [
+            BuilderKeyValueType.DYNAMIC, 
+            BuilderKeyValueType.LITERAL, 
+            BuilderKeyValueType.STRING
+        ];
 
-        this.createRootProperty(this.interpreter.data.properties, result);
+        this.createProperty('this', this.interpreter.data.properties, codes, allowed);
 
-        for (item in this.interpreter.data.views) this.createNewCode(item, result);
-        for (item in this.interpreter.data.views) this.createPropertyCode(item, result);
-        for (item in this.interpreter.data.views) this.createAddCode('this', item, result);
+        for (item in this.interpreter.data.views) this.createNewCode(item, codes);
+        for (item in this.interpreter.data.views) this.createPropertyCode(item, codes, allowed);
+        for (item in this.interpreter.data.views) this.createAddCode('this', item, codes);
         
+        for (code in codes) {
+            #if prioridebug
+            BuilderMacroHelper.print(' > SETUP: ${code}');
+            #end
+            result.push(Context.parse(code, Context.currentPos()));
+        }
+
         return result;
     }
 
-    private function createAddCode(parent:String, item:BuilderInstanceData, result:Array<Expr>):Void {
+    private function generatePaintCode():Array<Expr> {
+        var codes:Array<String> = [];
+        var result:Array<Expr> = [];
+        var allowed:Array<BuilderKeyValueType> = [BuilderKeyValueType.PAINT];
+
+        this.createProperty('this', this.interpreter.data.properties, codes, allowed);
+        for (item in this.interpreter.data.views) this.createPropertyCode(item, codes, allowed);
+
+        for (code in codes) {
+            #if prioridebug
+            BuilderMacroHelper.print(' > PAINT: ${code}');
+            #end
+            result.push(Context.parse(code, Context.currentPos()));
+        }
+
+        return result;
+    }
+
+    private function createAddCode(parent:String, item:BuilderInstanceData, result:Array<String>):Void {
         for (child in item.children) {
-            this.createAddCode('${parent}.${item.id}', child, result);
+            this.createAddCode('this.${item.id}', child, result);
         }
 
         var code:String = '${parent}.addChild(this.${item.id});';
-        result.push(Context.parse(code, Context.currentPos()));
+        result.push(code);
     }
 
-    private function createRootProperty(properties:Array<BuilderKeyValueData>, result:Array<Expr>):Void {
+    private function createProperty(parent:String, properties:Array<BuilderKeyValueData>, result:Array<String>, allowed:Array<BuilderKeyValueType>):Void {
         for (property in properties) {
-            var code:String = 'this.${property.getKey()} = ${property.getMacroValue()};';
-            result.push(Context.parse(code, Context.currentPos()));
+            if (allowed.indexOf(property.getType()) == -1) continue;
+            
+            var code:String = '${parent}.${property.getKey()} = ${property.getMacroValue()};';
+            result.push(code);
         }
     }
 
-    private function createPropertyCode(item:BuilderInstanceData, result:Array<Expr>):Void {
-        for (property in item.properties) {
-            var code:String = 'this.${item.id}.${property.getKey()} = ${property.getMacroValue()};';
-            result.push(Context.parse(code, Context.currentPos()));
-        }
-
-        for (child in item.children) this.createPropertyCode(child, result);
+    private function createPropertyCode(item:BuilderInstanceData, result:Array<String>, allowed:Array<BuilderKeyValueType>):Void {        
+        this.createProperty('this.${item.id}', item.properties, result, allowed);
+        for (child in item.children) this.createPropertyCode(child, result, allowed);
     }
 
-    private function createNewCode(item:BuilderInstanceData, result:Array<Expr>):Void {
+    private function createNewCode(item:BuilderInstanceData, result:Array<String>):Void {
         var code:String = 'this.${item.id} = new ${item.name}();';
-        result.push(Context.parse(code, Context.currentPos()));
+        result.push(code);
 
         for (child in item.children) this.createNewCode(child, result);
     }

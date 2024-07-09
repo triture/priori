@@ -12,10 +12,12 @@ abstract BuilderKeyValueData({key:String, value:String, typed:BuilderKeyValueTyp
 
     public function getKey():String return this.key;
     public function getValue():String return this.value;
+    public function getType():BuilderKeyValueType return this.typed;
     
     public function getMacroValue():String {
         if (this.typed == BuilderKeyValueType.STRING) return '"${this.value}"';
-        if (this.typed == BuilderKeyValueType.LITERAL) return '${this.value}';
+        else if (this.typed == BuilderKeyValueType.LITERAL) return '${this.value}';
+        else if (this.typed == BuilderKeyValueType.PAINT) return '${this.value}';
         else if (this.value == ':true') return 'true';
         else if (this.value == ':false') return 'false';
         else if (isNumeric() || isNumericFloat()) return this.value;
