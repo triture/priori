@@ -1,0 +1,8 @@
+-lib jQueryExtern
+-lib priori
+
+-cp src-example
+
+-main Main
+
+-js ./build/example/js/priori.js

@@ -8,7 +8,8 @@
   "link" : [],
 
   "d_flags" : [
-    "source-map"
+    "source-map",
+    "prioridebug"
   ],
 
   "dependencies" : [],
@@ -16,7 +17,7 @@
   "main" : "Main",
 
   "src" : [
-    "src"
+    "src-example"
   ],
 
   "seo" : {
@@ -24,5 +25,5 @@
     "ereg" : []
   },
 
-  "output" : "build"
+  "output" : "build/example"
 }
