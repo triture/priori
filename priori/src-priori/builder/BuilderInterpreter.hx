@@ -55,10 +55,16 @@ class BuilderInterpreter {
         var resultViews:Array<BuilderInstanceData> = [];
         var resultProperties:Array<BuilderKeyValueData> = [];
 
-        for (views in data.elementsNamed("views")) {
-            for (element in views.elements()) {
-                if (StringTools.startsWith(element.nodeName, "p:")) this.extractElementPropertyFromNode(element, resultProperties);
-                else resultViews.push(this.interpretViewElement(element));
+        var acceptedNodes:Array<String> = ["views", "view"];
+
+        for (nodeName in acceptedNodes) {
+            for (viewElement in data.elementsNamed(nodeName)) {
+                for (element in viewElement.elements()) {
+                    if (StringTools.startsWith(element.nodeName, "p:")) this.extractElementPropertyFromNode(element, resultProperties);
+                    else resultViews.push(this.interpretViewElement(element));
+                }
+
+                for (prop in this.extractElementProperties(viewElement)) resultProperties.push(prop);
             }
         }
 

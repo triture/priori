@@ -54,6 +54,13 @@
     </views>
 </priori>
 
+# VIEW ROOT ELEMENT CAN HAVE PROPERTIES
+<priori>
+    <views width="100" height="200">
+        <priori.view.PriDisplay />
+    </views>
+</priori>
+
 # PROPERTY FORCED TO BE STRING
 <priori>
     <views>
