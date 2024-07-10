@@ -2,24 +2,17 @@ package priori.app;
 
 import js.html.KeyboardEvent;
 import js.html.DivElement;
-import priori.view.PriFrame;
-import priori.event.PriFocusEvent;
-import priori.style.font.PriFontStyle;
-import helper.browser.StyleHelper;
-import priori.event.PriTapEvent;
-import priori.geom.PriGeomPoint;
-import priori.system.PriDevice;
-import js.Browser;
-import priori.assets.AssetManagerEvent;
-import priori.view.container.PriGroup;
-import priori.assets.AssetManager;
-import js.jquery.Event;
-import priori.event.PriEvent;
-import haxe.Timer;
-import priori.geom.PriGeomBox;
 import js.jquery.JQuery;
-import priori.app.PriApp;
-import priori.view.PriDisplay;
+import js.Browser;
+import haxe.Timer;
+import priori.system.PriDevice;
+import helper.browser.StyleHelper;
+import priori.geom.PriGeomPoint;
+import priori.geom.PriGeomBox;
+import priori.event.PriTapEvent;
+import priori.event.PriEvent;
+import priori.style.font.PriFontStyle;
+import priori.view.container.PriGroup;
 
 class PriApp extends PriGroup {
 

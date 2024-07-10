@@ -53,8 +53,10 @@ class BuilderMacroHelper {
     }
 
     public static function dispatchError(error:BuilderErrorData):Void {
+        var file = PositionTools.getInfos(Context.currentPos()).file;
+
         var errorPos = Context.makePosition({
-            file : error.filename,
+            file : file,
             min : error.min,
             max : error.max
         });

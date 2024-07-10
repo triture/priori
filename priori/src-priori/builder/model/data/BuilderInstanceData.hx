@@ -10,9 +10,11 @@ import builder.model.enums.BuilderElementVisibilityType;
 
 typedef BuilderInstanceData = {
     @:optional var id:String;
-    
+    @:optional var typed:String;
+
     var name:String;
     var visibility:BuilderElementVisibilityType;
     var properties:Array<BuilderKeyValueData>;
     var children:Array<BuilderInstanceData>;
+    
 }

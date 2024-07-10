@@ -351,4 +351,44 @@ class TestBuilderIntepreterViews extends Test {
         // ASSERT
         Assert.same(expecteData, resultData);
     }
+
+    function test_load_xml_test_typed_view() {
+        // ARRANGE
+        var builderInterpreter = new BuilderInterpreter();
+        var valueXml:String = '
+            <priori>
+                <views>
+                    <some.TypedClass type="<Bool>" />
+                </views>
+            </priori>
+        ';
+
+        var expecteData:BuilderData = {
+            imports: [
+                "some.TypedClass" => {
+                    name: "some.TypedClass",
+                    alias: "some.TypedClass"
+                }
+            ],
+            views: [
+                {
+                    name: "some.TypedClass",
+                    visibility: BuilderElementVisibilityType.PUBLIC,
+                    properties: [],
+                    children: [],
+                    typed: "<Bool>"
+                }
+            ],
+            properties: []
+        };
+
+        var resultData:BuilderData;
+        
+        // ACT
+        builderInterpreter.loadXML(valueXml);
+        resultData = builderInterpreter.data;
+
+        // ASSERT
+        Assert.same(expecteData, resultData);
+    }
 }

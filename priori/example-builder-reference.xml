@@ -94,3 +94,10 @@
         <priori.view.PriDisplay width:P="somefunc()" />
     </views>
 </priori>
+
+# DISPLAY CLASS WITH TYPE T CLASS
+<priori>
+    <views>
+        <SomeDisplay type="<X, Y, Z>" />
+    </views>
+</priori>

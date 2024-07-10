@@ -1,5 +1,8 @@
 package builder;
 
+import haxe.macro.MacroStringTools;
+import haxe.macro.PositionTools;
+import haxe.macro.ComplexTypeTools;
 import builder.model.enums.BuilderKeyValueType;
 import builder.model.data.BuilderKeyValueData;
 import haxe.macro.Expr;
@@ -58,6 +61,7 @@ class BuilderMacro {
 
         // building from current code imports
         for (importItem in Context.getLocalImports()) {
+            
             if (importItem.mode == ImportMode.INormal) {
                 var path:String = [for (path in importItem.path) path.name].join('.');
                 var module:Array<Type> = Context.getModule(path);
@@ -66,10 +70,31 @@ class BuilderMacro {
         }
 
         // building from import data
-        for (importItem in this.interpreter.data.imports) {
-            var module:Array<Type> = Context.getModule(importItem.name);
-            this.importTypesFromModule(module);
-        }
+        for (importItem in this.interpreter.data.imports) this.importTypesFromClassName(importItem.name);
+
+        
+    }
+
+    private function importTypesFromClassName(className:String):Void {
+        // var pack = className.split('.');
+        // var complex = TPath({pack: pack, name: pack.pop(), params: []});
+        
+        // var simple = ComplexTypeTools.toType(complex);
+        
+        // var item:BuilderMacroImportData = {
+        //     className: className,
+        //     type : simple,
+        //     complexType: complex
+        // }
+
+        // this.types.set(className, item);
+        
+        // return;
+        
+        ////////////////
+
+        var module:Array<Type> = Context.getModule(className);
+        this.importTypesFromModule(module);
     }
 
     private function importTypesFromModule(module:Array<Type>):Void {
@@ -81,39 +106,64 @@ class BuilderMacro {
                 type : t,
                 complexType: TypeTools.toComplexType(t)
             }
-            
+
             this.types.set(className, item);
         }
     }
 
     private function constructFields():Void {
+        BuilderMacroHelper.print('- Building Fields');
+
         this.fields = Context.getBuildFields();
         for (view in this.interpreter.data.views) this.createField(view, this.fields);
     }
 
     private function createField(element:BuilderInstanceData, ?result:Array<Field>):Array<Field> {
         if (result == null) result = [];
-
+        
+        var debug_fieldRepresentation:String = 'field ${element.id == null ? 'class:${element.name}' : 'id:${element.id}'}';
         var importData:BuilderMacroImportData = this.types.get(element.name);
+        
+        BuilderMacroHelper.print('  Creating field ${debug_fieldRepresentation}');
+        
         if (element.id == null) element.id = '___${BuilderMacroHelper.generateRandomString()}';
+        
+        try {
+            var complexTyped:ComplexType;
 
-        var field:Field = {
-            meta : StringTools.startsWith(element.id, '___') 
-                ? [{
-                    pos : Context.currentPos(), 
-                    name : ':noCompletion',
-                    params:[]
-                  }] 
-                : null,
-            name : element.id,
-            doc : '',
-            access: [element.visibility],
-            kind: FieldType.FVar(importData.complexType),
-            pos: Context.currentPos()
+            if (element.typed != null) {
+                var code:String = 'var ${element.id}:${element.name}${element.typed};';
+                var f = Context.parse(code, Context.currentPos());
+                complexTyped = f.expr.getParameters()[0][0].type;
+            }
+
+            
+            var field:Field = {
+                meta : StringTools.startsWith(element.id, '___') 
+                    ? [{
+                        pos : Context.currentPos(), 
+                        name : ':noCompletion',
+                        params:[]
+                    }] 
+                    : null,
+                name : element.id,
+                doc : '',
+                access: [element.visibility],
+                kind: FieldType.FVar(complexTyped == null ? importData.complexType : complexTyped),
+                pos: Context.currentPos()
+            }
+
+            result.push(field);
+
+        } catch (e:Dynamic) {
+            var message:String = 'Error building ${debug_fieldRepresentation} - ${e}';
+            BuilderMacroHelper.dispatchError({
+                message: message,
+                min: 0,
+                max: 0
+            });
         }
-
-        result.push(field);
-
+        
         for (child in element.children) this.createField(child, result);
         return result;
     }
@@ -215,7 +265,7 @@ class BuilderMacro {
     }
 
     private function createNewCode(item:BuilderInstanceData, result:Array<String>):Void {
-        var code:String = 'this.${item.id} = new ${item.name}();';
+        var code:String = 'this.${item.id} = new ${item.name}${item.typed == null ? '' : item.typed}();';
         result.push(code);
 
         for (child in item.children) this.createNewCode(child, result);

@@ -1,7 +1,6 @@
 package builder;
 
 import builder.model.enums.BuilderKeyValueType;
-import builder.helper.BuilderMacroHelper;
 import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
 import builder.model.enums.BuilderElementVisibilityType;
@@ -33,7 +32,6 @@ class BuilderInterpreter {
             this.hasError = true;
             this.error = {
                 message: e.toString(),
-                filename: null,
                 min: e.position,
                 max: e.position
             };
@@ -97,10 +95,22 @@ class BuilderInterpreter {
             children: children
         };
 
+        // SPECIAL CASES: id AND type
         for (property in properties) {
             if (property.getKey() == "id") {
                 var idValue:String = property.getValue();
-                if (!BuilderMacroHelper.isEmptyString(idValue)) result.id = idValue;
+                if (!this.isEmpty(idValue)) result.id = idValue;
+                properties.remove(property);
+                break;
+            }
+        }
+
+        for (property in properties) {
+            if (property.getKey() == "type") {
+                if (!this.isEmpty(property.getValue())) {
+                    var typedValue:String = property.getClassValue(this.data.imports);
+                    result.typed = typedValue;
+                }
                 properties.remove(property);
                 break;
             }
