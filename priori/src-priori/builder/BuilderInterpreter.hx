@@ -22,10 +22,23 @@ class BuilderInterpreter {
         this.className = className;
         this.hasError = false;
     }
+
+    private function createEmptyData():Void {
+        this.data = {
+            imports: new StringMap<BuilderImportData>(),
+            views: [],
+            properties: []
+        }
+    }
     
     public function loadXML(data:String):Void {
+        if (this.isEmpty(data)) {
+            this.createEmptyData();
+            return;
+        }
+        
         var xml:Xml;
-
+        
         try {
             xml = Xml.parse(data);
         } catch (e:XmlParserException) {

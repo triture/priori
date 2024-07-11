@@ -25,7 +25,6 @@ class BuilderTest extends PriBuilder {
         super.setup();
 
         this.container.bgColor = 0xF3F3F3;
-        this.typed.datat.dataj;
         
     }
 }

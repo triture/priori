@@ -82,6 +82,7 @@
     <views>
         <priori.view.PriDisplay somethingNumeric:Literal="100" />
         <priori.view.PriDisplay somethingBolean:L="true" />
+        <priori.view.PriDisplay somethingFromStaticValue:L="SomeClass.STATIC_VALUE" />
         <priori.view.PriDisplay somethingCallingAFunction:Literal="SomeClass.somefunction()" />
     </views>
 </priori>
