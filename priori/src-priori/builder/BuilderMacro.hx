@@ -31,6 +31,7 @@ class BuilderMacro {
     private var interpreter:BuilderInterpreter;
     
     public function new() {
+        BuilderMacroHelper.print('');
         BuilderMacroHelper.print('Building ${this.className}');
 
         this.interpreter = new BuilderInterpreter(this.className);
@@ -57,6 +58,8 @@ class BuilderMacro {
     }
 
     private function constructImportTypes():Void {
+        BuilderMacroHelper.print('- Building Imports');
+
         this.types = new StringMap<BuilderMacroImportData>();
 
         // building from current code imports
@@ -64,6 +67,7 @@ class BuilderMacro {
             
             if (importItem.mode == ImportMode.INormal) {
                 var path:String = [for (path in importItem.path) path.name].join('.');
+                
                 var module:Array<Type> = Context.getModule(path);
                 this.importTypesFromModule(module);
             }
@@ -71,36 +75,22 @@ class BuilderMacro {
 
         // building from import data
         for (importItem in this.interpreter.data.imports) this.importTypesFromClassName(importItem.name);
-
-        
     }
 
     private function importTypesFromClassName(className:String):Void {
-        // var pack = className.split('.');
-        // var complex = TPath({pack: pack, name: pack.pop(), params: []});
-        
-        // var simple = ComplexTypeTools.toType(complex);
-        
-        // var item:BuilderMacroImportData = {
-        //     className: className,
-        //     type : simple,
-        //     complexType: complex
-        // }
-
-        // this.types.set(className, item);
-        
-        // return;
-        
-        ////////////////
-
-        var module:Array<Type> = Context.getModule(className);
-        this.importTypesFromModule(module);
+        try {
+            var module:Array<Type> = Context.getModule(className);
+            this.importTypesFromModule(module);
+        } catch(e) {
+            
+        }
     }
 
     private function importTypesFromModule(module:Array<Type>):Void {
         for (t in module) {
             var className:String = TypeTools.toString(t);
-            
+            BuilderMacroHelper.print('  Importing ${className}');
+
             var item:BuilderMacroImportData = {
                 className: className,
                 type : t,
@@ -121,20 +111,24 @@ class BuilderMacro {
     private function createField(element:BuilderInstanceData, ?result:Array<Field>):Array<Field> {
         if (result == null) result = [];
         
-        var debug_fieldRepresentation:String = 'field ${element.id == null ? 'class:${element.name}' : 'id:${element.id}'}';
+        var debug_fieldRepresentation:String = '${element.id == null ? 'class:${element.name}' : 'id:${element.id}'}';
         var importData:BuilderMacroImportData = this.types.get(element.name);
         
-        BuilderMacroHelper.print('  Creating field ${debug_fieldRepresentation}');
+        BuilderMacroHelper.print('  Creating ${debug_fieldRepresentation}');
         
         if (element.id == null) element.id = '___${BuilderMacroHelper.generateRandomString()}';
         
         try {
-            var complexTyped:ComplexType;
+            var complex:ComplexType;
+            var complexCode:String;
 
-            if (element.typed != null) {
-                var code:String = 'var ${element.id}:${element.name}${element.typed};';
-                var f = Context.parse(code, Context.currentPos());
-                complexTyped = f.expr.getParameters()[0][0].type;
+            if (element.typed == null) complexCode = 'var ${element.id}:${element.name}';
+            else if (importData == null) complexCode = 'var ${element.id}:${element.name}${element.typed}';
+            else complex = importData.complexType;
+
+            if (complexCode != null) {
+                var f = Context.parse(complexCode, Context.currentPos());
+                complex = f.expr.getParameters()[0][0].type;
             }
 
             
@@ -149,7 +143,7 @@ class BuilderMacro {
                 name : element.id,
                 doc : '',
                 access: [element.visibility],
-                kind: FieldType.FVar(complexTyped == null ? importData.complexType : complexTyped),
+                kind: FieldType.FVar(complex),
                 pos: Context.currentPos()
             }
 
@@ -169,6 +163,8 @@ class BuilderMacro {
     }
 
     private function constructCode():Void {
+        BuilderMacroHelper.print('- Building Code');
+
         this.fields.push({
             name : '__priBuilderSetup',
             pos: Context.currentPos(),
@@ -215,7 +211,7 @@ class BuilderMacro {
         
         for (code in codes) {
             #if prioridebug
-            BuilderMacroHelper.print(' > SETUP: ${code}');
+            BuilderMacroHelper.print('  SETUP: ${code}');
             #end
             result.push(Context.parse(code, Context.currentPos()));
         }
@@ -246,7 +242,7 @@ class BuilderMacro {
             this.createAddCode('this.${item.id}', child, result);
         }
 
-        var code:String = '${parent}.addChild(this.${item.id});';
+        var code:String = '${parent}.addChild(this.${item.id})';
         result.push(code);
     }
 
@@ -254,7 +250,7 @@ class BuilderMacro {
         for (property in properties) {
             if (allowed.indexOf(property.getType()) == -1) continue;
             
-            var code:String = '${parent}.${property.getKey()} = ${property.getMacroValue()};';
+            var code:String = '${parent}.${property.getKey()} = ${property.getMacroValue()}';
             result.push(code);
         }
     }
@@ -265,7 +261,7 @@ class BuilderMacro {
     }
 
     private function createNewCode(item:BuilderInstanceData, result:Array<String>):Void {
-        var code:String = 'this.${item.id} = new ${item.name}${item.typed == null ? '' : item.typed}();';
+        var code:String = 'this.${item.id} = new ${item.name}${item.typed == null ? '' : item.typed}()';
         result.push(code);
 
         for (child in item.children) this.createNewCode(child, result);

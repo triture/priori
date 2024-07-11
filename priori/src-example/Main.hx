@@ -1,6 +1,7 @@
 package ;
 
 import priori.app.PriApp;
+import pack.BuilderTest;
 
 class Main extends PriApp {
 

@@ -65,7 +65,8 @@ class BuilderMacroHelper {
     }
 
     public static function print(message:String):Void {
-        Sys.println("   PriBuilder : " + message);
+        if (message == '') Sys.println("");
+        else Sys.println("   PriBuilder : " + message);
     }
 
     public static function generateRandomString():String {

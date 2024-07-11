@@ -1,4 +1,4 @@
-package;
+package pack;
 
 import priori.view.builder.PriBuilder;
 
@@ -6,11 +6,11 @@ import priori.view.builder.PriBuilder;
 <priori>
     <imports>
         <priori.view.container.PriContainer alias="Container" />
-        <MyTypedDisplay />
     </imports>
     <views left="0" right="0" top="0" bottom="0">
-
+        
         <Container id="container" width="300" height="300" centerX="${this.width/2}" >
+            <priori.view.PriDisplay />
             <Container width="200" height="200" x="10" y="10" bgColor="#ffff00" >
                 <MyTypedDisplay type="<MyTypedDisplay<Bool, PriBuilder>, Container>" id="typed" width="20" height="20" bgColor="#00ff00" />
             </Container>
