@@ -380,4 +380,58 @@ class TestBuilderIntepreterViewsProperty extends Test {
         // ASSERT
         Assert.same(expecteData, resultData);
     }
+
+    // function test_load_xml_property_order_matter_following_att_order() {
+    //     // ARRANGE
+    //     var builderInterpreter = new BuilderInterpreter();
+    //     var valueXml:String = '
+    //         <priori>
+    //             <views>
+    //                 <PriDisplay x="10" label:String="100" width="90" other="abc" />
+    //                 <PriDisplay other="abc" x="10" width="90" label:String="100" />
+    //             </views>
+    //         </priori>
+    //     ';
+
+    //     var expecteData:BuilderData = {
+    //         imports: ["PriDisplay" => {
+    //             name: "PriDisplay",
+    //             alias: "PriDisplay"
+    //         }],
+    //         views: [
+    //             {
+    //                 name: "PriDisplay",
+    //                 visibility: BuilderElementVisibilityType.PUBLIC,
+    //                 properties: [
+    //                     new BuilderKeyValueData("x", "100", BuilderKeyValueType.DYNAMIC),
+    //                     new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING),
+    //                     new BuilderKeyValueData("width", "90", BuilderKeyValueType.DYNAMIC),
+    //                     new BuilderKeyValueData("other", "abc", BuilderKeyValueType.DYNAMIC)
+    //                 ],
+    //                 children: []
+    //             },
+    //             {
+    //                 name: "PriDisplay",
+    //                 visibility: BuilderElementVisibilityType.PUBLIC,
+    //                 properties: [
+    //                     new BuilderKeyValueData("other", "abc", BuilderKeyValueType.DYNAMIC),
+    //                     new BuilderKeyValueData("x", "100", BuilderKeyValueType.DYNAMIC),
+    //                     new BuilderKeyValueData("width", "90", BuilderKeyValueType.DYNAMIC),
+    //                     new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING)
+    //                 ],
+    //                 children: []
+    //             }
+    //         ],
+    //         properties: []
+    //     };
+
+    //     var resultData:BuilderData;
+        
+    //     // ACT
+    //     builderInterpreter.loadXML(valueXml);
+    //     resultData = builderInterpreter.data;
+
+    //     // ASSERT
+    //     Assert.same(expecteData, resultData);
+    // }
 }

@@ -1,5 +1,6 @@
 package unit;
 
+import unit.builder.TestBuilderHelperExtractAttributes;
 import unit.builder.TestBuilderPropertyValue;
 import unit.builder.TestBuilderIntepreterViewsProperty;
 import unit.builder.TestBuilderIntepreterViews;
@@ -23,6 +24,7 @@ class PrioriUnitTest {
         runner.addCase(new TestBuilderIntepreterViews());
         runner.addCase(new TestBuilderIntepreterViewsProperty());
         runner.addCase(new TestBuilderPropertyValue());
+        runner.addCase(new TestBuilderHelperExtractAttributes());
         
 
         Report.create(runner);

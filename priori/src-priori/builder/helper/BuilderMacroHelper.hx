@@ -83,5 +83,18 @@ class BuilderMacroHelper {
     public static function isEmptyString(value:String):Bool {
         return value == null || StringTools.trim(value) == "";
     }
+
+    public static function extractAttributesInOrder(data:Xml):Array<{key:String, value:String}> {
+        var result:Array<{key:String, value:String}> = [];
+
+        var xmlString = data.toString();
+        trace(xmlString);
+
+        for (att in data.attributes()) {
+            result.push({key: att, value: data.get(att)});
+        }   
+
+        return result;
+    }
     
 }

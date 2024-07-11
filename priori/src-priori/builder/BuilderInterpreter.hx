@@ -36,7 +36,7 @@ class BuilderInterpreter {
             this.createEmptyData();
             return;
         }
-        
+
         var xml:Xml;
         
         try {
@@ -156,9 +156,10 @@ class BuilderInterpreter {
             }
         }
     }
-
+    
     private function extractElementProperties(data:Xml):Array<BuilderKeyValueData> {
         var result:Array<BuilderKeyValueData> = [];
+        var dataString:String = data.toString();
 
         for (property in data.attributes()) {
             var propertyBlock:Array<String> = property.split(":");

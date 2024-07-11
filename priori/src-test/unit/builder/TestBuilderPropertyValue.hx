@@ -327,26 +327,4 @@ class TestBuilderPropertyValue extends Test {
         Assert.same(expected, result);
     }
 
-    // function test_extract_all_class_names() {
-    //     // ARRANGE
-        
-    //     var value = new BuilderKeyValueData("key", "<MyClass, Other12Class, Array<some.full.Path>, {xx : Int, y:MyClass, "y":Int}>");
-        
-    //     var valueImports = [
-    //         "MyClass" => {
-    //             name : "full.MyClass",
-    //             alias : "MyClass"
-    //         }
-    //     ];
-        
-
-    //     var expected:Array<String> = ["MyClass", "Other12Class", "Array", "Int", "MyClass"];
-    //     var result:Array<String>;
-
-    //     // ACT
-    //     result = value.extractClassCandidates();
-
-    //     // ASSERT
-    //     Assert.same(expected, result);
-    // }
 }

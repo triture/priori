@@ -229,7 +229,7 @@ class BuilderMacro {
 
         for (code in codes) {
             #if prioridebug
-            BuilderMacroHelper.print(' > PAINT: ${code}');
+            BuilderMacroHelper.print('  PAINT: ${code}');
             #end
             result.push(Context.parse(code, Context.currentPos()));
         }
