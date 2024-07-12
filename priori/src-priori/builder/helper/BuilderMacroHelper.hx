@@ -1,5 +1,6 @@
 package builder.helper;
 
+import haxe.ds.StringMap;
 import haxe.macro.PositionTools;
 import builder.model.data.BuilderErrorData;
 import sys.io.File;
@@ -84,14 +85,21 @@ class BuilderMacroHelper {
         return value == null || StringTools.trim(value) == "";
     }
 
-    public static function extractAttributesInOrder(data:Xml):Array<{key:String, value:String}> {
-        var result:Array<{key:String, value:String}> = [];
+    public static function extractAttributes(data:Xml):Array<{att:String, value:String}> {
+        var result:Array<{att:String, value:String}> = [];
 
-        var xmlString = data.toString();
-        trace(xmlString);
+        var atts:Array<String> = [for (att in data.attributes()) att];
+        atts.sort((a, b) -> return a < b ? -1 : a > b ? 1 : 0);
 
-        for (att in data.attributes()) {
-            result.push({key: att, value: data.get(att)});
+        // expressão regular para detectar caracteres numericos seguidos de dois pontos no inicio da string
+        var reg = ~/^\d+:/;
+        
+        for (att in atts) {
+            var value:String = data.get(att);
+
+            if (reg.match(att)) att = reg.matchedRight();
+
+            result.push({att: att, value: value});
         }   
 
         return result;

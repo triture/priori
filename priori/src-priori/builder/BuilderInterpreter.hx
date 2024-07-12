@@ -1,5 +1,6 @@
 package builder;
 
+import builder.helper.BuilderMacroHelper;
 import builder.model.enums.BuilderKeyValueType;
 import haxe.ds.StringMap;
 import builder.model.data.BuilderKeyValueData;
@@ -132,6 +133,7 @@ class BuilderInterpreter {
         return result;
     }
 
+    // <p:node value="1" />
     private function extractElementPropertyFromNode(data:Xml, deposit:Array<BuilderKeyValueData>):Void {
         var nodeName:String = data.nodeName;
         var cleanName:String = nodeName.split(":").pop();
@@ -159,15 +161,16 @@ class BuilderInterpreter {
     
     private function extractElementProperties(data:Xml):Array<BuilderKeyValueData> {
         var result:Array<BuilderKeyValueData> = [];
-        var dataString:String = data.toString();
+        var properties = BuilderMacroHelper.extractAttributes(data);
 
-        for (property in data.attributes()) {
-            var propertyBlock:Array<String> = property.split(":");
+
+        for (property in properties) {
+            var propertyBlock:Array<String> = property.att.split(":");
+            var value:String = property.value;
 
             var propertyName:String = propertyBlock[0];
             var propertyType:BuilderKeyValueType = propertyBlock.length == 1 ? BuilderKeyValueType.DYNAMIC : propertyBlock[1];
             
-            var value:String = data.get(property);
             var isExpession:Bool = this.isPaintExpression(StringTools.trim(value));
 
             if (isExpession) {
