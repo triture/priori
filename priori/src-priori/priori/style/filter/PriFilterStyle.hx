@@ -111,7 +111,7 @@ class PriFilterStyle {
         if (this.blur > 0) result += 'blur(${this.blur}px) ';
         if (this.brightness != 1) result += 'brightness(${this.brightness * 100}%) ';
         if (this.contrast != 1) result += 'contrast(${this.contrast * 100}%) ';
-        if (this.grayscale > 0) result += 'grayscale${this.grayscale * 100}%) ';
+        if (this.grayscale > 0) result += 'grayscale(${this.grayscale * 100}%) ';
         if (this.hue != 0) result += 'hue-rotate(${360 * this.hue}deg) ';
         if (this.saturate > 0) result += 'saturate(${this.saturate * 100}%) ';
         if (this.shadow != null && this.shadow.length > 0) {
