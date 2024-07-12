@@ -102,3 +102,11 @@
         <SomeDisplay type="<X, Y, Z>" />
     </views>
 </priori>
+
+# FORCE ATTRIBUTE ORDERS
+<priori>
+    <views>
+        <!-- height will be executed before width -->
+        <priori.view.PriDisplay 2:width="100" 1:height="200" />
+    </views>
+</priori>
