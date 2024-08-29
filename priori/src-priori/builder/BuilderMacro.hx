@@ -1,5 +1,6 @@
 package builder;
 
+import haxe.ValueException;
 import haxe.macro.MacroStringTools;
 import haxe.macro.PositionTools;
 import haxe.macro.ComplexTypeTools;
@@ -31,15 +32,38 @@ class BuilderMacro {
     private var interpreter:BuilderInterpreter;
     
     public function new() {
-        BuilderMacroHelper.print('');
-        BuilderMacroHelper.print('Building ${this.className}');
+        try {
+            BuilderMacroHelper.print('');
+            BuilderMacroHelper.print('Building ${this.className}');
 
-        this.interpreter = new BuilderInterpreter(this.className);
-        this.interpreter.loadXML(this.recoverXmlData());
+            this.interpreter = new BuilderInterpreter(this.className);
+            this.interpreter.loadXML(this.recoverXmlData());
+            
+            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+            
 
-        this.constructImportTypes();
-        this.constructFields();
-        this.constructCode();
+            if (this.interpreter.hasError) {
+                var pos = Context.makePosition({
+                    min: tagPos.min + this.interpreter.error.min,
+                    max: this.interpreter.error.max,
+                    file: PositionTools.getInfos(Context.currentPos()).file
+                });
+                
+                Context.fatalError(
+                    this.interpreter.error.message, 
+                    pos
+                );
+            }
+            
+            this.constructImportTypes();
+            this.constructFields();
+            this.constructCode();
+        } catch (e) {
+            Context.fatalError(
+                'Priori XML Error: ${e}', 
+                Context.currentPos()
+            );
+        }
     }
 
     public function getFields():Array<Field> return this.fields;
@@ -82,7 +106,7 @@ class BuilderMacro {
             var module:Array<Type> = Context.getModule(className);
             this.importTypesFromModule(module);
         } catch(e) {
-            
+            trace(e);
         }
     }
 
