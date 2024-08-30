@@ -39,10 +39,9 @@ class BuilderMacro {
             this.interpreter = new BuilderInterpreter(this.className);
             this.interpreter.loadXML(this.recoverXmlData());
             
-            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
-            
-
             if (this.interpreter.hasError) {
+                var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+                
                 var pos = Context.makePosition({
                     min: tagPos.min + this.interpreter.error.min,
                     max: this.interpreter.error.max,
@@ -106,7 +105,18 @@ class BuilderMacro {
             var module:Array<Type> = Context.getModule(className);
             this.importTypesFromModule(module);
         } catch(e) {
-            trace(e);
+            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+                
+            var pos = Context.makePosition({
+                min: tagPos.min,
+                max: tagPos.max,
+                file: PositionTools.getInfos(Context.currentPos()).file
+            });
+            
+            Context.fatalError(
+                'Building Error: ${e}', 
+                pos
+            );
         }
     }
 
@@ -174,12 +184,18 @@ class BuilderMacro {
             result.push(field);
 
         } catch (e:Dynamic) {
-            var message:String = 'Error building ${debug_fieldRepresentation} - ${e}';
-            BuilderMacroHelper.dispatchError({
-                message: message,
-                min: 0,
-                max: 0
+            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+                
+            var pos = Context.makePosition({
+                min: tagPos.min,
+                max: tagPos.max,
+                file: PositionTools.getInfos(Context.currentPos()).file
             });
+            
+            Context.fatalError(
+                'Building Error: ${e}', 
+                pos
+            );
         }
         
         for (child in element.children) this.createField(child, result);
