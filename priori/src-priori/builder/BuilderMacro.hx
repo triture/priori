@@ -1,5 +1,6 @@
 package builder;
 
+import haxe.macro.CompilationServer.ContextOptions;
 import haxe.ValueException;
 import haxe.macro.MacroStringTools;
 import haxe.macro.PositionTools;
@@ -58,10 +59,20 @@ class BuilderMacro {
             this.constructFields();
             this.constructCode();
         } catch (e) {
+
+            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+                
+            var pos = Context.makePosition({
+                min: tagPos.min,
+                max: tagPos.max,
+                file: PositionTools.getInfos(Context.currentPos()).file
+            });
+            
             Context.fatalError(
-                'Priori XML Error: ${e}', 
-                Context.currentPos()
+                'Building Error: ${e}', 
+                pos
             );
+            
         }
     }
 
@@ -104,19 +115,27 @@ class BuilderMacro {
         try {
             var module:Array<Type> = Context.getModule(className);
             this.importTypesFromModule(module);
-        } catch(e) {
-            var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
-                
-            var pos = Context.makePosition({
-                min: tagPos.min,
-                max: tagPos.max,
-                file: PositionTools.getInfos(Context.currentPos()).file
-            });
+        } catch(e1) {
             
-            Context.fatalError(
-                'Building Error: ${e}', 
-                pos
-            );
+            try {
+                var currPack:Array<String> = Context.getLocalClass().get().pack;
+                var module:Array<Type> = Context.getModule(currPack.join('.') + '.' + className);
+                this.importTypesFromModule(module);
+
+            } catch (e2) {
+                var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
+                
+                var pos = Context.makePosition({
+                    min: tagPos.min,
+                    max: tagPos.max,
+                    file: PositionTools.getInfos(Context.currentPos()).file
+                });
+                
+                Context.fatalError(
+                    'Building Error: ${e1}', 
+                    pos
+                );
+            }
         }
     }
 
@@ -164,7 +183,6 @@ class BuilderMacro {
                 var f = Context.parse(complexCode, Context.currentPos());
                 complex = f.expr.getParameters()[0][0].type;
             }
-
             
             var field:Field = {
                 meta : StringTools.startsWith(element.id, '___') 
