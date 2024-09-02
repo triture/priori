@@ -38,7 +38,7 @@ class BuilderMacro {
             BuilderMacroHelper.print('Building ${this.className}');
 
             this.interpreter = new BuilderInterpreter(this.className);
-            this.interpreter.loadXML(this.recoverXmlData());
+            this.interpreter.loadXML(this.recoverXmlData(), this.getPreImportList());
             
             if (this.interpreter.hasError) {
                 var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
@@ -76,6 +76,19 @@ class BuilderMacro {
         }
     }
 
+    private function getPreImportList():Array<String> {
+        var result:Array<String> = [];
+
+        for (importItem in Context.getLocalImports()) {
+            if (importItem.mode == ImportMode.INormal) {
+                var path:String = [for (path in importItem.path) path.name].join('.');
+                result.push(path);
+            }
+        }
+
+        return result;
+    }
+
     public function getFields():Array<Field> return this.fields;
 
     public function recoverXmlData():String {
@@ -95,17 +108,6 @@ class BuilderMacro {
         BuilderMacroHelper.print('- Building Imports');
 
         this.types = new StringMap<BuilderMacroImportData>();
-
-        // building from current code imports
-        for (importItem in Context.getLocalImports()) {
-            
-            if (importItem.mode == ImportMode.INormal) {
-                var path:String = [for (path in importItem.path) path.name].join('.');
-                
-                var module:Array<Type> = Context.getModule(path);
-                this.importTypesFromModule(module);
-            }
-        }
 
         // building from import data
         for (importItem in this.interpreter.data.imports) this.importTypesFromClassName(importItem.name);
@@ -142,6 +144,9 @@ class BuilderMacro {
     private function importTypesFromModule(module:Array<Type>):Void {
         for (t in module) {
             var className:String = TypeTools.toString(t);
+
+            if (this.types.exists(className)) continue;
+
             BuilderMacroHelper.print('  Importing ${className}');
 
             var item:BuilderMacroImportData = {

@@ -32,7 +32,7 @@ class BuilderInterpreter {
         }
     }
     
-    public function loadXML(data:String):Void {
+    public function loadXML(data:String, ?preImport:Array<String>):Void {
         if (this.isEmpty(data)) {
             this.createEmptyData();
             return;
@@ -57,6 +57,18 @@ class BuilderInterpreter {
             views: [],
             properties: []
         };
+
+        if (preImport != null) {
+            for (pre in preImport) {
+                var name:String = pre;
+                var alias:String = name.split('.').pop();
+                
+                this.data.imports.set(alias, {
+                    name: name,
+                    alias: alias
+                });
+            }
+        }
 
         var root:Xml = xml.firstElement();
         this.interpretImports(root);
