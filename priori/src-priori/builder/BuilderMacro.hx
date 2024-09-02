@@ -29,6 +29,7 @@ class BuilderMacro {
     
     private var fields:Array<Field>;
     private var types:StringMap<BuilderMacroImportData>;
+    private var privateTypes:Array<String>;
 
     private var interpreter:BuilderInterpreter;
     
@@ -38,6 +39,7 @@ class BuilderMacro {
             BuilderMacroHelper.print('Building ${this.className}');
 
             this.types = new StringMap<BuilderMacroImportData>();
+            this.privateTypes = [];
 
             this.interpreter = new BuilderInterpreter(this.className);
             this.interpreter.loadXML(this.recoverXmlData(), this.getPreImportList());
@@ -83,7 +85,9 @@ class BuilderMacro {
 
         this.importTypesFromModule(Context.getModule(Context.getLocalModule()));
         for (m in Context.getModule(Context.getLocalModule())) {
-            result.push(TypeTools.toString(m));
+            var pack:String = TypeTools.toString(m);
+            if (pack.indexOf('._') != -1) this.privateTypes.push(pack.split('.').pop());
+            else result.push(TypeTools.toString(m));
         }
 
         for (importItem in Context.getLocalImports()) {
@@ -120,6 +124,7 @@ class BuilderMacro {
 
     private function importTypesFromClassName(className:String):Void {
         if (this.types.exists(className)) return;
+        else if (this.privateTypes.indexOf(className) != -1) return;
 
         try {
             var module:Array<Type> = Context.getModule(className);
