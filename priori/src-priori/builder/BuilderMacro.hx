@@ -37,6 +37,8 @@ class BuilderMacro {
             BuilderMacroHelper.print('');
             BuilderMacroHelper.print('Building ${this.className}');
 
+            this.types = new StringMap<BuilderMacroImportData>();
+
             this.interpreter = new BuilderInterpreter(this.className);
             this.interpreter.loadXML(this.recoverXmlData(), this.getPreImportList());
             
@@ -79,6 +81,11 @@ class BuilderMacro {
     private function getPreImportList():Array<String> {
         var result:Array<String> = [];
 
+        this.importTypesFromModule(Context.getModule(Context.getLocalModule()));
+        for (m in Context.getModule(Context.getLocalModule())) {
+            result.push(TypeTools.toString(m));
+        }
+
         for (importItem in Context.getLocalImports()) {
             if (importItem.mode == ImportMode.INormal) {
                 var path:String = [for (path in importItem.path) path.name].join('.');
@@ -106,14 +113,14 @@ class BuilderMacro {
 
     private function constructImportTypes():Void {
         BuilderMacroHelper.print('- Building Imports');
-
-        this.types = new StringMap<BuilderMacroImportData>();
-
+        
         // building from import data
         for (importItem in this.interpreter.data.imports) this.importTypesFromClassName(importItem.name);
     }
 
     private function importTypesFromClassName(className:String):Void {
+        if (this.types.exists(className)) return;
+
         try {
             var module:Array<Type> = Context.getModule(className);
             this.importTypesFromModule(module);
@@ -125,8 +132,9 @@ class BuilderMacro {
                 this.importTypesFromModule(module);
 
             } catch (e2) {
+
                 var tagPos = BuilderMacroHelper.getMetaPosition(PRIORI_BUILDER_TAG);
-                
+            
                 var pos = Context.makePosition({
                     min: tagPos.min,
                     max: tagPos.max,
@@ -137,6 +145,7 @@ class BuilderMacro {
                     'Building Error: ${e1}', 
                     pos
                 );
+            
             }
         }
     }
