@@ -8,4 +8,6 @@ enum abstract PriTransitionType(String) {
     var BACKGROUND_COLOR = 'background-color';
     var TEXT_COLOR = 'color';
     var FONT_SIZE = 'font-size';
+    var WIDTH = 'width';
+    var HEIGHT = 'height';
 }
