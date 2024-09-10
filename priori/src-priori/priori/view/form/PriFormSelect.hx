@@ -7,10 +7,14 @@ import priori.event.PriEvent;
 class PriFormSelect extends PriFormElementBase {
 
     @:isVar public var data(default, set):Array<Dynamic>;
-    @:isVar public var labelField(default, set):String;
     @:isVar public var selected(get, set):Dynamic;
     @:isVar public var selectedIndex(get, set):Int;
 
+    public var labelField(get, set):String;
+    public var labelFieldFunction(get, set):(value:Dynamic)->String;
+    
+    private var _labelField:String;
+    private var _labelFieldFunction:(value:Dynamic)->String;
     private var _selectedData:Dynamic;
     private var _menuItens:Array<{label:String, id:String, data:Dynamic}>;
 
@@ -20,17 +24,9 @@ class PriFormSelect extends PriFormElementBase {
         this.labelField = "label";
     }
 
-    override public function getComponentCode():String {
-        return "<select></select>";
-    }
-
-    override private function onAddedToApp():Void {
-        this._baseElement.on("change", this._onSelectChange);
-    }
-
-    override private function onRemovedFromApp():Void {
-        this._baseElement.off("change", this._onSelectChange);
-    }
+    override public function getComponentCode():String return "<select></select>";
+    override private function onAddedToApp():Void this._baseElement.on("change", this._onSelectChange);
+    override private function onRemovedFromApp():Void this._baseElement.off("change", this._onSelectChange);
 
     @:noCompletion private function set_data(value:Array<Dynamic>):Array<Dynamic> {
         this.data = value;
@@ -47,11 +43,26 @@ class PriFormSelect extends PriFormElementBase {
         return value;
     }
 
-    @:noCompletion private function set_labelField(value:String):String {
-        this.labelField = value;
+    private function get_labelFieldFunction():(value:Dynamic)->String {
+        if (this._labelFieldFunction == this.getLabelForData) return null;
+        return this._labelFieldFunction;
+    }
 
+    private function set_labelFieldFunction(value:(value:Dynamic)->String):(value:Dynamic)->String {
+        this._labelFieldFunction = value;
         this.updateDropDownData();
+        return value;
+    }
 
+    private function get_labelField():String {
+        if (this._labelFieldFunction == this.getLabelForData) return this._labelField;
+        return null;
+    }
+
+    private function set_labelField(value:String):String {
+        this._labelField = value;
+        this._labelFieldFunction = this.getLabelForData;
+        this.updateDropDownData();
         return value;
     }
 
@@ -99,26 +110,27 @@ class PriFormSelect extends PriFormElementBase {
     @:noCompletion private function get_selected():Dynamic {
         var result:Dynamic = this._selectedData;
 
-        if (this._baseElement != null) {
-            var i:Int = 0;
-            var n:Int = this._menuItens.length;
+        if (this._baseElement == null || this._menuItens == null) return result;
+    
+        var i:Int = 0;
+        var n:Int = this._menuItens.length;
 
-            var isDisabled:Bool = this.disabled;
-            if (isDisabled) this.suspendDisabled();
+        var isDisabled:Bool = this.disabled;
+        if (isDisabled) this.suspendDisabled();
 
-            var selectedId:String = this._baseElement.val();
-            if (isDisabled) this.reactivateDisable();
+        var selectedId:String = this._baseElement.val();
+        if (isDisabled) this.reactivateDisable();
 
-            while (i < n) {
+        while (i < n) {
 
-                if (this._menuItens[i].id == selectedId) {
-                    result = this._menuItens[i].data;
-                    i = n;
-                }
-
-                i++;
+            if (this._menuItens[i].id == selectedId) {
+                result = this._menuItens[i].data;
+                i = n;
             }
+
+            i++;
         }
+    
 
         return result;
     }
@@ -132,26 +144,21 @@ class PriFormSelect extends PriFormElementBase {
     }
 
     private function updateDropDownView():Void {
-        if (this._selectedData != null) {
+        if (this._selectedData == null) return;
+    
+        var i:Int = 0;
+        var n:Int = this._menuItens.length;
 
-            var i:Int = 0;
-            var n:Int = this._menuItens.length;
+        while (i < n) {
+            if (this._selectedData == this._menuItens[i].data) {
+                var item:Dynamic = this._menuItens[i];
 
-            while (i < n) {
+                this._baseElement.val(item.id);
 
-                if (this._selectedData == this._menuItens[i].data) {
-                    var item:Dynamic = this._menuItens[i];
-
-                    this._baseElement.val(item.id);
-
-                    i = n;
-                }
-
-                i++;
+                i = n;
             }
 
-        } else {
-
+            i++;
         }
     }
 
@@ -185,14 +192,16 @@ class PriFormSelect extends PriFormElementBase {
             var item_label:String = null;
             var item_data:Dynamic = null;
             var item_view:JQuery;
-
+            
             while (i < n) {
 
                 item_data = this.data[i];
 
                 if (item_data != null) {
 
-                    item_label = this.getLabelForData(item_data);
+                    item_label = this._labelFieldFunction == null 
+                        ? Std.string(item_data) 
+                        : this._labelFieldFunction(item_data);
 
                     if (item_label == null) item_label = "";
 
