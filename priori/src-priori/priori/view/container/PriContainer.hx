@@ -109,6 +109,8 @@ class PriContainer extends PriDisplay {
         }
     }
 
+    public function removeAllChildren():Void this.removeChildList(this._childList.copy());
+
     /**
     * Adds a child PriDisplay instance to this PriContainer instance.
     * The child is added to the front (top) of all other children in this PriContainer instance.
