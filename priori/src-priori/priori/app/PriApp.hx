@@ -87,9 +87,6 @@ class PriApp extends PriGroup {
 
             Browser.window.document.addEventListener("focus", this.___onAppFocusIn, true);
             Browser.window.document.addEventListener("blur", this.___onAppFocusOut, true);
-
-            Browser.window.document.addEventListener('keydown', this.__onAppKey, true);
-            Browser.window.document.addEventListener('keyup', this.__onAppKey, true);
         } else {
             Browser.window.document.onmousedown = this.___onPointerMove;
             Browser.window.document.ontouchstart = this.___onPointerMove;
@@ -147,6 +144,13 @@ class PriApp extends PriGroup {
     override private function get_mousePoint():PriGeomPoint return new PriGeomPoint(this.___xmouse, this.___ymouse);
 
     private function ___onPointerMove(e:Dynamic):Void {
+        if (e == null) return;
+
+        ALT_IS_ACTIVE = e.altKey == null ? false : e.altKey;
+        CTRL_IS_ACTIVE = e.ctrlKey == null ? false : e.ctrlKey;
+        SHIFT_IS_ACTIVE = e.shiftKey == null ? false : e.shiftKey;
+        COMMAND_IS_ACTIVE = e.metaKey == null ? false : e.metaKey;
+
         if (e.touches != null) {
             if (e.touches.length > 0) {
                 this.___xmouse = e.touches[0].pageX;
@@ -226,18 +230,9 @@ class PriApp extends PriGroup {
         return _g;
     }
 
-    private function __onAppKey(e:KeyboardEvent):Void {
-        ALT_IS_ACTIVE = e.altKey;
-        CTRL_IS_ACTIVE = e.ctrlKey;
-        SHIFT_IS_ACTIVE = e.shiftKey;
-
-        if (e.keyCode == 224 || e.keyCode == 91 || e.keyCode == 93) {
-            COMMAND_IS_ACTIVE = (e.type == 'keydown');
-        }
-    }
-
     private function ___onAppFocusIn():Void this.___hasFocus = true;
     private function ___onAppFocusOut():Void this.___hasFocus = false;
+    
     override public function hasFocus():Bool return this.___hasFocus;
     
 }
