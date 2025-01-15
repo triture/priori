@@ -94,9 +94,6 @@ class PriApp extends PriGroup {
             Browser.window.document.ontouchmove = this.___onPointerMove;
             Browser.window.document.onfocus = this.___onAppFocusIn;
             Browser.window.document.onblur = this.___onAppFocusOut;
-
-            Browser.window.document.onkeydown = this.__onAppKey;
-            Browser.window.document.onkeyup = this.__onAppKey;
         }
 
         Browser.window.onresize = this.___onWindowResize;
