@@ -19,6 +19,7 @@ class BuilderController {
         var argsHaxelib:Array<String> = [];
         var argsSourcePath:Array<String> = [];
         var argsFlags:Array<String> = [];
+        var argsParams:Array<String> = [];
 
         libs.reverse();
         for (lib in libs) {
@@ -30,6 +31,10 @@ class BuilderController {
                 for (flag in lib.priori.dFlags) {
                     argsFlags.push('-D');
                     argsFlags.push(flag);
+                }
+
+                for (param in lib.priori.params) {
+                    argsParams.push(param);
                 }
             }
         }
@@ -69,6 +74,7 @@ class BuilderController {
         args = args.concat(argsHaxelib);
         args = args.concat(argsSourcePath);
         args = args.concat(argsFlags);
+        args = args.concat(argsParams);
 
         args.push("-main");
         args.push(mainBuilderName);

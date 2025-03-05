@@ -21,6 +21,7 @@ class DataController {
         result.gitHash = getGitHash();
         result.dFlags = [];
         result.seo = {url:"", ereg:[]}
+        result.params = [];
 
         if (Validation.isString(json.project_name)) result.name = StringTools.trim(json.project_name);
         if (Validation.isString(json.lang)) result.lang = StringTools.trim(json.lang);
@@ -46,6 +47,7 @@ class DataController {
         result.src = result.src.concat(Validation.parseStringArray(json.src));
         result.dFlags = result.dFlags.concat(Validation.parseStringArray(json.dFlags));
         result.dFlags = result.dFlags.concat(Validation.parseStringArray(json.d_flags));
+        result.params = result.params.concat(Validation.parseStringArray(json.params));
 
         return result;
     }

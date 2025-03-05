@@ -14,6 +14,7 @@ typedef PrioriDataVO = {
     @:optional var gitHash:String;
     @:optional var dFlags:Array<String>;
     @:optional var seo:PrioriDataSEOVO;
+    @:optional var params:Array<String>;
 }
 
 typedef PrioriDataSEOVO = {
