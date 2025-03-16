@@ -151,6 +151,7 @@ class PriDisplay extends PriEventDispatcher {
     * `default value : null`
     **/
     @:isVar public var filter(default, set):PriFilterStyle;
+    @:isVar public var backdropFilter(default, set):PriFilterStyle;
 
     public var anchorX(get, set):Float;
     public var anchorY(get, set):Float;
@@ -333,6 +334,25 @@ class PriDisplay extends PriEventDispatcher {
             this.dh.styles.set("-webkit-filter", filterString);
             this.dh.styles.set("-o-filter", filterString);
             this.dh.styles.set("-ms-filter", filterString);
+        }
+
+        this.__updateStyle();
+
+        return value;
+    }
+
+    private function set_backdropFilter(value:PriFilterStyle):PriFilterStyle {
+        this.filter = value;
+
+        var filterString:String = "";
+        if (value != null) filterString = value.toString();
+
+        if (filterString.length == 0) {
+            this.dh.styles.remove("backdrop-filter");
+            this.dh.styles.remove("-webkit-backdrop-filter");
+        } else {
+            this.dh.styles.set("backdrop-filter", filterString);
+            this.dh.styles.set("-webkit-backdrop-filter", filterString);
         }
 
         this.__updateStyle();
