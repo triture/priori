@@ -342,7 +342,7 @@ class PriDisplay extends PriEventDispatcher {
     }
 
     private function set_backdropFilter(value:PriFilterStyle):PriFilterStyle {
-        this.filter = value;
+        this.backdropFilter = value;
 
         var filterString:String = "";
         if (value != null) filterString = value.toString();
