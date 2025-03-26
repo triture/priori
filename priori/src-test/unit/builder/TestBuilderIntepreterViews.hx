@@ -14,7 +14,7 @@ class TestBuilderIntepreterViews extends Test {
         var builderInterpreter = new BuilderInterpreter();
         var valueXml:String = "<priori><imports><priori.view.PriDisplay /></imports><views></views></priori>";
 
-        var expecteData:Dynamic = {
+        var expecteData:BuilderData = {
             imports: [
                 "PriDisplay" => {
                     name: "priori.view.PriDisplay",
@@ -22,7 +22,8 @@ class TestBuilderIntepreterViews extends Test {
                 }
             ],
             views: [],
-            properties: []
+            properties: [],
+            root: "this"
         };
 
         var resultData:BuilderData;
@@ -55,7 +56,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -88,7 +90,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -139,7 +142,8 @@ class TestBuilderIntepreterViews extends Test {
                     ]
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -178,7 +182,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -231,7 +236,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -285,7 +291,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -339,7 +346,8 @@ class TestBuilderIntepreterViews extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -379,7 +387,8 @@ class TestBuilderIntepreterViews extends Test {
                     typed: "<Bool>"
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;

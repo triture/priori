@@ -16,6 +16,11 @@ import priori.view.builder.PriBuilder;
             </Container>
         </Container>
 
+        <ReRootDisplay id="reroot" y="400" centerX="${this.width/2}" >
+            <PriBuilder width="20" height="20" bgColor="0xFF0000" />
+            <PriBuilder right="0" width="20" height="20" bgColor="0xFFF200" />
+        </ReRootDisplay>
+
     </views>
 </priori>
 ')

@@ -16,16 +16,18 @@ class PriBuilder extends PriContainer {
     @:noCompletion private var __right_value:Float;
     @:noCompletion private var __top_value:Float;
     @:noCompletion private var __bottom_value:Float;
+    @:noCompletion private var setupInitialized:Bool = false;
+    @:noCompletion private var root:PriContainer;
 
     public var preventRepaint:Bool = false;
-    private var setupInitialized:Bool = false;
 
     public function new() {
         super();
 
+        this.root = this;
+
         this.__priBuilderSetup();
         this.setup();
-
         this.setupInitialized = true;
 
         this.addEventListener(PriEvent.RESIZE, this.___onResize);
@@ -79,6 +81,12 @@ class PriBuilder extends PriContainer {
                 if (item.updateDisplay != null) item.updateDisplay();
             }
         }
+    }
+
+    @:noCompletion
+    public function addRootChild(child:PriDisplay):Void {
+        if (this.root == null) this.addChild(child);
+        else this.root.addChild(child);
     }
 
     override private function set_x(value:Float):Float {

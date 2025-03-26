@@ -28,7 +28,8 @@ class BuilderInterpreter {
         this.data = {
             imports: new StringMap<BuilderImportData>(),
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         }
     }
     
@@ -55,7 +56,8 @@ class BuilderInterpreter {
         this.data = {
             imports: new StringMap<BuilderImportData>(),
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         if (preImport != null) {
@@ -89,6 +91,16 @@ class BuilderInterpreter {
                 }
 
                 for (prop in this.extractElementProperties(viewElement)) resultProperties.push(prop);
+            }
+        }
+
+        // find root value
+        for (property in resultProperties) {
+            if (property.getKey() == "root") {
+                var rootValue:String = property.getValue();
+                this.data.root = this.isEmpty(rootValue) ? "this" : rootValue;
+                resultProperties.remove(property);
+                break;
             }
         }
 

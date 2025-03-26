@@ -17,7 +17,8 @@ class TestBuilderIntepreterImports extends Test {
         var expecteData:BuilderData = {
             imports: new StringMap<BuilderImportData>(),
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -43,7 +44,8 @@ class TestBuilderIntepreterImports extends Test {
                 }
             ],
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -69,7 +71,8 @@ class TestBuilderIntepreterImports extends Test {
                 }
             ],
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -131,7 +134,8 @@ class TestBuilderIntepreterImports extends Test {
                 }
             ],
             views: [],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;

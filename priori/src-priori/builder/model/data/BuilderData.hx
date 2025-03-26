@@ -18,5 +18,6 @@ typedef BuilderData = {
     var imports:StringMap<BuilderImportData>;
     var views:Array<BuilderInstanceData>;
     var properties:Array<BuilderKeyValueData>;
+    var root:String;
 
 }

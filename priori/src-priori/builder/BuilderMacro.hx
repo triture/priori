@@ -293,6 +293,12 @@ class BuilderMacro {
             result.push(Context.parse(code, Context.currentPos()));
         }
 
+        if (this.interpreter.data.root != 'this') {
+            BuilderMacroHelper.print('  CHANGING ROOT TO ${this.interpreter.data.root}');
+            var code:String = 'this.root = this.${this.interpreter.data.root}';
+            result.push(Context.parse(code, Context.currentPos()));
+        }
+
         return result;
     }
 
@@ -319,7 +325,7 @@ class BuilderMacro {
             this.createAddCode('this.${item.id}', child, result);
         }
 
-        var code:String = '${parent}.addChild(this.${item.id})';
+        var code:String = 'if ((cast ${parent}).addRootChild == null) ${parent}.addChild(this.${item.id}) else (cast ${parent}).addRootChild(this.${item.id})';
         result.push(code);
     }
 

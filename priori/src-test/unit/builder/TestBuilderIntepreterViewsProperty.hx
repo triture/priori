@@ -43,7 +43,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -89,7 +90,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -126,7 +128,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
             views: [],
             properties: [
                 new BuilderKeyValueData("width", "100")
-            ]
+            ],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -165,7 +168,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -203,7 +207,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -240,7 +245,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -279,7 +285,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -308,7 +315,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
             views: [],
             properties: [
                 new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING)
-            ]
+            ],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -337,7 +345,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
             properties: [
                 new BuilderKeyValueData("label", "100", BuilderKeyValueType.STRING),
                 new BuilderKeyValueData("width", "100", BuilderKeyValueType.DYNAMIC)
-            ]
+            ],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -368,7 +377,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
             properties: [
                 new BuilderKeyValueData("width", "100", BuilderKeyValueType.PAINT),
                 new BuilderKeyValueData("height", "this.getSize()", BuilderKeyValueType.PAINT)
-            ]
+            ],
+            root : "this"
         };
 
         var resultData:BuilderData;
@@ -410,7 +420,8 @@ class TestBuilderIntepreterViewsProperty extends Test {
                     children: []
                 }
             ],
-            properties: []
+            properties: [],
+            root : "this"
         };
 
         var resultData:BuilderData;
