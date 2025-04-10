@@ -4,8 +4,8 @@ import {APPCLASS};
 class {MAINBUILDCLASS} {
 
     static public function main():Void {
-        haxe.Timer.delay(() -> {
+        js.Browser.window.addEventListener('load', () -> {
             new {APPCLASS}();
-        }, 0);
+        });
     }
 }
