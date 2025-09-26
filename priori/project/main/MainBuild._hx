@@ -4,7 +4,8 @@ import {APPCLASS};
 class {MAINBUILDCLASS} {
 
     static public function main():Void {
-        js.Browser.window.addEventListener('load', () -> {
+        if (js.Browser.document.readyState == 'complete') new {APPCLASS}();
+        else js.Browser.window.addEventListener('load', () -> {
             new {APPCLASS}();
         });
     }
