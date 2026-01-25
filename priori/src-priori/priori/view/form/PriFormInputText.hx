@@ -26,6 +26,8 @@ class PriFormInputText extends PriFormElementBase {
     @:isVar public var marginLeft(default, set):Float;
     @:isVar public var marginRight(default, set):Float;
 
+    @:isVar public var maxChars(default, set):Int = null;
+
     @:isVar public var fieldType(default, set):PriFormInputTextFieldType = PriFormInputTextFieldType.TEXT;
 
     public function new() {
@@ -35,6 +37,15 @@ class PriFormInputText extends PriFormElementBase {
         this.width = 160;
 
         this.addEventListener(PriEvent.CHANGE, function(e:PriEvent):Void this.__placeholderValidate());
+    }
+
+    private function set_maxChars(value:Int):Int {
+        this.maxChars = value;
+
+        if (value == null || value < 1) this._baseElement.removeProp('maxlength');
+        else this._baseElement.prop('maxlength', value);
+
+        return value;
     }
 
     private function __placeholderValidate():Void {
