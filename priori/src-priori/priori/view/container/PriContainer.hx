@@ -11,7 +11,7 @@ class PriContainer extends PriDisplay {
     @:noCompletion
     @:allow(priori.event.PriEventDispatcher)
     private var _childList:Array<PriDisplay> = [];
-    
+
     @:noCompletion
     private var _migratingView:Bool = false;
 
@@ -109,7 +109,11 @@ class PriContainer extends PriDisplay {
         }
     }
 
-    public function removeAllChildren():Void this.removeChildList(this._childList.copy());
+    public function removeAllChildren(autoKill:Bool = false):Void {
+        var childListCopy:Array<PriDisplay> = this._childList.copy();
+        this.removeChildList(childListCopy);
+        if (autoKill) for (child in childListCopy) child.kill();
+    }
 
     /**
     * Adds a child PriDisplay instance to this PriContainer instance.
@@ -177,7 +181,7 @@ class PriContainer extends PriDisplay {
             super.set_height(value);
             this.dispatchEvent(new PriEvent(PriEvent.RESIZE, false));
         }
-        
+
         return value;
     }
 
